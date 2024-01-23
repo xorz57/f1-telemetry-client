@@ -1,7 +1,7 @@
 pub mod packets;
 
-use packets::packet_car_telemetry_data::PacketCarTelemetryData;
-use packets::packet_header::PacketHeader;
+use packets::PacketCarTelemetryData;
+use packets::PacketHeader;
 use std::net::UdpSocket;
 
 pub struct F1TelemetryClient {

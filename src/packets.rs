@@ -1,0 +1,15 @@
+pub mod packet_car_damage_data;
+pub mod packet_car_setup_data;
+pub mod packet_car_status_data;
+pub mod packet_car_telemetry_data;
+pub mod packet_event_data;
+pub mod packet_final_classification_data;
+pub mod packet_header;
+pub mod packet_lap_data;
+pub mod packet_lobby_info_data;
+pub mod packet_motion_data;
+pub mod packet_motion_ex_data;
+pub mod packet_participants_data;
+pub mod packet_session_data;
+pub mod packet_session_history_data;
+pub mod packet_tyre_sets_data;

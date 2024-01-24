@@ -11,6 +11,7 @@ This Rust library provides a telemetry client for the [F1® 23](https://store.st
 ```rust
 use f1_telemetry_client::packets::PacketCarDamageData;
 use f1_telemetry_client::packets::PacketCarSetupData;
+use f1_telemetry_client::packets::PacketCarStatusData;
 use f1_telemetry_client::packets::PacketCarTelemetryData;
 use f1_telemetry_client::F1TelemetryClient;
 
@@ -20,6 +21,9 @@ fn main() {
         println!("{packet:?}");
     }));
     client.set_car_setup_handler(Box::new(|packet: &PacketCarSetupData| {
+        println!("{packet:?}");
+    }));
+    client.set_car_status_handler(Box::new(|packet: &PacketCarStatusData| {
         println!("{packet:?}");
     }));
     client.set_car_telemetry_handler(Box::new(|packet: &PacketCarTelemetryData| {

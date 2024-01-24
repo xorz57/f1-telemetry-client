@@ -2,6 +2,7 @@ pub mod packets;
 
 use packets::PacketCarDamageData;
 use packets::PacketCarSetupData;
+use packets::PacketCarStatusData;
 use packets::PacketCarTelemetryData;
 use packets::PacketHeader;
 use std::net::UdpSocket;
@@ -11,6 +12,7 @@ pub struct F1TelemetryClient {
     buffer: [u8; 2048],
     car_damage_handler: Box<dyn Fn(&PacketCarDamageData)>,
     car_setup_handler: Box<dyn Fn(&PacketCarSetupData)>,
+    car_status_handler: Box<dyn Fn(&PacketCarStatusData)>,
     car_telemetry_handler: Box<dyn Fn(&PacketCarTelemetryData)>,
 }
 
@@ -20,6 +22,7 @@ impl F1TelemetryClient {
         let buffer: [u8; 2048] = [0; 2048];
         let car_damage_handler = Box::new(|_: &PacketCarDamageData| {});
         let car_setup_handler = Box::new(|_: &PacketCarSetupData| {});
+        let car_status_handler = Box::new(|_: &PacketCarStatusData| {});
         let car_telemetry_handler = Box::new(|_: &PacketCarTelemetryData| {});
 
         F1TelemetryClient {
@@ -27,6 +30,7 @@ impl F1TelemetryClient {
             buffer,
             car_damage_handler,
             car_setup_handler,
+            car_status_handler,
             car_telemetry_handler,
         }
     }
@@ -37,6 +41,10 @@ impl F1TelemetryClient {
 
     pub fn set_car_setup_handler(&mut self, handler: Box<dyn Fn(&PacketCarSetupData)>) {
         self.car_setup_handler = handler;
+    }
+
+    pub fn set_car_status_handler(&mut self, handler: Box<dyn Fn(&PacketCarStatusData)>) {
+        self.car_status_handler = handler;
     }
 
     pub fn set_car_telemetry_handler(&mut self, handler: Box<dyn Fn(&PacketCarTelemetryData)>) {

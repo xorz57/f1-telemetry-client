@@ -27,44 +27,44 @@ use f1_telemetry_client::F1TelemetryClient;
 
 fn main() {
     let mut client: F1TelemetryClient = F1TelemetryClient::new("0.0.0.0:20777");
-    client.set_car_damage_handler(Box::new(|packet: &PacketCarDamageData| {
+    client.on_car_damage(Box::new(|packet: &PacketCarDamageData| {
         println!("{packet:?}");
     }));
-    client.set_car_setup_handler(Box::new(|packet: &PacketCarSetupData| {
+    client.on_car_setup(Box::new(|packet: &PacketCarSetupData| {
         println!("{packet:?}");
     }));
-    client.set_car_status_handler(Box::new(|packet: &PacketCarStatusData| {
+    client.on_car_status(Box::new(|packet: &PacketCarStatusData| {
         println!("{packet:?}");
     }));
-    client.set_car_telemetry_handler(Box::new(|packet: &PacketCarTelemetryData| {
+    client.on_car_telemetry(Box::new(|packet: &PacketCarTelemetryData| {
         println!("{packet:?}");
     }));
-    client.set_event_handler(Box::new(|_: &PacketEventData| {}));
-    client.set_final_classification_handler(Box::new(|packet: &PacketFinalClassificationData| {
+    client.on_event(Box::new(|_: &PacketEventData| {}));
+    client.on_final_classification(Box::new(|packet: &PacketFinalClassificationData| {
         println!("{packet:?}");
     }));
-    client.set_lap_data_handler(Box::new(|packet: &PacketLapData| {
+    client.on_lap_data(Box::new(|packet: &PacketLapData| {
         println!("{packet:?}");
     }));
-    client.set_lobby_info_handler(Box::new(|packet: &PacketLobbyInfoData| {
+    client.on_lobby_info(Box::new(|packet: &PacketLobbyInfoData| {
         println!("{packet:?}");
     }));
-    client.set_motion_data_handler(Box::new(|packet: &PacketMotionData| {
+    client.on_motion_data(Box::new(|packet: &PacketMotionData| {
         println!("{packet:?}");
     }));
-    client.set_motion_ex_data_handler(Box::new(|packet: &PacketMotionExData| {
+    client.on_motion_ex_data(Box::new(|packet: &PacketMotionExData| {
         println!("{packet:?}");
     }));
-    client.set_participants_data_handler(Box::new(|packet: &PacketParticipantsData| {
+    client.on_participants_data(Box::new(|packet: &PacketParticipantsData| {
         println!("{packet:?}");
     }));
-    client.set_session_data_handler(Box::new(|packet: &PacketSessionData| {
+    client.on_session_data(Box::new(|packet: &PacketSessionData| {
         println!("{packet:?}");
     }));
-    client.set_session_history_data_handler(Box::new(|packet: &PacketSessionHistoryData| {
+    client.on_session_history_data(Box::new(|packet: &PacketSessionHistoryData| {
         println!("{packet:?}");
     }));
-    client.set_tyre_sets_data_handler(Box::new(|packet: &PacketTyreSetsData| {
+    client.on_tyre_sets_data(Box::new(|packet: &PacketTyreSetsData| {
         println!("{packet:?}");
     }));
     client.run();

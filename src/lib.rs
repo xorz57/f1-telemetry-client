@@ -75,65 +75,62 @@ impl F1TelemetryClient {
         }
     }
 
-    pub fn set_car_damage_handler(&mut self, handler: Box<dyn Fn(&PacketCarDamageData)>) {
+    pub fn on_car_damage(&mut self, handler: Box<dyn Fn(&PacketCarDamageData)>) {
         self.car_damage_handler = handler;
     }
 
-    pub fn set_car_setup_handler(&mut self, handler: Box<dyn Fn(&PacketCarSetupData)>) {
+    pub fn on_car_setup(&mut self, handler: Box<dyn Fn(&PacketCarSetupData)>) {
         self.car_setup_handler = handler;
     }
 
-    pub fn set_car_status_handler(&mut self, handler: Box<dyn Fn(&PacketCarStatusData)>) {
+    pub fn on_car_status(&mut self, handler: Box<dyn Fn(&PacketCarStatusData)>) {
         self.car_status_handler = handler;
     }
 
-    pub fn set_car_telemetry_handler(&mut self, handler: Box<dyn Fn(&PacketCarTelemetryData)>) {
+    pub fn on_car_telemetry(&mut self, handler: Box<dyn Fn(&PacketCarTelemetryData)>) {
         self.car_telemetry_handler = handler;
     }
 
-    pub fn set_event_handler(&mut self, handler: Box<dyn Fn(&PacketEventData)>) {
+    pub fn on_event(&mut self, handler: Box<dyn Fn(&PacketEventData)>) {
         self.event_handler = handler;
     }
 
-    pub fn set_final_classification_handler(
+    pub fn on_final_classification(
         &mut self,
         handler: Box<dyn Fn(&PacketFinalClassificationData)>,
     ) {
         self.final_classification_handler = handler;
     }
 
-    pub fn set_lap_data_handler(&mut self, handler: Box<dyn Fn(&PacketLapData)>) {
+    pub fn on_lap_data(&mut self, handler: Box<dyn Fn(&PacketLapData)>) {
         self.lap_data_handler = handler;
     }
 
-    pub fn set_lobby_info_handler(&mut self, handler: Box<dyn Fn(&PacketLobbyInfoData)>) {
+    pub fn on_lobby_info(&mut self, handler: Box<dyn Fn(&PacketLobbyInfoData)>) {
         self.lobby_info_handler = handler;
     }
 
-    pub fn set_motion_data_handler(&mut self, handler: Box<dyn Fn(&PacketMotionData)>) {
+    pub fn on_motion_data(&mut self, handler: Box<dyn Fn(&PacketMotionData)>) {
         self.motion_data_handler = handler;
     }
 
-    pub fn set_motion_ex_data_handler(&mut self, handler: Box<dyn Fn(&PacketMotionExData)>) {
+    pub fn on_motion_ex_data(&mut self, handler: Box<dyn Fn(&PacketMotionExData)>) {
         self.motion_ex_data_handler = handler;
     }
 
-    pub fn set_participants_data_handler(&mut self, handler: Box<dyn Fn(&PacketParticipantsData)>) {
+    pub fn on_participants_data(&mut self, handler: Box<dyn Fn(&PacketParticipantsData)>) {
         self.participants_data_handler = handler;
     }
 
-    pub fn set_session_data_handler(&mut self, handler: Box<dyn Fn(&PacketSessionData)>) {
+    pub fn on_session_data(&mut self, handler: Box<dyn Fn(&PacketSessionData)>) {
         self.session_data_handler = handler;
     }
 
-    pub fn set_session_history_data_handler(
-        &mut self,
-        handler: Box<dyn Fn(&PacketSessionHistoryData)>,
-    ) {
+    pub fn on_session_history_data(&mut self, handler: Box<dyn Fn(&PacketSessionHistoryData)>) {
         self.session_history_data_handler = handler;
     }
 
-    pub fn set_tyre_sets_data_handler(&mut self, handler: Box<dyn Fn(&PacketTyreSetsData)>) {
+    pub fn on_tyre_sets_data(&mut self, handler: Box<dyn Fn(&PacketTyreSetsData)>) {
         self.tyre_sets_data_handler = handler;
     }
 

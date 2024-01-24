@@ -1,6 +1,7 @@
 # F1 Telemetry Client for Rust
 
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+[![Rust](https://github.com/xorz57/f1-telemetry-client/actions/workflows/rust.yml/badge.svg)](https://github.com/xorz57/f1-telemetry-client/actions/workflows/rust.yml)
 
 ## Overview
 

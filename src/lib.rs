@@ -4,7 +4,17 @@ use packets::PacketCarDamageData;
 use packets::PacketCarSetupData;
 use packets::PacketCarStatusData;
 use packets::PacketCarTelemetryData;
+use packets::PacketEventData;
+use packets::PacketFinalClassificationData;
 use packets::PacketHeader;
+use packets::PacketLapData;
+use packets::PacketLobbyInfoData;
+use packets::PacketMotionData;
+use packets::PacketMotionExData;
+use packets::PacketParticipantsData;
+use packets::PacketSessionData;
+use packets::PacketSessionHistoryData;
+use packets::PacketTyreSetsData;
 use std::net::UdpSocket;
 
 pub struct F1TelemetryClient {
@@ -14,6 +24,16 @@ pub struct F1TelemetryClient {
     car_setup_handler: Box<dyn Fn(&PacketCarSetupData)>,
     car_status_handler: Box<dyn Fn(&PacketCarStatusData)>,
     car_telemetry_handler: Box<dyn Fn(&PacketCarTelemetryData)>,
+    event_handler: Box<dyn Fn(&PacketEventData)>,
+    final_classification_handler: Box<dyn Fn(&PacketFinalClassificationData)>,
+    lap_data_handler: Box<dyn Fn(&PacketLapData)>,
+    lobby_info_handler: Box<dyn Fn(&PacketLobbyInfoData)>,
+    motion_data_handler: Box<dyn Fn(&PacketMotionData)>,
+    motion_ex_data_handler: Box<dyn Fn(&PacketMotionExData)>,
+    participants_data_handler: Box<dyn Fn(&PacketParticipantsData)>,
+    session_data_handler: Box<dyn Fn(&PacketSessionData)>,
+    session_history_data_handler: Box<dyn Fn(&PacketSessionHistoryData)>,
+    tyre_sets_data_handler: Box<dyn Fn(&PacketTyreSetsData)>,
 }
 
 impl F1TelemetryClient {
@@ -24,6 +44,16 @@ impl F1TelemetryClient {
         let car_setup_handler = Box::new(|_: &PacketCarSetupData| {});
         let car_status_handler = Box::new(|_: &PacketCarStatusData| {});
         let car_telemetry_handler = Box::new(|_: &PacketCarTelemetryData| {});
+        let event_handler = Box::new(|_: &PacketEventData| {});
+        let final_classification_handler = Box::new(|_: &PacketFinalClassificationData| {});
+        let lap_data_handler = Box::new(|_: &PacketLapData| {});
+        let lobby_info_handler = Box::new(|_: &PacketLobbyInfoData| {});
+        let motion_data_handler = Box::new(|_: &PacketMotionData| {});
+        let motion_ex_data_handler = Box::new(|_: &PacketMotionExData| {});
+        let participants_data_handler = Box::new(|_: &PacketParticipantsData| {});
+        let session_data_handler = Box::new(|_: &PacketSessionData| {});
+        let session_history_data_handler = Box::new(|_: &PacketSessionHistoryData| {});
+        let tyre_sets_data_handler = Box::new(|_: &PacketTyreSetsData| {});
 
         F1TelemetryClient {
             socket,
@@ -32,6 +62,16 @@ impl F1TelemetryClient {
             car_setup_handler,
             car_status_handler,
             car_telemetry_handler,
+            event_handler,
+            final_classification_handler,
+            lap_data_handler,
+            lobby_info_handler,
+            motion_data_handler,
+            motion_ex_data_handler,
+            participants_data_handler,
+            session_data_handler,
+            session_history_data_handler,
+            tyre_sets_data_handler,
         }
     }
 
@@ -51,6 +91,52 @@ impl F1TelemetryClient {
         self.car_telemetry_handler = handler;
     }
 
+    pub fn set_event_handler(&mut self, handler: Box<dyn Fn(&PacketEventData)>) {
+        self.event_handler = handler;
+    }
+
+    pub fn set_final_classification_handler(
+        &mut self,
+        handler: Box<dyn Fn(&PacketFinalClassificationData)>,
+    ) {
+        self.final_classification_handler = handler;
+    }
+
+    pub fn set_lap_data_handler(&mut self, handler: Box<dyn Fn(&PacketLapData)>) {
+        self.lap_data_handler = handler;
+    }
+
+    pub fn set_lobby_info_handler(&mut self, handler: Box<dyn Fn(&PacketLobbyInfoData)>) {
+        self.lobby_info_handler = handler;
+    }
+
+    pub fn set_motion_data_handler(&mut self, handler: Box<dyn Fn(&PacketMotionData)>) {
+        self.motion_data_handler = handler;
+    }
+
+    pub fn set_motion_ex_data_handler(&mut self, handler: Box<dyn Fn(&PacketMotionExData)>) {
+        self.motion_ex_data_handler = handler;
+    }
+
+    pub fn set_participants_data_handler(&mut self, handler: Box<dyn Fn(&PacketParticipantsData)>) {
+        self.participants_data_handler = handler;
+    }
+
+    pub fn set_session_data_handler(&mut self, handler: Box<dyn Fn(&PacketSessionData)>) {
+        self.session_data_handler = handler;
+    }
+
+    pub fn set_session_history_data_handler(
+        &mut self,
+        handler: Box<dyn Fn(&PacketSessionHistoryData)>,
+    ) {
+        self.session_history_data_handler = handler;
+    }
+
+    pub fn set_tyre_sets_data_handler(&mut self, handler: Box<dyn Fn(&PacketTyreSetsData)>) {
+        self.tyre_sets_data_handler = handler;
+    }
+
     pub fn run(&mut self) {
         loop {
             self.receive_packet();
@@ -62,6 +148,60 @@ impl F1TelemetryClient {
             Ok(received) => {
                 match PacketHeader::from_bytes(&self.buffer[..received]) {
                     Ok(header) => match header.packet_id {
+                        0 => {
+                            match PacketMotionData::from_bytes(&self.buffer[..received]) {
+                                Ok(packet) => (self.motion_data_handler)(&packet),
+                                Err(e) => {
+                                    eprintln!("{e:?}");
+                                    return;
+                                }
+                            };
+                        }
+                        1 => {
+                            // match PacketSessionData::from_bytes(&self.buffer[..received]) {
+                            //     Ok(packet) => (self.session_data_handler)(&packet),
+                            //     Err(e) => {
+                            //         eprintln!("{e:?}");
+                            //         return;
+                            //     }
+                            // };
+                        }
+                        2 => {
+                            // match PacketLapData::from_bytes(&self.buffer[..received]) {
+                            //     Ok(packet) => (self.lap_data_handler)(&packet),
+                            //     Err(e) => {
+                            //         eprintln!("{e:?}");
+                            //         return;
+                            //     }
+                            // };
+                        }
+                        3 => {
+                            // match PacketEventData::from_bytes(&self.buffer[..received]) {
+                            //     Ok(packet) => (self.event_handler)(&packet),
+                            //     Err(e) => {
+                            //         eprintln!("{e:?}");
+                            //         return;
+                            //     }
+                            // };
+                        }
+                        4 => {
+                            // match PacketParticipantsData::from_bytes(&self.buffer[..received]) {
+                            //     Ok(packet) => (self.participants_data_handler)(&packet),
+                            //     Err(e) => {
+                            //         eprintln!("{e:?}");
+                            //         return;
+                            //     }
+                            // };
+                        }
+                        5 => {
+                            match PacketCarSetupData::from_bytes(&self.buffer[..received]) {
+                                Ok(packet) => (self.car_setup_handler)(&packet),
+                                Err(e) => {
+                                    eprintln!("{e:?}");
+                                    return;
+                                }
+                            };
+                        }
                         6 => {
                             match PacketCarTelemetryData::from_bytes(&self.buffer[..received]) {
                                 Ok(packet) => (self.car_telemetry_handler)(&packet),
@@ -70,6 +210,69 @@ impl F1TelemetryClient {
                                     return;
                                 }
                             };
+                        }
+                        7 => {
+                            match PacketCarStatusData::from_bytes(&self.buffer[..received]) {
+                                Ok(packet) => (self.car_status_handler)(&packet),
+                                Err(e) => {
+                                    eprintln!("{e:?}");
+                                    return;
+                                }
+                            };
+                        }
+                        8 => {
+                            // match PacketFinalClassificationData::from_bytes(&self.buffer[..received]) {
+                            //     Ok(packet) => (self.final_classification_handler)(&packet),
+                            //     Err(e) => {
+                            //         eprintln!("{e:?}");
+                            //         return;
+                            //     }
+                            // };
+                        }
+                        9 => {
+                            // match PacketLobbyInfoData::from_bytes(&self.buffer[..received]) {
+                            //     Ok(packet) => (self.lobby_info_handler)(&packet),
+                            //     Err(e) => {
+                            //         eprintln!("{e:?}");
+                            //         return;
+                            //     }
+                            // };
+                        }
+                        10 => {
+                            // match CarDamageData::from_bytes(&self.buffer[..received]) {
+                            //     Ok(packet) => (self.car_damage_handler)(&packet),
+                            //     Err(e) => {
+                            //         eprintln!("{e:?}");
+                            //         return;
+                            //     }
+                            // };
+                        }
+                        11 => {
+                            match PacketSessionHistoryData::from_bytes(&self.buffer[..received]) {
+                                Ok(packet) => (self.session_history_data_handler)(&packet),
+                                Err(e) => {
+                                    eprintln!("{e:?}");
+                                    return;
+                                }
+                            };
+                        }
+                        12 => {
+                            match PacketTyreSetsData::from_bytes(&self.buffer[..received]) {
+                                Ok(packet) => (self.tyre_sets_data_handler)(&packet),
+                                Err(e) => {
+                                    eprintln!("{e:?}");
+                                    return;
+                                }
+                            };
+                        }
+                        13 => {
+                            // match PacketMotionExData::from_bytes(&self.buffer[..received]) {
+                            //     Ok(packet) => (self.motion_ex_data_handler)(&packet),
+                            //     Err(e) => {
+                            //         eprintln!("{e:?}");
+                            //         return;
+                            //     }
+                            // };
                         }
                         _ => {}
                     },

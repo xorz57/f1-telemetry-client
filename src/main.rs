@@ -28,7 +28,9 @@ fn main() {
     client.on_car_telemetry(Box::new(|packet: &PacketCarTelemetryData| {
         println!("{packet:?}");
     }));
-    client.on_event(Box::new(|_: &PacketEventData| {}));
+    client.on_event(Box::new(|_: &PacketEventData| {
+        // println!("{packet:?}");
+    }));
     client.on_final_classification(Box::new(|packet: &PacketFinalClassificationData| {
         println!("{packet:?}");
     }));

@@ -16,8 +16,8 @@ use f1_telemetry_client::F1TelemetryClient;
 
 fn main() {
     let mut client: F1TelemetryClient = F1TelemetryClient::new("0.0.0.0:20777");
-    client.on_car_damage(Box::new(|packet: &PacketCarDamageData| {
-        println!("{packet:?}");
+    client.on_car_damage(Box::new(|_: &PacketCarDamageData| {
+        // println!("{packet:?}");
     }));
     client.on_car_setup(Box::new(|packet: &PacketCarSetupData| {
         println!("{packet:?}");
@@ -31,26 +31,26 @@ fn main() {
     client.on_event(Box::new(|_: &PacketEventData| {
         // println!("{packet:?}");
     }));
-    client.on_final_classification(Box::new(|packet: &PacketFinalClassificationData| {
-        println!("{packet:?}");
+    client.on_final_classification(Box::new(|_: &PacketFinalClassificationData| {
+        // println!("{packet:?}");
     }));
-    client.on_lap_data(Box::new(|packet: &PacketLapData| {
-        println!("{packet:?}");
+    client.on_lap_data(Box::new(|_: &PacketLapData| {
+        // println!("{packet:?}");
     }));
-    client.on_lobby_info(Box::new(|packet: &PacketLobbyInfoData| {
-        println!("{packet:?}");
+    client.on_lobby_info(Box::new(|_: &PacketLobbyInfoData| {
+        // println!("{packet:?}");
     }));
     client.on_motion_data(Box::new(|packet: &PacketMotionData| {
         println!("{packet:?}");
     }));
-    client.on_motion_ex_data(Box::new(|packet: &PacketMotionExData| {
-        println!("{packet:?}");
+    client.on_motion_ex_data(Box::new(|_: &PacketMotionExData| {
+        // println!("{packet:?}");
     }));
-    client.on_participants_data(Box::new(|packet: &PacketParticipantsData| {
-        println!("{packet:?}");
+    client.on_participants_data(Box::new(|_: &PacketParticipantsData| {
+        // println!("{packet:?}");
     }));
-    client.on_session_data(Box::new(|packet: &PacketSessionData| {
-        println!("{packet:?}");
+    client.on_session_data(Box::new(|_: &PacketSessionData| {
+        // println!("{packet:?}");
     }));
     client.on_session_history_data(Box::new(|packet: &PacketSessionHistoryData| {
         println!("{packet:?}");

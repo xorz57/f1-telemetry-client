@@ -148,141 +148,93 @@ impl F1TelemetryClient {
                         0 => {
                             match PacketMotionData::from_bytes(&self.buffer[..received]) {
                                 Ok(packet) => (self.motion_data_handler)(&packet),
-                                Err(e) => {
-                                    eprintln!("{e:?}");
-                                    return;
-                                }
+                                Err(e) => eprintln!("{e:?}"),
                             };
                         }
                         1 => {
                             // match PacketSessionData::from_bytes(&self.buffer[..received]) {
                             //     Ok(packet) => (self.session_data_handler)(&packet),
-                            //     Err(e) => {
-                            //         eprintln!("{e:?}");
-                            //         return;
-                            //     }
+                            //     Err(e) => eprintln!("{e:?}"),
                             // };
                         }
                         2 => {
                             // match PacketLapData::from_bytes(&self.buffer[..received]) {
                             //     Ok(packet) => (self.lap_data_handler)(&packet),
-                            //     Err(e) => {
-                            //         eprintln!("{e:?}");
-                            //         return;
-                            //     }
+                            //     Err(e) => eprintln!("{e:?}"),
                             // };
                         }
                         3 => {
                             // match PacketEventData::from_bytes(&self.buffer[..received]) {
                             //     Ok(packet) => (self.event_handler)(&packet),
-                            //     Err(e) => {
-                            //         eprintln!("{e:?}");
-                            //         return;
-                            //     }
+                            //     Err(e) => eprintln!("{e:?}"),
                             // };
                         }
                         4 => {
                             // match PacketParticipantsData::from_bytes(&self.buffer[..received]) {
                             //     Ok(packet) => (self.participants_data_handler)(&packet),
-                            //     Err(e) => {
-                            //         eprintln!("{e:?}");
-                            //         return;
-                            //     }
+                            //     Err(e) => eprintln!("{e:?}"),
                             // };
                         }
                         5 => {
                             match PacketCarSetupData::from_bytes(&self.buffer[..received]) {
                                 Ok(packet) => (self.car_setup_handler)(&packet),
-                                Err(e) => {
-                                    eprintln!("{e:?}");
-                                    return;
-                                }
+                                Err(e) => eprintln!("{e:?}"),
                             };
                         }
                         6 => {
                             match PacketCarTelemetryData::from_bytes(&self.buffer[..received]) {
                                 Ok(packet) => (self.car_telemetry_handler)(&packet),
-                                Err(e) => {
-                                    eprintln!("{e:?}");
-                                    return;
-                                }
+                                Err(e) => eprintln!("{e:?}"),
                             };
                         }
                         7 => {
                             match PacketCarStatusData::from_bytes(&self.buffer[..received]) {
                                 Ok(packet) => (self.car_status_handler)(&packet),
-                                Err(e) => {
-                                    eprintln!("{e:?}");
-                                    return;
-                                }
+                                Err(e) => eprintln!("{e:?}"),
                             };
                         }
                         8 => {
                             // match PacketFinalClassificationData::from_bytes(&self.buffer[..received]) {
                             //     Ok(packet) => (self.final_classification_handler)(&packet),
-                            //     Err(e) => {
-                            //         eprintln!("{e:?}");
-                            //         return;
-                            //     }
+                            //     Err(e) => eprintln!("{e:?}"),
                             // };
                         }
                         9 => {
                             // match PacketLobbyInfoData::from_bytes(&self.buffer[..received]) {
                             //     Ok(packet) => (self.lobby_info_handler)(&packet),
-                            //     Err(e) => {
-                            //         eprintln!("{e:?}");
-                            //         return;
-                            //     }
+                            //     Err(e) => eprintln!("{e:?}"),
                             // };
                         }
                         10 => {
                             // match CarDamageData::from_bytes(&self.buffer[..received]) {
                             //     Ok(packet) => (self.car_damage_handler)(&packet),
-                            //     Err(e) => {
-                            //         eprintln!("{e:?}");
-                            //         return;
-                            //     }
+                            //     Err(e) => eprintln!("{e:?}"),
                             // };
                         }
                         11 => {
                             match PacketSessionHistoryData::from_bytes(&self.buffer[..received]) {
                                 Ok(packet) => (self.session_history_data_handler)(&packet),
-                                Err(e) => {
-                                    eprintln!("{e:?}");
-                                    return;
-                                }
+                                Err(e) => eprintln!("{e:?}"),
                             };
                         }
                         12 => {
                             match PacketTyreSetsData::from_bytes(&self.buffer[..received]) {
                                 Ok(packet) => (self.tyre_sets_data_handler)(&packet),
-                                Err(e) => {
-                                    eprintln!("{e:?}");
-                                    return;
-                                }
+                                Err(e) => eprintln!("{e:?}"),
                             };
                         }
                         13 => {
                             // match PacketMotionExData::from_bytes(&self.buffer[..received]) {
                             //     Ok(packet) => (self.motion_ex_data_handler)(&packet),
-                            //     Err(e) => {
-                            //         eprintln!("{e:?}");
-                            //         return;
-                            //     }
+                            //     Err(e) => eprintln!("{e:?}"),
                             // };
                         }
                         _ => {}
                     },
-                    Err(e) => {
-                        eprintln!("{e:?}");
-                        return;
-                    }
+                    Err(e) => eprintln!("{e:?}"),
                 };
             }
-            Err(e) => {
-                eprintln!("{e:?}");
-                return;
-            }
+            Err(e) => eprintln!("{e:?}"),
         }
     }
 }

@@ -1,6 +1,7 @@
 use super::packet_header::PacketHeader;
 use byteorder::{LittleEndian, ReadBytesExt, WriteBytesExt};
 use std::io::{Cursor, Write};
+use std::mem::size_of;
 
 #[repr(C, packed)]
 #[derive(Debug, Default, Clone, Copy)]
@@ -54,7 +55,7 @@ impl CarMotionData {
 
     #[allow(dead_code)]
     pub fn to_bytes(&self) -> Result<Vec<u8>, std::io::Error> {
-        let mut buffer: Vec<u8> = Vec::with_capacity(60);
+        let mut buffer: Vec<u8> = Vec::with_capacity(size_of::<CarMotionData>());
         let mut cursor: Cursor<&mut Vec<u8>> = Cursor::new(&mut buffer);
 
         cursor.write_f32::<LittleEndian>(self.world_position_x)?;
@@ -91,12 +92,14 @@ impl PacketMotionData {
     #[allow(dead_code)]
     pub fn from_bytes(bytes: &[u8]) -> Result<Self, std::io::Error> {
         Ok(PacketMotionData {
-            header: PacketHeader::from_bytes(&bytes[..29])?,
+            header: PacketHeader::from_bytes(&bytes[..size_of::<PacketHeader>()])?,
             car_motion_data: {
                 let mut motion_data: [CarMotionData; 22] = [CarMotionData::default(); 22];
                 for i in 0..22 {
-                    motion_data[i] =
-                        CarMotionData::from_bytes(&bytes[29 + i * 60..29 + (i + 1) * 60])?;
+                    motion_data[i] = CarMotionData::from_bytes(
+                        &bytes[size_of::<PacketHeader>() + i * size_of::<CarMotionData>()
+                            ..size_of::<PacketHeader>() + (i + 1) * size_of::<CarMotionData>()],
+                    )?;
                 }
                 motion_data
             },
@@ -105,7 +108,7 @@ impl PacketMotionData {
 
     #[allow(dead_code)]
     pub fn to_bytes(&self) -> Result<Vec<u8>, std::io::Error> {
-        let mut buffer: Vec<u8> = Vec::with_capacity(1349);
+        let mut buffer: Vec<u8> = Vec::with_capacity(size_of::<PacketMotionData>());
         let mut cursor: Cursor<&mut Vec<u8>> = Cursor::new(&mut buffer);
 
         cursor.write_all(&self.header.to_bytes()?)?;

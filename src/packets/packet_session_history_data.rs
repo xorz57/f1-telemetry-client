@@ -1,6 +1,7 @@
 use super::packet_header::PacketHeader;
 use byteorder::{LittleEndian, ReadBytesExt, WriteBytesExt};
 use std::io::{Cursor, Write};
+use std::mem::size_of;
 
 #[repr(C, packed)]
 #[derive(Debug, Default, Clone, Copy)]
@@ -34,7 +35,7 @@ impl LapHistoryData {
 
     #[allow(dead_code)]
     pub fn to_bytes(&self) -> Result<Vec<u8>, std::io::Error> {
-        let mut buffer: Vec<u8> = Vec::with_capacity(14);
+        let mut buffer: Vec<u8> = Vec::with_capacity(size_of::<LapHistoryData>());
         let mut cursor: Cursor<&mut Vec<u8>> = Cursor::new(&mut buffer);
 
         cursor.write_u32::<LittleEndian>(self.lap_time_in_ms)?;
@@ -72,7 +73,7 @@ impl TyreStintHistoryData {
 
     #[allow(dead_code)]
     pub fn to_bytes(&self) -> Result<Vec<u8>, std::io::Error> {
-        let mut buffer: Vec<u8> = Vec::with_capacity(3);
+        let mut buffer: Vec<u8> = Vec::with_capacity(size_of::<TyreStintHistoryData>());
         let mut cursor: Cursor<&mut Vec<u8>> = Cursor::new(&mut buffer);
 
         cursor.write_u8(self.end_lap)?;
@@ -104,7 +105,7 @@ impl PacketSessionHistoryData {
         let mut cursor: Cursor<&[u8]> = Cursor::new(bytes);
 
         Ok(PacketSessionHistoryData {
-            header: PacketHeader::from_bytes(&bytes[..29])?,
+            header: PacketHeader::from_bytes(&bytes[..size_of::<PacketHeader>()])?,
             car_idx: cursor.read_u8()?,
             num_laps: cursor.read_u8()?,
             num_tyre_stints: cursor.read_u8()?,
@@ -115,8 +116,10 @@ impl PacketSessionHistoryData {
             lap_history_data: {
                 let mut lap_history_data: [LapHistoryData; 100] = [LapHistoryData::default(); 100];
                 for i in 0..100 {
-                    lap_history_data[i] =
-                        LapHistoryData::from_bytes(&bytes[29 + i * 14..29 + (i + 1) * 14])?;
+                    lap_history_data[i] = LapHistoryData::from_bytes(
+                        &bytes[size_of::<PacketHeader>() + i * size_of::<LapHistoryData>()
+                            ..size_of::<PacketHeader>() + (i + 1) * size_of::<LapHistoryData>()],
+                    )?;
                 }
                 lap_history_data
             },
@@ -134,7 +137,7 @@ impl PacketSessionHistoryData {
 
     #[allow(dead_code)]
     pub fn to_bytes(&self) -> Result<Vec<u8>, std::io::Error> {
-        let mut buffer: Vec<u8> = Vec::with_capacity(1460);
+        let mut buffer: Vec<u8> = Vec::with_capacity(size_of::<PacketSessionHistoryData>());
         let mut cursor: Cursor<&mut Vec<u8>> = Cursor::new(&mut buffer);
 
         cursor.write_all(&self.header.to_bytes()?)?;

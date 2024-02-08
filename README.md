@@ -27,8 +27,8 @@ use f1_telemetry_client::F1TelemetryClient;
 
 fn main() {
     let mut client: F1TelemetryClient = F1TelemetryClient::new("0.0.0.0:20777");
-    client.on_car_damage(Box::new(|_: &PacketCarDamageData| {
-        // println!("{packet:?}");
+    client.on_car_damage(Box::new(|packet: &PacketCarDamageData| {
+        println!("{packet:?}");
     }));
     client.on_car_setup(Box::new(|packet: &PacketCarSetupData| {
         println!("{packet:?}");

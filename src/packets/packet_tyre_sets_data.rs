@@ -1,6 +1,7 @@
 use super::packet_header::PacketHeader;
 use byteorder::{LittleEndian, ReadBytesExt, WriteBytesExt};
 use std::io::{Cursor, Write};
+use std::mem::size_of;
 
 #[repr(C, packed)]
 #[derive(Debug, Default, Clone, Copy)]
@@ -36,7 +37,7 @@ impl TyreSetData {
 
     #[allow(dead_code)]
     pub fn to_bytes(&self) -> Result<Vec<u8>, std::io::Error> {
-        let mut buffer: Vec<u8> = Vec::with_capacity(10);
+        let mut buffer: Vec<u8> = Vec::with_capacity(size_of::<TyreSetData>());
         let mut cursor: Cursor<&mut Vec<u8>> = Cursor::new(&mut buffer);
 
         cursor.write_u8(self.actual_tyre_compound)?;
@@ -68,13 +69,15 @@ impl PacketTyreSetsData {
         let mut cursor: Cursor<&[u8]> = Cursor::new(bytes);
 
         Ok(PacketTyreSetsData {
-            header: PacketHeader::from_bytes(&bytes[..29])?,
+            header: PacketHeader::from_bytes(&bytes[..size_of::<PacketHeader>()])?,
             car_idx: cursor.read_u8()?,
             tyre_set_data: {
                 let mut tyre_set_data: [TyreSetData; 20] = [TyreSetData::default(); 20];
                 for i in 0..20 {
-                    tyre_set_data[i] =
-                        TyreSetData::from_bytes(&bytes[30 + i * 10..30 + (i + 1) * 10])?;
+                    tyre_set_data[i] = TyreSetData::from_bytes(
+                        &bytes[size_of::<PacketHeader>() + i * size_of::<TyreSetData>()
+                            ..size_of::<PacketHeader>() + (i + 1) * size_of::<TyreSetData>()],
+                    )?;
                 }
                 tyre_set_data
             },

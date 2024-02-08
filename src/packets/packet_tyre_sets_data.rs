@@ -87,7 +87,7 @@ impl PacketTyreSetsData {
 
     #[allow(dead_code)]
     pub fn to_bytes(&self) -> Result<Vec<u8>, std::io::Error> {
-        let mut buffer: Vec<u8> = Vec::with_capacity(231);
+        let mut buffer: Vec<u8> = Vec::with_capacity(size_of::<PacketTyreSetsData>());
         let mut cursor: Cursor<&mut Vec<u8>> = Cursor::new(&mut buffer);
 
         cursor.write_all(&self.header.to_bytes()?)?;

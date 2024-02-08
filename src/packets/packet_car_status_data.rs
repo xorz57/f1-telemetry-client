@@ -1,6 +1,7 @@
 use super::packet_header::PacketHeader;
 use byteorder::{LittleEndian, ReadBytesExt, WriteBytesExt};
 use std::io::{Cursor, Write};
+use std::mem::size_of;
 
 #[repr(C, packed)]
 #[derive(Debug, Default, Clone, Copy)]
@@ -68,7 +69,7 @@ impl CarStatusData {
 
     #[allow(dead_code)]
     pub fn to_bytes(&self) -> Result<Vec<u8>, std::io::Error> {
-        let mut buffer: Vec<u8> = Vec::with_capacity(49);
+        let mut buffer: Vec<u8> = Vec::with_capacity(size_of::<CarStatusData>());
         let mut cursor: Cursor<&mut Vec<u8>> = Cursor::new(&mut buffer);
 
         cursor.write_u8(self.traction_control)?;
@@ -112,12 +113,14 @@ impl PacketCarStatusData {
     #[allow(dead_code)]
     pub fn from_bytes(bytes: &[u8]) -> Result<Self, std::io::Error> {
         Ok(PacketCarStatusData {
-            header: PacketHeader::from_bytes(&bytes[..29])?,
+            header: PacketHeader::from_bytes(&bytes[..size_of::<PacketHeader>()])?,
             car_status_data: {
                 let mut status_data: [CarStatusData; 22] = [CarStatusData::default(); 22];
                 for i in 0..22 {
-                    status_data[i] =
-                        CarStatusData::from_bytes(&bytes[29 + i * 49..29 + (i + 1) * 49])?;
+                    status_data[i] = CarStatusData::from_bytes(
+                        &bytes[size_of::<PacketHeader>() + i * size_of::<CarStatusData>()
+                            ..size_of::<PacketHeader>() + (i + 1) * size_of::<CarStatusData>()],
+                    )?;
                 }
                 status_data
             },
@@ -126,7 +129,7 @@ impl PacketCarStatusData {
 
     #[allow(dead_code)]
     pub fn to_bytes(&self) -> Result<Vec<u8>, std::io::Error> {
-        let mut buffer: Vec<u8> = Vec::with_capacity(1239);
+        let mut buffer: Vec<u8> = Vec::with_capacity(size_of::<PacketCarStatusData>());
         let mut cursor: Cursor<&mut Vec<u8>> = Cursor::new(&mut buffer);
 
         cursor.write_all(&self.header.to_bytes()?)?;

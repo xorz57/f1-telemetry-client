@@ -1,6 +1,7 @@
 use super::packet_header::PacketHeader;
 use byteorder::{LittleEndian, ReadBytesExt, WriteBytesExt};
 use std::io::{Cursor, Write};
+use std::mem::size_of;
 
 #[repr(C, packed)]
 #[derive(Debug, Default, Clone, Copy)]
@@ -75,7 +76,7 @@ impl CarTelemetryData {
 
     #[allow(dead_code)]
     pub fn to_bytes(&self) -> Result<Vec<u8>, std::io::Error> {
-        let mut buffer: Vec<u8> = Vec::with_capacity(60);
+        let mut buffer: Vec<u8> = Vec::with_capacity(size_of::<CarTelemetryData>());
         let mut cursor: Cursor<&mut Vec<u8>> = Cursor::new(&mut buffer);
 
         cursor.write_u16::<LittleEndian>(self.speed)?;
@@ -133,12 +134,14 @@ impl PacketCarTelemetryData {
         let mut cursor: Cursor<&[u8]> = Cursor::new(bytes);
 
         Ok(PacketCarTelemetryData {
-            header: PacketHeader::from_bytes(&bytes[..29])?,
+            header: PacketHeader::from_bytes(&bytes[..size_of::<PacketHeader>()])?,
             car_telemetry_data: {
                 let mut telemetry_data: [CarTelemetryData; 22] = [CarTelemetryData::default(); 22];
                 for i in 0..22 {
-                    telemetry_data[i] =
-                        CarTelemetryData::from_bytes(&bytes[29 + i * 60..29 + (i + 1) * 60])?;
+                    telemetry_data[i] = CarTelemetryData::from_bytes(
+                        &bytes[size_of::<PacketHeader>() + i * size_of::<CarTelemetryData>()
+                            ..size_of::<PacketHeader>() + (i + 1) * size_of::<CarTelemetryData>()],
+                    )?;
                 }
                 telemetry_data
             },
@@ -150,7 +153,7 @@ impl PacketCarTelemetryData {
 
     #[allow(dead_code)]
     pub fn to_bytes(&self) -> Result<Vec<u8>, std::io::Error> {
-        let mut buffer: Vec<u8> = Vec::with_capacity(1352);
+        let mut buffer: Vec<u8> = Vec::with_capacity(size_of::<PacketCarTelemetryData>());
         let mut cursor: Cursor<&mut Vec<u8>> = Cursor::new(&mut buffer);
 
         cursor.write_all(&self.header.to_bytes()?)?;

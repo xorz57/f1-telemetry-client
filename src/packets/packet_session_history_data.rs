@@ -102,7 +102,7 @@ pub struct PacketSessionHistoryData {
 impl PacketSessionHistoryData {
     #[allow(dead_code)]
     pub fn from_bytes(bytes: &[u8]) -> Result<Self, std::io::Error> {
-        let mut cursor: Cursor<&[u8]> = Cursor::new(bytes);
+        let mut cursor: Cursor<&[u8]> = Cursor::new(&bytes[size_of::<PacketHeader>()..]);
 
         Ok(PacketSessionHistoryData {
             header: PacketHeader::from_bytes(&bytes[..size_of::<PacketHeader>()])?,
@@ -117,8 +117,10 @@ impl PacketSessionHistoryData {
                 let mut lap_history_data: [LapHistoryData; 100] = [LapHistoryData::default(); 100];
                 for i in 0..100 {
                     lap_history_data[i] = LapHistoryData::from_bytes(
-                        &bytes[size_of::<PacketHeader>() + i * size_of::<LapHistoryData>()
-                            ..size_of::<PacketHeader>() + (i + 1) * size_of::<LapHistoryData>()],
+                        &bytes[size_of::<PacketHeader>() + 7 + i * size_of::<LapHistoryData>()
+                            ..size_of::<PacketHeader>()
+                                + 7
+                                + (i + 1) * size_of::<LapHistoryData>()],
                     )?;
                 }
                 lap_history_data
@@ -127,8 +129,16 @@ impl PacketSessionHistoryData {
                 let mut tyre_stints_history_data: [TyreStintHistoryData; 8] =
                     [TyreStintHistoryData::default(); 8];
                 for i in 0..8 {
-                    tyre_stints_history_data[i] =
-                        TyreStintHistoryData::from_bytes(&bytes[1429 + i * 3..1429 + (i + 1) * 3])?;
+                    tyre_stints_history_data[i] = TyreStintHistoryData::from_bytes(
+                        &bytes[size_of::<[LapHistoryData; 100]>()
+                            + size_of::<PacketHeader>()
+                            + 7
+                            + i * size_of::<TyreStintHistoryData>()
+                            ..size_of::<[LapHistoryData; 100]>()
+                                + size_of::<PacketHeader>()
+                                + 7
+                                + (i + 1) * size_of::<TyreStintHistoryData>()],
+                    )?;
                 }
                 tyre_stints_history_data
             },

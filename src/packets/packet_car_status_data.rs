@@ -115,14 +115,14 @@ impl PacketCarStatusData {
         Ok(PacketCarStatusData {
             header: PacketHeader::from_bytes(&bytes[..size_of::<PacketHeader>()])?,
             car_status_data: {
-                let mut status_data: [CarStatusData; 22] = [CarStatusData::default(); 22];
+                let mut car_status_data: [CarStatusData; 22] = [CarStatusData::default(); 22];
                 for i in 0..22 {
-                    status_data[i] = CarStatusData::from_bytes(
+                    car_status_data[i] = CarStatusData::from_bytes(
                         &bytes[size_of::<PacketHeader>() + i * size_of::<CarStatusData>()
                             ..size_of::<PacketHeader>() + (i + 1) * size_of::<CarStatusData>()],
                     )?;
                 }
-                status_data
+                car_status_data
             },
         })
     }
@@ -134,8 +134,8 @@ impl PacketCarStatusData {
 
         cursor.write_all(&self.header.to_bytes()?)?;
 
-        for status_data in &self.car_status_data {
-            cursor.write_all(&status_data.to_bytes()?)?;
+        for car_status_data in &self.car_status_data {
+            cursor.write_all(&car_status_data.to_bytes()?)?;
         }
 
         Ok(buffer)

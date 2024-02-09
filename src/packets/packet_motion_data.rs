@@ -94,14 +94,14 @@ impl PacketMotionData {
         Ok(PacketMotionData {
             header: PacketHeader::from_bytes(&bytes[..size_of::<PacketHeader>()])?,
             car_motion_data: {
-                let mut motion_data: [CarMotionData; 22] = [CarMotionData::default(); 22];
+                let mut car_motion_data: [CarMotionData; 22] = [CarMotionData::default(); 22];
                 for i in 0..22 {
-                    motion_data[i] = CarMotionData::from_bytes(
+                    car_motion_data[i] = CarMotionData::from_bytes(
                         &bytes[size_of::<PacketHeader>() + i * size_of::<CarMotionData>()
                             ..size_of::<PacketHeader>() + (i + 1) * size_of::<CarMotionData>()],
                     )?;
                 }
-                motion_data
+                car_motion_data
             },
         })
     }
@@ -113,8 +113,8 @@ impl PacketMotionData {
 
         cursor.write_all(&self.header.to_bytes()?)?;
 
-        for motion_data in &self.car_motion_data {
-            cursor.write_all(&motion_data.to_bytes()?)?;
+        for car_motion_data in &self.car_motion_data {
+            cursor.write_all(&car_motion_data.to_bytes()?)?;
         }
 
         Ok(buffer)

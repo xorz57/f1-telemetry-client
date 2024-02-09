@@ -91,27 +91,27 @@ impl CarTelemetryData {
         cursor.write_u16::<LittleEndian>(self.rev_lights_bit_value)?;
 
         let brakes_temperature: [u16; 4] = self.brakes_temperature;
-        for brake_temperature in &brakes_temperature {
-            cursor.write_u16::<LittleEndian>(*brake_temperature)?;
+        for element in &brakes_temperature {
+            cursor.write_u16::<LittleEndian>(*element)?;
         }
 
-        for tyre_surface_temperature in &self.tyres_surface_temperature {
-            cursor.write_u8(*tyre_surface_temperature)?;
+        for element in &self.tyres_surface_temperature {
+            cursor.write_u8(*element)?;
         }
 
-        for tyre_inner_temperature in &self.tyres_inner_temperature {
-            cursor.write_u8(*tyre_inner_temperature)?;
+        for element in &self.tyres_inner_temperature {
+            cursor.write_u8(*element)?;
         }
 
         cursor.write_u16::<LittleEndian>(self.engine_temperature)?;
 
         let tyres_pressure: [f32; 4] = self.tyres_pressure;
-        for tyre_pressure in &tyres_pressure {
-            cursor.write_f32::<LittleEndian>(*tyre_pressure)?;
+        for element in &tyres_pressure {
+            cursor.write_f32::<LittleEndian>(*element)?;
         }
 
-        for surface_type in &self.surface_type {
-            cursor.write_u8(*surface_type)?;
+        for element in &self.surface_type {
+            cursor.write_u8(*element)?;
         }
 
         Ok(buffer)
@@ -136,14 +136,14 @@ impl PacketCarTelemetryData {
         Ok(PacketCarTelemetryData {
             header: PacketHeader::from_bytes(&bytes[..size_of::<PacketHeader>()])?,
             car_telemetry_data: {
-                let mut telemetry_data: [CarTelemetryData; 22] = [CarTelemetryData::default(); 22];
+                let mut car_telemetry_data: [CarTelemetryData; 22] = [CarTelemetryData::default(); 22];
                 for i in 0..22 {
-                    telemetry_data[i] = CarTelemetryData::from_bytes(
+                    car_telemetry_data[i] = CarTelemetryData::from_bytes(
                         &bytes[size_of::<PacketHeader>() + i * size_of::<CarTelemetryData>()
                             ..size_of::<PacketHeader>() + (i + 1) * size_of::<CarTelemetryData>()],
                     )?;
                 }
-                telemetry_data
+                car_telemetry_data
             },
             mfd_panel_index: cursor.read_u8()?,
             mfd_panel_index_secondary_player: cursor.read_u8()?,
@@ -158,8 +158,8 @@ impl PacketCarTelemetryData {
 
         cursor.write_all(&self.header.to_bytes()?)?;
 
-        for telemetry_data in &self.car_telemetry_data {
-            cursor.write_all(&telemetry_data.to_bytes()?)?;
+        for car_telemetry_data in &self.car_telemetry_data {
+            cursor.write_all(&car_telemetry_data.to_bytes()?)?;
         }
 
         cursor.write_u8(self.mfd_panel_index)?;

@@ -106,14 +106,14 @@ impl PacketCarSetupData {
         Ok(PacketCarSetupData {
             header: PacketHeader::from_bytes(&bytes[..size_of::<PacketHeader>()])?,
             car_setups: {
-                let mut setups: [CarSetupData; 22] = [CarSetupData::default(); 22];
+                let mut car_setups: [CarSetupData; 22] = [CarSetupData::default(); 22];
                 for i in 0..22 {
-                    setups[i] = CarSetupData::from_bytes(
+                    car_setups[i] = CarSetupData::from_bytes(
                         &bytes[size_of::<PacketHeader>() + i * size_of::<CarSetupData>()
                             ..size_of::<PacketHeader>() + (i + 1) * size_of::<CarSetupData>()],
                     )?;
                 }
-                setups
+                car_setups
             },
         })
     }
@@ -125,8 +125,8 @@ impl PacketCarSetupData {
 
         cursor.write_all(&self.header.to_bytes()?)?;
 
-        for setup in &self.car_setups {
-            cursor.write_all(&setup.to_bytes()?)?;
+        for car_setups in &self.car_setups {
+            cursor.write_all(&car_setups.to_bytes()?)?;
         }
 
         Ok(buffer)

@@ -80,16 +80,16 @@ impl CarDamageData {
         let mut cursor: Cursor<&mut Vec<u8>> = Cursor::new(&mut buffer);
 
         let tyres_wear: [f32; 4] = self.tyres_wear;
-        for tyre_wear in &tyres_wear {
-            cursor.write_f32::<LittleEndian>(*tyre_wear)?;
+        for element in &tyres_wear {
+            cursor.write_f32::<LittleEndian>(*element)?;
         }
 
-        for tyre_damage in &self.tyres_damage {
-            cursor.write_u8(*tyre_damage)?;
+        for element in &self.tyres_damage {
+            cursor.write_u8(*element)?;
         }
 
-        for brake_damage in &self.brakes_damage {
-            cursor.write_u8(*brake_damage)?;
+        for element in &self.brakes_damage {
+            cursor.write_u8(*element)?;
         }
 
         cursor.write_u8(self.front_left_wing_damage)?;
@@ -128,14 +128,14 @@ impl PacketCarDamageData {
         Ok(PacketCarDamageData {
             header: PacketHeader::from_bytes(&bytes[..size_of::<PacketHeader>()])?,
             car_damage_data: {
-                let mut damage_data: [CarDamageData; 22] = [CarDamageData::default(); 22];
+                let mut car_damage_data: [CarDamageData; 22] = [CarDamageData::default(); 22];
                 for i in 0..22 {
-                    damage_data[i] = CarDamageData::from_bytes(
+                    car_damage_data[i] = CarDamageData::from_bytes(
                         &bytes[size_of::<PacketHeader>() + i * size_of::<CarDamageData>()
                             ..size_of::<PacketHeader>() + (i + 1) * size_of::<CarDamageData>()],
                     )?;
                 }
-                damage_data
+                car_damage_data
             },
         })
     }
@@ -147,8 +147,8 @@ impl PacketCarDamageData {
 
         cursor.write_all(&self.header.to_bytes()?)?;
 
-        for damage_data in &self.car_damage_data {
-            cursor.write_all(&damage_data.to_bytes()?)?;
+        for car_damage_data in &self.car_damage_data {
+            cursor.write_all(&car_damage_data.to_bytes()?)?;
         }
 
         Ok(buffer)

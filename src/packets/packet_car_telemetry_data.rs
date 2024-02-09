@@ -131,12 +131,14 @@ pub struct PacketCarTelemetryData {
 impl PacketCarTelemetryData {
     #[allow(dead_code)]
     pub fn from_bytes(bytes: &[u8]) -> Result<Self, std::io::Error> {
-        let mut cursor: Cursor<&[u8]> = Cursor::new(bytes);
+        let mut cursor: Cursor<&[u8]> =
+            Cursor::new(&bytes[size_of::<PacketHeader>() + size_of::<[CarTelemetryData; 22]>()..]);
 
         Ok(PacketCarTelemetryData {
             header: PacketHeader::from_bytes(&bytes[..size_of::<PacketHeader>()])?,
             car_telemetry_data: {
-                let mut car_telemetry_data: [CarTelemetryData; 22] = [CarTelemetryData::default(); 22];
+                let mut car_telemetry_data: [CarTelemetryData; 22] =
+                    [CarTelemetryData::default(); 22];
                 for i in 0..22 {
                     car_telemetry_data[i] = CarTelemetryData::from_bytes(
                         &bytes[size_of::<PacketHeader>() + i * size_of::<CarTelemetryData>()

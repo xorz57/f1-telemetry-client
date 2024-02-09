@@ -54,8 +54,8 @@ fn main() {
     client.on_motion_data(Box::new(|packet: &PacketMotionData| {
         println!("{packet:?}");
     }));
-    client.on_motion_ex_data(Box::new(|_: &PacketMotionExData| {
-        // println!("{packet:?}");
+    client.on_motion_ex_data(Box::new(|packet: &PacketMotionExData| {
+        println!("{packet:?}");
     }));
     client.on_participants_data(Box::new(|_: &PacketParticipantsData| {
         // println!("{packet:?}");

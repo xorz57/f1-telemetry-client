@@ -224,10 +224,10 @@ impl F1TelemetryClient {
                             };
                         }
                         13 => {
-                            // match PacketMotionExData::from_bytes(&self.buffer[..received]) {
-                            //     Ok(packet) => (self.motion_ex_data_handler)(&packet),
-                            //     Err(e) => eprintln!("{e:?}"),
-                            // };
+                            match PacketMotionExData::from_bytes(&self.buffer[..received]) {
+                                Ok(packet) => (self.motion_ex_data_handler)(&packet),
+                                Err(e) => eprintln!("{e:?}"),
+                            };
                         }
                         _ => {}
                     },

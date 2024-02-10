@@ -132,11 +132,11 @@ impl PacketSessionHistoryData {
                     tyre_stints_history_data[i] = TyreStintHistoryData::from_bytes(
                         &bytes[size_of::<[LapHistoryData; 100]>()
                             + size_of::<PacketHeader>()
-                            + 7
+                            + 7 * size_of::<u8>()
                             + i * size_of::<TyreStintHistoryData>()
                             ..size_of::<[LapHistoryData; 100]>()
                                 + size_of::<PacketHeader>()
-                                + 7
+                                + 7 * size_of::<u8>()
                                 + (i + 1) * size_of::<TyreStintHistoryData>()],
                     )?;
                 }

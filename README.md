@@ -48,8 +48,8 @@ fn main() {
     client.on_lap_data(Box::new(|_: &PacketLapData| {
         // println!("{packet:?}");
     }));
-    client.on_lobby_info(Box::new(|_: &PacketLobbyInfoData| {
-        // println!("{packet:?}");
+    client.on_lobby_info(Box::new(|packet: &PacketLobbyInfoData| {
+        println!("{packet:?}");
     }));
     client.on_motion_data(Box::new(|packet: &PacketMotionData| {
         println!("{packet:?}");

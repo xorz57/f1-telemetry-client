@@ -200,10 +200,10 @@ impl F1TelemetryClient {
                             // };
                         }
                         9 => {
-                            // match PacketLobbyInfoData::from_bytes(&self.buffer[..received]) {
-                            //     Ok(packet) => (self.lobby_info_handler)(&packet),
-                            //     Err(e) => eprintln!("{e:?}"),
-                            // };
+                            match PacketLobbyInfoData::from_bytes(&self.buffer[..received]) {
+                                Ok(packet) => (self.lobby_info_handler)(&packet),
+                                Err(e) => eprintln!("{e:?}"),
+                            };
                         }
                         10 => {
                             match PacketCarDamageData::from_bytes(&self.buffer[..received]) {

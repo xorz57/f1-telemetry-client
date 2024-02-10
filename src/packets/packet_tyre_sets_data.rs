@@ -92,11 +92,9 @@ impl PacketTyreSetsData {
 
         cursor.write_all(&self.header.to_bytes()?)?;
         cursor.write_u8(self.car_idx)?;
-
         for tyre_set_data in self.tyre_set_data {
             cursor.write_all(&tyre_set_data.to_bytes()?)?;
         }
-
         cursor.write_u8(self.fitted_idx)?;
 
         Ok(buffer)

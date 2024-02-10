@@ -79,19 +79,15 @@ impl CarDamageData {
         let mut buffer: Vec<u8> = Vec::with_capacity(size_of::<CarDamageData>());
         let mut cursor: Cursor<&mut Vec<u8>> = Cursor::new(&mut buffer);
 
-        let tyres_wear: [f32; 4] = self.tyres_wear;
-        for element in tyres_wear {
+        for element in self.tyres_wear {
             cursor.write_f32::<LittleEndian>(element)?;
         }
-
         for element in self.tyres_damage {
             cursor.write_u8(element)?;
         }
-
         for element in self.brakes_damage {
             cursor.write_u8(element)?;
         }
-
         cursor.write_u8(self.front_left_wing_damage)?;
         cursor.write_u8(self.front_right_wing_damage)?;
         cursor.write_u8(self.rear_wing_damage)?;
@@ -146,7 +142,6 @@ impl PacketCarDamageData {
         let mut cursor: Cursor<&mut Vec<u8>> = Cursor::new(&mut buffer);
 
         cursor.write_all(&self.header.to_bytes()?)?;
-
         for car_damage_data in self.car_damage_data {
             cursor.write_all(&car_damage_data.to_bytes()?)?;
         }

@@ -110,47 +110,30 @@ impl PacketMotionExData {
         let mut cursor: Cursor<&mut Vec<u8>> = Cursor::new(&mut buffer);
 
         cursor.write_all(&self.header.to_bytes()?)?;
-
-        let suspension_position: [f32; 4] = self.suspension_position;
-        for element in &suspension_position {
-            cursor.write_f32::<LittleEndian>(*element)?;
+        for element in self.suspension_position {
+            cursor.write_f32::<LittleEndian>(element)?;
         }
-
-        let suspension_velocity: [f32; 4] = self.suspension_velocity;
-        for element in &suspension_velocity {
-            cursor.write_f32::<LittleEndian>(*element)?;
+        for element in self.suspension_velocity {
+            cursor.write_f32::<LittleEndian>(element)?;
         }
-
-        let suspension_acceleration: [f32; 4] = self.suspension_acceleration;
-        for element in &suspension_acceleration {
-            cursor.write_f32::<LittleEndian>(*element)?;
+        for element in self.suspension_acceleration {
+            cursor.write_f32::<LittleEndian>(element)?;
         }
-
-        let wheel_speed: [f32; 4] = self.wheel_speed;
-        for element in &wheel_speed {
-            cursor.write_f32::<LittleEndian>(*element)?;
+        for element in self.wheel_speed {
+            cursor.write_f32::<LittleEndian>(element)?;
         }
-
-        let wheel_slip_ratio: [f32; 4] = self.wheel_slip_ratio;
-        for element in &wheel_slip_ratio {
-            cursor.write_f32::<LittleEndian>(*element)?;
+        for element in self.wheel_slip_ratio {
+            cursor.write_f32::<LittleEndian>(element)?;
         }
-
-        let wheel_slip_angle: [f32; 4] = self.wheel_slip_angle;
-        for element in &wheel_slip_angle {
-            cursor.write_f32::<LittleEndian>(*element)?;
+        for element in self.wheel_slip_angle {
+            cursor.write_f32::<LittleEndian>(element)?;
         }
-
-        let wheel_lat_force: [f32; 4] = self.wheel_lat_force;
-        for element in &wheel_lat_force {
-            cursor.write_f32::<LittleEndian>(*element)?;
+        for element in self.wheel_lat_force {
+            cursor.write_f32::<LittleEndian>(element)?;
         }
-
-        let wheel_long_force: [f32; 4] = self.wheel_long_force;
-        for element in &wheel_long_force {
-            cursor.write_f32::<LittleEndian>(*element)?;
+        for element in self.wheel_long_force {
+            cursor.write_f32::<LittleEndian>(element)?;
         }
-
         cursor.write_f32::<LittleEndian>(self.height_of_cog_above_ground)?;
         cursor.write_f32::<LittleEndian>(self.local_velocity_x)?;
         cursor.write_f32::<LittleEndian>(self.local_velocity_y)?;
@@ -162,9 +145,7 @@ impl PacketMotionExData {
         cursor.write_f32::<LittleEndian>(self.angular_acceleration_y)?;
         cursor.write_f32::<LittleEndian>(self.angular_acceleration_z)?;
         cursor.write_f32::<LittleEndian>(self.front_wheels_angle)?;
-
-        let wheel_vert_force: [f32; 4] = self.wheel_vert_force;
-        for element in wheel_vert_force {
+        for element in self.wheel_vert_force {
             cursor.write_f32::<LittleEndian>(element)?;
         }
 

@@ -89,27 +89,19 @@ impl CarTelemetryData {
         cursor.write_u8(self.drs)?;
         cursor.write_u8(self.rev_lights_percent)?;
         cursor.write_u16::<LittleEndian>(self.rev_lights_bit_value)?;
-
-        let brakes_temperature: [u16; 4] = self.brakes_temperature;
-        for element in brakes_temperature {
+        for element in self.brakes_temperature {
             cursor.write_u16::<LittleEndian>(element)?;
         }
-
         for element in self.tyres_surface_temperature {
             cursor.write_u8(element)?;
         }
-
         for element in self.tyres_inner_temperature {
             cursor.write_u8(element)?;
         }
-
         cursor.write_u16::<LittleEndian>(self.engine_temperature)?;
-
-        let tyres_pressure: [f32; 4] = self.tyres_pressure;
-        for element in tyres_pressure {
+        for element in self.tyres_pressure {
             cursor.write_f32::<LittleEndian>(element)?;
         }
-
         for element in self.surface_type {
             cursor.write_u8(element)?;
         }
@@ -159,11 +151,9 @@ impl PacketCarTelemetryData {
         let mut cursor: Cursor<&mut Vec<u8>> = Cursor::new(&mut buffer);
 
         cursor.write_all(&self.header.to_bytes()?)?;
-
         for car_telemetry_data in self.car_telemetry_data {
             cursor.write_all(&car_telemetry_data.to_bytes()?)?;
         }
-
         cursor.write_u8(self.mfd_panel_index)?;
         cursor.write_u8(self.mfd_panel_index_secondary_player)?;
         cursor.write_i8(self.suggested_gear)?;

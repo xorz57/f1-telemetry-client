@@ -112,7 +112,6 @@ impl PacketMotionData {
         let mut cursor: Cursor<&mut Vec<u8>> = Cursor::new(&mut buffer);
 
         cursor.write_all(&self.header.to_bytes()?)?;
-
         for car_motion_data in self.car_motion_data {
             cursor.write_all(&car_motion_data.to_bytes()?)?;
         }

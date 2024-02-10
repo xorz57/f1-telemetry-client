@@ -160,11 +160,9 @@ impl PacketSessionHistoryData {
         cursor.write_u8(self.best_sector1_lap_num)?;
         cursor.write_u8(self.best_sector2_lap_num)?;
         cursor.write_u8(self.best_sector3_lap_num)?;
-
         for lap_history_data in self.lap_history_data {
             cursor.write_all(&lap_history_data.to_bytes()?)?;
         }
-
         for tyre_stint_history_data in self.tyre_stints_history_data {
             cursor.write_all(&tyre_stint_history_data.to_bytes()?)?;
         }

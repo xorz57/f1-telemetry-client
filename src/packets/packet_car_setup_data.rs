@@ -124,7 +124,6 @@ impl PacketCarSetupData {
         let mut cursor: Cursor<&mut Vec<u8>> = Cursor::new(&mut buffer);
 
         cursor.write_all(&self.header.to_bytes()?)?;
-
         for car_setups in self.car_setups {
             cursor.write_all(&car_setups.to_bytes()?)?;
         }

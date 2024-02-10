@@ -117,9 +117,11 @@ impl PacketSessionHistoryData {
                 let mut lap_history_data: [LapHistoryData; 100] = [LapHistoryData::default(); 100];
                 for i in 0..100 {
                     lap_history_data[i] = LapHistoryData::from_bytes(
-                        &bytes[size_of::<PacketHeader>() + 7 + i * size_of::<LapHistoryData>()
+                        &bytes[size_of::<PacketHeader>()
+                            + 7 * size_of::<u8>()
+                            + i * size_of::<LapHistoryData>()
                             ..size_of::<PacketHeader>()
-                                + 7
+                                + 7 * size_of::<u8>()
                                 + (i + 1) * size_of::<LapHistoryData>()],
                     )?;
                 }
@@ -159,11 +161,11 @@ impl PacketSessionHistoryData {
         cursor.write_u8(self.best_sector2_lap_num)?;
         cursor.write_u8(self.best_sector3_lap_num)?;
 
-        for lap_history_data in &self.lap_history_data {
+        for lap_history_data in self.lap_history_data {
             cursor.write_all(&lap_history_data.to_bytes()?)?;
         }
 
-        for tyre_stint_history_data in &self.tyre_stints_history_data {
+        for tyre_stint_history_data in self.tyre_stints_history_data {
             cursor.write_all(&tyre_stint_history_data.to_bytes()?)?;
         }
 

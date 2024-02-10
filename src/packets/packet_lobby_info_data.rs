@@ -60,8 +60,8 @@ impl LobbyInfoData {
         cursor.write_u8(self.team_id)?;
         cursor.write_u8(self.nationality)?;
         cursor.write_u8(self.platform)?;
-        for name in &self.name {
-            cursor.write_u8(*name)?;
+        for name in self.name {
+            cursor.write_u8(name)?;
         }
         cursor.write_u8(self.car_number)?;
         cursor.write_u8(self.ready_status)?;
@@ -116,7 +116,7 @@ impl PacketLobbyInfoData {
 
         cursor.write_all(&self.header.to_bytes()?)?;
         cursor.write_u8(self.num_players)?;
-        for lobby_players in &self.lobby_players {
+        for lobby_players in self.lobby_players {
             cursor.write_all(&lobby_players.to_bytes()?)?;
         }
 

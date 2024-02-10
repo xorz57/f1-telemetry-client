@@ -164,8 +164,8 @@ impl PacketMotionExData {
         cursor.write_f32::<LittleEndian>(self.front_wheels_angle)?;
 
         let wheel_vert_force: [f32; 4] = self.wheel_vert_force;
-        for element in &wheel_vert_force {
-            cursor.write_f32::<LittleEndian>(*element)?;
+        for element in wheel_vert_force {
+            cursor.write_f32::<LittleEndian>(element)?;
         }
 
         Ok(buffer)

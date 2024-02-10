@@ -113,7 +113,7 @@ impl PacketMotionData {
 
         cursor.write_all(&self.header.to_bytes()?)?;
 
-        for car_motion_data in &self.car_motion_data {
+        for car_motion_data in self.car_motion_data {
             cursor.write_all(&car_motion_data.to_bytes()?)?;
         }
 

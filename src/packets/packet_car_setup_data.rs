@@ -125,7 +125,7 @@ impl PacketCarSetupData {
 
         cursor.write_all(&self.header.to_bytes()?)?;
 
-        for car_setups in &self.car_setups {
+        for car_setups in self.car_setups {
             cursor.write_all(&car_setups.to_bytes()?)?;
         }
 

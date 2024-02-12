@@ -19,7 +19,7 @@ use std::net::UdpSocket;
 
 pub struct F1TelemetryClient {
     socket: UdpSocket,
-    buffer: [u8; 2048],
+    buf: [u8; 2048],
     car_damage_handler: Box<dyn Fn(&PacketCarDamageData)>,
     car_setup_handler: Box<dyn Fn(&PacketCarSetupData)>,
     car_status_handler: Box<dyn Fn(&PacketCarStatusData)>,
@@ -39,7 +39,7 @@ pub struct F1TelemetryClient {
 impl F1TelemetryClient {
     pub fn new(bind_address: &str) -> Self {
         let socket: UdpSocket = UdpSocket::bind(bind_address).expect("Couldn't bind to address");
-        let buffer: [u8; 2048] = [0; 2048];
+        let buf: [u8; 2048] = [0; 2048];
         let car_damage_handler = Box::new(|_: &PacketCarDamageData| {});
         let car_setup_handler = Box::new(|_: &PacketCarSetupData| {});
         let car_status_handler = Box::new(|_: &PacketCarStatusData| {});
@@ -57,7 +57,7 @@ impl F1TelemetryClient {
 
         F1TelemetryClient {
             socket,
-            buffer,
+            buf,
             car_damage_handler,
             car_setup_handler,
             car_status_handler,
@@ -141,90 +141,90 @@ impl F1TelemetryClient {
     }
 
     fn receive_packet(&mut self) {
-        match self.socket.recv(&mut self.buffer) {
+        match self.socket.recv(&mut self.buf) {
             Ok(received) => {
-                match PacketHeader::unserialize(&self.buffer[..received]) {
+                match PacketHeader::unserialize(&self.buf[..received]) {
                     Ok(header) => match header.packet_id {
                         0 => {
-                            match PacketMotionData::unserialize(&self.buffer[..received]) {
+                            match PacketMotionData::unserialize(&self.buf[..received]) {
                                 Ok(packet) => (self.motion_data_handler)(&packet),
                                 Err(e) => eprintln!("{e:?}"),
                             };
                         }
                         1 => {
-                            // match PacketSessionData::unserialize(&self.buffer[..received]) {
+                            // match PacketSessionData::unserialize(&self.buf[..received]) {
                             //     Ok(packet) => (self.session_data_handler)(&packet),
                             //     Err(e) => eprintln!("{e:?}"),
                             // };
                         }
                         2 => {
-                            match PacketLapData::unserialize(&self.buffer[..received]) {
+                            match PacketLapData::unserialize(&self.buf[..received]) {
                                 Ok(packet) => (self.lap_data_handler)(&packet),
                                 Err(e) => eprintln!("{e:?}"),
                             };
                         }
                         3 => {
-                            // match PacketEventData::unserialize(&self.buffer[..received]) {
+                            // match PacketEventData::unserialize(&self.buf[..received]) {
                             //     Ok(packet) => (self.event_handler)(&packet),
                             //     Err(e) => eprintln!("{e:?}"),
                             // };
                         }
                         4 => {
-                            match PacketParticipantsData::unserialize(&self.buffer[..received]) {
+                            match PacketParticipantsData::unserialize(&self.buf[..received]) {
                                 Ok(packet) => (self.participants_data_handler)(&packet),
                                 Err(e) => eprintln!("{e:?}"),
                             };
                         }
                         5 => {
-                            match PacketCarSetupData::unserialize(&self.buffer[..received]) {
+                            match PacketCarSetupData::unserialize(&self.buf[..received]) {
                                 Ok(packet) => (self.car_setup_handler)(&packet),
                                 Err(e) => eprintln!("{e:?}"),
                             };
                         }
                         6 => {
-                            match PacketCarTelemetryData::unserialize(&self.buffer[..received]) {
+                            match PacketCarTelemetryData::unserialize(&self.buf[..received]) {
                                 Ok(packet) => (self.car_telemetry_handler)(&packet),
                                 Err(e) => eprintln!("{e:?}"),
                             };
                         }
                         7 => {
-                            match PacketCarStatusData::unserialize(&self.buffer[..received]) {
+                            match PacketCarStatusData::unserialize(&self.buf[..received]) {
                                 Ok(packet) => (self.car_status_handler)(&packet),
                                 Err(e) => eprintln!("{e:?}"),
                             };
                         }
                         8 => {
-                            match PacketFinalClassificationData::unserialize(&self.buffer[..received]) {
+                            match PacketFinalClassificationData::unserialize(&self.buf[..received]) {
                                 Ok(packet) => (self.final_classification_handler)(&packet),
                                 Err(e) => eprintln!("{e:?}"),
                             };
                         }
                         9 => {
-                            match PacketLobbyInfoData::unserialize(&self.buffer[..received]) {
+                            match PacketLobbyInfoData::unserialize(&self.buf[..received]) {
                                 Ok(packet) => (self.lobby_info_handler)(&packet),
                                 Err(e) => eprintln!("{e:?}"),
                             };
                         }
                         10 => {
-                            match PacketCarDamageData::unserialize(&self.buffer[..received]) {
+                            match PacketCarDamageData::unserialize(&self.buf[..received]) {
                                 Ok(packet) => (self.car_damage_handler)(&packet),
                                 Err(e) => eprintln!("{e:?}"),
                             };
                         }
                         11 => {
-                            match PacketSessionHistoryData::unserialize(&self.buffer[..received]) {
+                            match PacketSessionHistoryData::unserialize(&self.buf[..received]) {
                                 Ok(packet) => (self.session_history_data_handler)(&packet),
                                 Err(e) => eprintln!("{e:?}"),
                             };
                         }
                         12 => {
-                            match PacketTyreSetsData::unserialize(&self.buffer[..received]) {
+                            match PacketTyreSetsData::unserialize(&self.buf[..received]) {
                                 Ok(packet) => (self.tyre_sets_data_handler)(&packet),
                                 Err(e) => eprintln!("{e:?}"),
                             };
                         }
                         13 => {
-                            match PacketMotionExData::unserialize(&self.buffer[..received]) {
+                            match PacketMotionExData::unserialize(&self.buf[..received]) {
                                 Ok(packet) => (self.motion_ex_data_handler)(&packet),
                                 Err(e) => eprintln!("{e:?}"),
                             };

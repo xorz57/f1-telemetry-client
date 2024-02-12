@@ -18,7 +18,7 @@ pub struct LapHistoryData {
 
 impl LapHistoryData {
     #[allow(dead_code)]
-    pub fn from_bytes(bytes: &[u8]) -> Result<Self, std::io::Error> {
+    pub fn unserialize(bytes: &[u8]) -> Result<Self, std::io::Error> {
         let mut cursor: Cursor<&[u8]> = Cursor::new(bytes);
 
         Ok(LapHistoryData {
@@ -34,7 +34,7 @@ impl LapHistoryData {
     }
 
     #[allow(dead_code)]
-    pub fn to_bytes(&self) -> Result<Vec<u8>, std::io::Error> {
+    pub fn serialize(&self) -> Result<Vec<u8>, std::io::Error> {
         let mut buffer: Vec<u8> = Vec::with_capacity(size_of::<LapHistoryData>());
         let mut cursor: Cursor<&mut Vec<u8>> = Cursor::new(&mut buffer);
 
@@ -61,7 +61,7 @@ pub struct TyreStintHistoryData {
 
 impl TyreStintHistoryData {
     #[allow(dead_code)]
-    pub fn from_bytes(bytes: &[u8]) -> Result<Self, std::io::Error> {
+    pub fn unserialize(bytes: &[u8]) -> Result<Self, std::io::Error> {
         let mut cursor: Cursor<&[u8]> = Cursor::new(bytes);
 
         Ok(TyreStintHistoryData {
@@ -72,7 +72,7 @@ impl TyreStintHistoryData {
     }
 
     #[allow(dead_code)]
-    pub fn to_bytes(&self) -> Result<Vec<u8>, std::io::Error> {
+    pub fn serialize(&self) -> Result<Vec<u8>, std::io::Error> {
         let mut buffer: Vec<u8> = Vec::with_capacity(size_of::<TyreStintHistoryData>());
         let mut cursor: Cursor<&mut Vec<u8>> = Cursor::new(&mut buffer);
 
@@ -118,11 +118,11 @@ impl Default for PacketSessionHistoryData {
 
 impl PacketSessionHistoryData {
     #[allow(dead_code)]
-    pub fn from_bytes(bytes: &[u8]) -> Result<Self, std::io::Error> {
+    pub fn unserialize(bytes: &[u8]) -> Result<Self, std::io::Error> {
         let mut cursor: Cursor<&[u8]> = Cursor::new(&bytes[size_of::<PacketHeader>()..]);
 
         Ok(PacketSessionHistoryData {
-            header: PacketHeader::from_bytes(&bytes[..size_of::<PacketHeader>()])?,
+            header: PacketHeader::unserialize(&bytes[..size_of::<PacketHeader>()])?,
             car_idx: cursor.read_u8()?,
             num_laps: cursor.read_u8()?,
             num_tyre_stints: cursor.read_u8()?,
@@ -133,7 +133,7 @@ impl PacketSessionHistoryData {
             lap_history_data: {
                 let mut lap_history_data: [LapHistoryData; 100] = [LapHistoryData::default(); 100];
                 for i in 0..100 {
-                    lap_history_data[i] = LapHistoryData::from_bytes(
+                    lap_history_data[i] = LapHistoryData::unserialize(
                         &bytes[size_of::<PacketHeader>()
                             + 7 * size_of::<u8>()
                             + i * size_of::<LapHistoryData>()
@@ -148,7 +148,7 @@ impl PacketSessionHistoryData {
                 let mut tyre_stints_history_data: [TyreStintHistoryData; 8] =
                     [TyreStintHistoryData::default(); 8];
                 for i in 0..8 {
-                    tyre_stints_history_data[i] = TyreStintHistoryData::from_bytes(
+                    tyre_stints_history_data[i] = TyreStintHistoryData::unserialize(
                         &bytes[size_of::<[LapHistoryData; 100]>()
                             + size_of::<PacketHeader>()
                             + 7 * size_of::<u8>()
@@ -165,11 +165,11 @@ impl PacketSessionHistoryData {
     }
 
     #[allow(dead_code)]
-    pub fn to_bytes(&self) -> Result<Vec<u8>, std::io::Error> {
+    pub fn serialize(&self) -> Result<Vec<u8>, std::io::Error> {
         let mut buffer: Vec<u8> = Vec::with_capacity(size_of::<PacketSessionHistoryData>());
         let mut cursor: Cursor<&mut Vec<u8>> = Cursor::new(&mut buffer);
 
-        cursor.write_all(&self.header.to_bytes()?)?;
+        cursor.write_all(&self.header.serialize()?)?;
         cursor.write_u8(self.car_idx)?;
         cursor.write_u8(self.num_laps)?;
         cursor.write_u8(self.num_tyre_stints)?;
@@ -178,10 +178,10 @@ impl PacketSessionHistoryData {
         cursor.write_u8(self.best_sector2_lap_num)?;
         cursor.write_u8(self.best_sector3_lap_num)?;
         for lap_history_data in self.lap_history_data {
-            cursor.write_all(&lap_history_data.to_bytes()?)?;
+            cursor.write_all(&lap_history_data.serialize()?)?;
         }
         for tyre_stint_history_data in self.tyre_stints_history_data {
-            cursor.write_all(&tyre_stint_history_data.to_bytes()?)?;
+            cursor.write_all(&tyre_stint_history_data.serialize()?)?;
         }
 
         Ok(buffer)

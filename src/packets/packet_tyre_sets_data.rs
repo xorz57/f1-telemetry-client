@@ -19,7 +19,7 @@ pub struct TyreSetData {
 
 impl TyreSetData {
     #[allow(dead_code)]
-    pub fn from_bytes(bytes: &[u8]) -> Result<Self, std::io::Error> {
+    pub fn unserialize(bytes: &[u8]) -> Result<Self, std::io::Error> {
         let mut cursor: Cursor<&[u8]> = Cursor::new(bytes);
 
         Ok(TyreSetData {
@@ -36,7 +36,7 @@ impl TyreSetData {
     }
 
     #[allow(dead_code)]
-    pub fn to_bytes(&self) -> Result<Vec<u8>, std::io::Error> {
+    pub fn serialize(&self) -> Result<Vec<u8>, std::io::Error> {
         let mut buffer: Vec<u8> = Vec::with_capacity(size_of::<TyreSetData>());
         let mut cursor: Cursor<&mut Vec<u8>> = Cursor::new(&mut buffer);
 
@@ -65,16 +65,16 @@ pub struct PacketTyreSetsData {
 
 impl PacketTyreSetsData {
     #[allow(dead_code)]
-    pub fn from_bytes(bytes: &[u8]) -> Result<Self, std::io::Error> {
+    pub fn unserialize(bytes: &[u8]) -> Result<Self, std::io::Error> {
         let mut cursor: Cursor<&[u8]> = Cursor::new(bytes);
 
         Ok(PacketTyreSetsData {
-            header: PacketHeader::from_bytes(&bytes[..size_of::<PacketHeader>()])?,
+            header: PacketHeader::unserialize(&bytes[..size_of::<PacketHeader>()])?,
             car_idx: cursor.read_u8()?,
             tyre_set_data: {
                 let mut tyre_set_data: [TyreSetData; 20] = [TyreSetData::default(); 20];
                 for i in 0..20 {
-                    tyre_set_data[i] = TyreSetData::from_bytes(
+                    tyre_set_data[i] = TyreSetData::unserialize(
                         &bytes[size_of::<PacketHeader>() + i * size_of::<TyreSetData>()
                             ..size_of::<PacketHeader>() + (i + 1) * size_of::<TyreSetData>()],
                     )?;
@@ -86,14 +86,14 @@ impl PacketTyreSetsData {
     }
 
     #[allow(dead_code)]
-    pub fn to_bytes(&self) -> Result<Vec<u8>, std::io::Error> {
+    pub fn serialize(&self) -> Result<Vec<u8>, std::io::Error> {
         let mut buffer: Vec<u8> = Vec::with_capacity(size_of::<PacketTyreSetsData>());
         let mut cursor: Cursor<&mut Vec<u8>> = Cursor::new(&mut buffer);
 
-        cursor.write_all(&self.header.to_bytes()?)?;
+        cursor.write_all(&self.header.serialize()?)?;
         cursor.write_u8(self.car_idx)?;
         for tyre_set_data in self.tyre_set_data {
-            cursor.write_all(&tyre_set_data.to_bytes()?)?;
+            cursor.write_all(&tyre_set_data.serialize()?)?;
         }
         cursor.write_u8(self.fitted_idx)?;
 

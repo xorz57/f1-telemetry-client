@@ -57,7 +57,7 @@ impl Default for PacketParticipantsData {
 
 impl ParticipantData {
     #[allow(dead_code)]
-    pub fn from_bytes(bytes: &[u8]) -> Result<Self, std::io::Error> {
+    pub fn unserialize(bytes: &[u8]) -> Result<Self, std::io::Error> {
         let mut cursor: Cursor<&[u8]> = Cursor::new(bytes);
 
         Ok(ParticipantData {
@@ -82,7 +82,7 @@ impl ParticipantData {
     }
 
     #[allow(dead_code)]
-    pub fn to_bytes(&self) -> Result<Vec<u8>, std::io::Error> {
+    pub fn serialize(&self) -> Result<Vec<u8>, std::io::Error> {
         let mut buffer: Vec<u8> = Vec::with_capacity(size_of::<ParticipantData>());
         let mut cursor: Cursor<&mut Vec<u8>> = Cursor::new(&mut buffer);
 
@@ -106,16 +106,16 @@ impl ParticipantData {
 
 impl PacketParticipantsData {
     #[allow(dead_code)]
-    pub fn from_bytes(bytes: &[u8]) -> Result<Self, std::io::Error> {
+    pub fn unserialize(bytes: &[u8]) -> Result<Self, std::io::Error> {
         let mut cursor: Cursor<&[u8]> = Cursor::new(&bytes[size_of::<PacketHeader>()..]);
 
         Ok(PacketParticipantsData {
-            header: PacketHeader::from_bytes(&bytes[..size_of::<PacketHeader>()])?,
+            header: PacketHeader::unserialize(&bytes[..size_of::<PacketHeader>()])?,
             num_active_cars: cursor.read_u8()?,
             participants: {
                 let mut participants: [ParticipantData; 22] = [ParticipantData::default(); 22];
                 for i in 0..22 {
-                    participants[i] = ParticipantData::from_bytes(
+                    participants[i] = ParticipantData::unserialize(
                         &bytes[size_of::<PacketHeader>()
                             + 1 * size_of::<u8>()
                             + i * size_of::<ParticipantData>()
@@ -130,14 +130,14 @@ impl PacketParticipantsData {
     }
 
     #[allow(dead_code)]
-    pub fn to_bytes(&self) -> Result<Vec<u8>, std::io::Error> {
+    pub fn serialize(&self) -> Result<Vec<u8>, std::io::Error> {
         let mut buffer: Vec<u8> = Vec::with_capacity(size_of::<PacketParticipantsData>());
         let mut cursor: Cursor<&mut Vec<u8>> = Cursor::new(&mut buffer);
 
-        cursor.write_all(&self.header.to_bytes()?)?;
+        cursor.write_all(&self.header.serialize()?)?;
         cursor.write_u8(self.num_active_cars)?;
         for participants in self.participants {
-            cursor.write_all(&participants.to_bytes()?)?;
+            cursor.write_all(&participants.serialize()?)?;
         }
 
         Ok(buffer)

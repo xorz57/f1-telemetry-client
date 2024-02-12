@@ -31,7 +31,7 @@ impl Default for LobbyInfoData {
 
 impl LobbyInfoData {
     #[allow(dead_code)]
-    pub fn from_bytes(bytes: &[u8]) -> Result<Self, std::io::Error> {
+    pub fn unserialize(bytes: &[u8]) -> Result<Self, std::io::Error> {
         let mut cursor: Cursor<&[u8]> = Cursor::new(bytes);
 
         Ok(LobbyInfoData {
@@ -52,7 +52,7 @@ impl LobbyInfoData {
     }
 
     #[allow(dead_code)]
-    pub fn to_bytes(&self) -> Result<Vec<u8>, std::io::Error> {
+    pub fn serialize(&self) -> Result<Vec<u8>, std::io::Error> {
         let mut buffer: Vec<u8> = Vec::with_capacity(size_of::<LobbyInfoData>());
         let mut cursor: Cursor<&mut Vec<u8>> = Cursor::new(&mut buffer);
 
@@ -90,16 +90,16 @@ impl Default for PacketLobbyInfoData {
 
 impl PacketLobbyInfoData {
     #[allow(dead_code)]
-    pub fn from_bytes(bytes: &[u8]) -> Result<Self, std::io::Error> {
+    pub fn unserialize(bytes: &[u8]) -> Result<Self, std::io::Error> {
         let mut cursor: Cursor<&[u8]> = Cursor::new(&bytes[..size_of::<PacketHeader>()]);
 
         Ok(PacketLobbyInfoData {
-            header: PacketHeader::from_bytes(&bytes[..size_of::<PacketHeader>()])?,
+            header: PacketHeader::unserialize(&bytes[..size_of::<PacketHeader>()])?,
             num_players: cursor.read_u8()?,
             lobby_players: {
                 let mut lobby_players: [LobbyInfoData; 22] = [LobbyInfoData::default(); 22];
                 for i in 0..22 {
-                    lobby_players[i] = LobbyInfoData::from_bytes(
+                    lobby_players[i] = LobbyInfoData::unserialize(
                         &bytes[1 * size_of::<u8>() + i * size_of::<LobbyInfoData>()
                             ..1 * size_of::<u8>() + (i + 1) * size_of::<LobbyInfoData>()],
                     )?;
@@ -110,14 +110,14 @@ impl PacketLobbyInfoData {
     }
 
     #[allow(dead_code)]
-    pub fn to_bytes(&self) -> Result<Vec<u8>, std::io::Error> {
+    pub fn serialize(&self) -> Result<Vec<u8>, std::io::Error> {
         let mut buffer: Vec<u8> = Vec::with_capacity(size_of::<PacketLobbyInfoData>());
         let mut cursor: Cursor<&mut Vec<u8>> = Cursor::new(&mut buffer);
 
-        cursor.write_all(&self.header.to_bytes()?)?;
+        cursor.write_all(&self.header.serialize()?)?;
         cursor.write_u8(self.num_players)?;
         for lobby_players in self.lobby_players {
-            cursor.write_all(&lobby_players.to_bytes()?)?;
+            cursor.write_all(&lobby_players.serialize()?)?;
         }
 
         Ok(buffer)

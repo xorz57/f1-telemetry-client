@@ -21,7 +21,7 @@ pub struct PacketHeader {
 
 impl PacketHeader {
     #[allow(dead_code)]
-    pub fn from_bytes(bytes: &[u8]) -> Result<Self, std::io::Error> {
+    pub fn unserialize(bytes: &[u8]) -> Result<Self, std::io::Error> {
         let mut cursor: Cursor<&[u8]> = Cursor::new(bytes);
 
         Ok(PacketHeader {
@@ -41,7 +41,7 @@ impl PacketHeader {
     }
 
     #[allow(dead_code)]
-    pub fn to_bytes(&self) -> Result<Vec<u8>, std::io::Error> {
+    pub fn serialize(&self) -> Result<Vec<u8>, std::io::Error> {
         let mut buffer: Vec<u8> = Vec::with_capacity(size_of::<PacketHeader>());
         let mut cursor: Cursor<&mut Vec<u8>> = Cursor::new(&mut buffer);
 

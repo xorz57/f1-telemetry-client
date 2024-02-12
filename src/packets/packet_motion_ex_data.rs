@@ -31,11 +31,11 @@ pub struct PacketMotionExData {
 
 impl PacketMotionExData {
     #[allow(dead_code)]
-    pub fn from_bytes(bytes: &[u8]) -> Result<Self, std::io::Error> {
+    pub fn unserialize(bytes: &[u8]) -> Result<Self, std::io::Error> {
         let mut cursor: Cursor<&[u8]> = Cursor::new(bytes);
 
         Ok(PacketMotionExData {
-            header: PacketHeader::from_bytes(&bytes[..size_of::<PacketHeader>()])?,
+            header: PacketHeader::unserialize(&bytes[..size_of::<PacketHeader>()])?,
             suspension_position: [
                 cursor.read_f32::<LittleEndian>()?,
                 cursor.read_f32::<LittleEndian>()?,
@@ -105,11 +105,11 @@ impl PacketMotionExData {
     }
 
     #[allow(dead_code)]
-    pub fn to_bytes(&self) -> Result<Vec<u8>, std::io::Error> {
+    pub fn serialize(&self) -> Result<Vec<u8>, std::io::Error> {
         let mut buffer: Vec<u8> = Vec::with_capacity(size_of::<PacketMotionExData>());
         let mut cursor: Cursor<&mut Vec<u8>> = Cursor::new(&mut buffer);
 
-        cursor.write_all(&self.header.to_bytes()?)?;
+        cursor.write_all(&self.header.serialize()?)?;
         for element in self.suspension_position {
             cursor.write_f32::<LittleEndian>(element)?;
         }

@@ -48,7 +48,7 @@ pub struct PacketLapData {
 
 impl LapData {
     #[allow(dead_code)]
-    pub fn from_bytes(bytes: &[u8]) -> Result<Self, std::io::Error> {
+    pub fn unserialize(bytes: &[u8]) -> Result<Self, std::io::Error> {
         let mut cursor: Cursor<&[u8]> = Cursor::new(bytes);
 
         Ok(LapData {
@@ -85,7 +85,7 @@ impl LapData {
     }
 
     #[allow(dead_code)]
-    pub fn to_bytes(&self) -> Result<Vec<u8>, std::io::Error> {
+    pub fn serialize(&self) -> Result<Vec<u8>, std::io::Error> {
         let mut buffer: Vec<u8> = Vec::with_capacity(size_of::<LapData>());
         let mut cursor: Cursor<&mut Vec<u8>> = Cursor::new(&mut buffer);
 
@@ -125,15 +125,15 @@ impl LapData {
 
 impl PacketLapData {
     #[allow(dead_code)]
-    pub fn from_bytes(bytes: &[u8]) -> Result<Self, std::io::Error> {
+    pub fn unserialize(bytes: &[u8]) -> Result<Self, std::io::Error> {
         let mut cursor: Cursor<&[u8]> = Cursor::new(bytes);
 
         Ok(PacketLapData {
-            header: PacketHeader::from_bytes(&bytes[..size_of::<PacketHeader>()])?,
+            header: PacketHeader::unserialize(&bytes[..size_of::<PacketHeader>()])?,
             lap_data: {
                 let mut lap_data: [LapData; 22] = [LapData::default(); 22];
                 for i in 0..22 {
-                    lap_data[i] = LapData::from_bytes(
+                    lap_data[i] = LapData::unserialize(
                         &bytes[size_of::<PacketHeader>() + i * size_of::<LapData>()
                             ..size_of::<PacketHeader>() + (i + 1) * size_of::<LapData>()],
                     )?;
@@ -146,13 +146,13 @@ impl PacketLapData {
     }
 
     #[allow(dead_code)]
-    pub fn to_bytes(&self) -> Result<Vec<u8>, std::io::Error> {
+    pub fn serialize(&self) -> Result<Vec<u8>, std::io::Error> {
         let mut buffer: Vec<u8> = Vec::with_capacity(size_of::<PacketLapData>());
         let mut cursor: Cursor<&mut Vec<u8>> = Cursor::new(&mut buffer);
 
-        cursor.write_all(&self.header.to_bytes()?)?;
+        cursor.write_all(&self.header.serialize()?)?;
         for lap_data in self.lap_data {
-            cursor.write_all(&lap_data.to_bytes()?)?;
+            cursor.write_all(&lap_data.serialize()?)?;
         }
         cursor.write_u8(self.time_trial_pb_car_idx)?;
         cursor.write_u8(self.time_trial_rival_car_idx)?;

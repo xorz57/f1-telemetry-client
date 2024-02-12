@@ -35,7 +35,7 @@ pub struct CarStatusData {
 
 impl CarStatusData {
     #[allow(dead_code)]
-    pub fn from_bytes(bytes: &[u8]) -> Result<Self, std::io::Error> {
+    pub fn unserialize(bytes: &[u8]) -> Result<Self, std::io::Error> {
         let mut cursor: Cursor<&[u8]> = Cursor::new(bytes);
 
         Ok(CarStatusData {
@@ -68,7 +68,7 @@ impl CarStatusData {
     }
 
     #[allow(dead_code)]
-    pub fn to_bytes(&self) -> Result<Vec<u8>, std::io::Error> {
+    pub fn serialize(&self) -> Result<Vec<u8>, std::io::Error> {
         let mut buffer: Vec<u8> = Vec::with_capacity(size_of::<CarStatusData>());
         let mut cursor: Cursor<&mut Vec<u8>> = Cursor::new(&mut buffer);
 
@@ -111,13 +111,13 @@ pub struct PacketCarStatusData {
 
 impl PacketCarStatusData {
     #[allow(dead_code)]
-    pub fn from_bytes(bytes: &[u8]) -> Result<Self, std::io::Error> {
+    pub fn unserialize(bytes: &[u8]) -> Result<Self, std::io::Error> {
         Ok(PacketCarStatusData {
-            header: PacketHeader::from_bytes(&bytes[..size_of::<PacketHeader>()])?,
+            header: PacketHeader::unserialize(&bytes[..size_of::<PacketHeader>()])?,
             car_status_data: {
                 let mut car_status_data: [CarStatusData; 22] = [CarStatusData::default(); 22];
                 for i in 0..22 {
-                    car_status_data[i] = CarStatusData::from_bytes(
+                    car_status_data[i] = CarStatusData::unserialize(
                         &bytes[size_of::<PacketHeader>() + i * size_of::<CarStatusData>()
                             ..size_of::<PacketHeader>() + (i + 1) * size_of::<CarStatusData>()],
                     )?;
@@ -128,13 +128,13 @@ impl PacketCarStatusData {
     }
 
     #[allow(dead_code)]
-    pub fn to_bytes(&self) -> Result<Vec<u8>, std::io::Error> {
+    pub fn serialize(&self) -> Result<Vec<u8>, std::io::Error> {
         let mut buffer: Vec<u8> = Vec::with_capacity(size_of::<PacketCarStatusData>());
         let mut cursor: Cursor<&mut Vec<u8>> = Cursor::new(&mut buffer);
 
-        cursor.write_all(&self.header.to_bytes()?)?;
+        cursor.write_all(&self.header.serialize()?)?;
         for car_status_data in self.car_status_data {
-            cursor.write_all(&car_status_data.to_bytes()?)?;
+            cursor.write_all(&car_status_data.serialize()?)?;
         }
 
         Ok(buffer)

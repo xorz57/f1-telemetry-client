@@ -26,7 +26,7 @@ pub struct CarTelemetryData {
 
 impl CarTelemetryData {
     #[allow(dead_code)]
-    pub fn from_bytes(bytes: &[u8]) -> Result<Self, std::io::Error> {
+    pub fn unserialize(bytes: &[u8]) -> Result<Self, std::io::Error> {
         let mut cursor: Cursor<&[u8]> = Cursor::new(bytes);
 
         Ok(CarTelemetryData {
@@ -75,7 +75,7 @@ impl CarTelemetryData {
     }
 
     #[allow(dead_code)]
-    pub fn to_bytes(&self) -> Result<Vec<u8>, std::io::Error> {
+    pub fn serialize(&self) -> Result<Vec<u8>, std::io::Error> {
         let mut buffer: Vec<u8> = Vec::with_capacity(size_of::<CarTelemetryData>());
         let mut cursor: Cursor<&mut Vec<u8>> = Cursor::new(&mut buffer);
 
@@ -122,17 +122,17 @@ pub struct PacketCarTelemetryData {
 
 impl PacketCarTelemetryData {
     #[allow(dead_code)]
-    pub fn from_bytes(bytes: &[u8]) -> Result<Self, std::io::Error> {
+    pub fn unserialize(bytes: &[u8]) -> Result<Self, std::io::Error> {
         let mut cursor: Cursor<&[u8]> =
             Cursor::new(&bytes[size_of::<PacketHeader>() + size_of::<[CarTelemetryData; 22]>()..]);
 
         Ok(PacketCarTelemetryData {
-            header: PacketHeader::from_bytes(&bytes[..size_of::<PacketHeader>()])?,
+            header: PacketHeader::unserialize(&bytes[..size_of::<PacketHeader>()])?,
             car_telemetry_data: {
                 let mut car_telemetry_data: [CarTelemetryData; 22] =
                     [CarTelemetryData::default(); 22];
                 for i in 0..22 {
-                    car_telemetry_data[i] = CarTelemetryData::from_bytes(
+                    car_telemetry_data[i] = CarTelemetryData::unserialize(
                         &bytes[size_of::<PacketHeader>() + i * size_of::<CarTelemetryData>()
                             ..size_of::<PacketHeader>() + (i + 1) * size_of::<CarTelemetryData>()],
                     )?;
@@ -146,13 +146,13 @@ impl PacketCarTelemetryData {
     }
 
     #[allow(dead_code)]
-    pub fn to_bytes(&self) -> Result<Vec<u8>, std::io::Error> {
+    pub fn serialize(&self) -> Result<Vec<u8>, std::io::Error> {
         let mut buffer: Vec<u8> = Vec::with_capacity(size_of::<PacketCarTelemetryData>());
         let mut cursor: Cursor<&mut Vec<u8>> = Cursor::new(&mut buffer);
 
-        cursor.write_all(&self.header.to_bytes()?)?;
+        cursor.write_all(&self.header.serialize()?)?;
         for car_telemetry_data in self.car_telemetry_data {
-            cursor.write_all(&car_telemetry_data.to_bytes()?)?;
+            cursor.write_all(&car_telemetry_data.serialize()?)?;
         }
         cursor.write_u8(self.mfd_panel_index)?;
         cursor.write_u8(self.mfd_panel_index_secondary_player)?;

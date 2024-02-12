@@ -18,13 +18,13 @@ pub struct LobbyInfoData {
 impl Default for LobbyInfoData {
     fn default() -> Self {
         LobbyInfoData {
-            ai_controlled: 0,
-            team_id: 0,
-            nationality: 0,
-            platform: 0,
-            name: [0; 48],
-            car_number: 0,
-            ready_status: 0,
+            ai_controlled: 0u8,
+            team_id: 0u8,
+            nationality: 0u8,
+            platform: 0u8,
+            name: [0u8; 48],
+            car_number: 0u8,
+            ready_status: 0u8,
         }
     }
 }
@@ -40,7 +40,7 @@ impl LobbyInfoData {
             nationality: cursor.read_u8()?,
             platform: cursor.read_u8()?,
             name: {
-                let mut name: [u8; 48] = [0; 48];
+                let mut name: [u8; 48] = [0u8; 48];
                 for i in 0..48 {
                     name[i] = cursor.read_u8()?
                 }
@@ -82,7 +82,7 @@ impl Default for PacketLobbyInfoData {
     fn default() -> Self {
         PacketLobbyInfoData {
             header: PacketHeader::default(),
-            num_players: 0,
+            num_players: 0u8,
             lobby_players: [LobbyInfoData::default(); 22],
         }
     }

@@ -170,10 +170,10 @@ impl F1TelemetryClient {
                             // };
                         }
                         4 => {
-                            // match PacketParticipantsData::from_bytes(&self.buffer[..received]) {
-                            //     Ok(packet) => (self.participants_data_handler)(&packet),
-                            //     Err(e) => eprintln!("{e:?}"),
-                            // };
+                            match PacketParticipantsData::from_bytes(&self.buffer[..received]) {
+                                Ok(packet) => (self.participants_data_handler)(&packet),
+                                Err(e) => eprintln!("{e:?}"),
+                            };
                         }
                         5 => {
                             match PacketCarSetupData::from_bytes(&self.buffer[..received]) {

@@ -55,8 +55,8 @@ impl CarMotionData {
 
     #[allow(dead_code)]
     pub fn serialize(&self) -> Result<Vec<u8>, std::io::Error> {
-        let mut buffer: Vec<u8> = Vec::with_capacity(size_of::<CarMotionData>());
-        let mut cursor: Cursor<&mut Vec<u8>> = Cursor::new(&mut buffer);
+        let mut bytes: Vec<u8> = Vec::with_capacity(size_of::<CarMotionData>());
+        let mut cursor: Cursor<&mut Vec<u8>> = Cursor::new(&mut bytes);
 
         cursor.write_f32::<LittleEndian>(self.world_position_x)?;
         cursor.write_f32::<LittleEndian>(self.world_position_y)?;
@@ -77,7 +77,7 @@ impl CarMotionData {
         cursor.write_f32::<LittleEndian>(self.pitch)?;
         cursor.write_f32::<LittleEndian>(self.roll)?;
 
-        Ok(buffer)
+        Ok(bytes)
     }
 }
 
@@ -108,14 +108,14 @@ impl PacketMotionData {
 
     #[allow(dead_code)]
     pub fn serialize(&self) -> Result<Vec<u8>, std::io::Error> {
-        let mut buffer: Vec<u8> = Vec::with_capacity(size_of::<PacketMotionData>());
-        let mut cursor: Cursor<&mut Vec<u8>> = Cursor::new(&mut buffer);
+        let mut bytes: Vec<u8> = Vec::with_capacity(size_of::<PacketMotionData>());
+        let mut cursor: Cursor<&mut Vec<u8>> = Cursor::new(&mut bytes);
 
         cursor.write_all(&self.header.serialize()?)?;
         for car_motion_data in self.car_motion_data {
             cursor.write_all(&car_motion_data.serialize()?)?;
         }
 
-        Ok(buffer)
+        Ok(bytes)
     }
 }

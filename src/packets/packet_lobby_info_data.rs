@@ -53,8 +53,8 @@ impl LobbyInfoData {
 
     #[allow(dead_code)]
     pub fn serialize(&self) -> Result<Vec<u8>, std::io::Error> {
-        let mut buffer: Vec<u8> = Vec::with_capacity(size_of::<LobbyInfoData>());
-        let mut cursor: Cursor<&mut Vec<u8>> = Cursor::new(&mut buffer);
+        let mut bytes: Vec<u8> = Vec::with_capacity(size_of::<LobbyInfoData>());
+        let mut cursor: Cursor<&mut Vec<u8>> = Cursor::new(&mut bytes);
 
         cursor.write_u8(self.ai_controlled)?;
         cursor.write_u8(self.team_id)?;
@@ -66,7 +66,7 @@ impl LobbyInfoData {
         cursor.write_u8(self.car_number)?;
         cursor.write_u8(self.ready_status)?;
 
-        Ok(buffer)
+        Ok(bytes)
     }
 }
 
@@ -111,8 +111,8 @@ impl PacketLobbyInfoData {
 
     #[allow(dead_code)]
     pub fn serialize(&self) -> Result<Vec<u8>, std::io::Error> {
-        let mut buffer: Vec<u8> = Vec::with_capacity(size_of::<PacketLobbyInfoData>());
-        let mut cursor: Cursor<&mut Vec<u8>> = Cursor::new(&mut buffer);
+        let mut bytes: Vec<u8> = Vec::with_capacity(size_of::<PacketLobbyInfoData>());
+        let mut cursor: Cursor<&mut Vec<u8>> = Cursor::new(&mut bytes);
 
         cursor.write_all(&self.header.serialize()?)?;
         cursor.write_u8(self.num_players)?;
@@ -120,6 +120,6 @@ impl PacketLobbyInfoData {
             cursor.write_all(&lobby_players.serialize()?)?;
         }
 
-        Ok(buffer)
+        Ok(bytes)
     }
 }

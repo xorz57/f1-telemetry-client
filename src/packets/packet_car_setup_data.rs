@@ -63,8 +63,8 @@ impl CarSetupData {
 
     #[allow(dead_code)]
     pub fn serialize(&self) -> Result<Vec<u8>, std::io::Error> {
-        let mut buffer: Vec<u8> = Vec::with_capacity(size_of::<CarSetupData>());
-        let mut cursor: Cursor<&mut Vec<u8>> = Cursor::new(&mut buffer);
+        let mut bytes: Vec<u8> = Vec::with_capacity(size_of::<CarSetupData>());
+        let mut cursor: Cursor<&mut Vec<u8>> = Cursor::new(&mut bytes);
 
         cursor.write_u8(self.front_wing)?;
         cursor.write_u8(self.rear_wing)?;
@@ -89,7 +89,7 @@ impl CarSetupData {
         cursor.write_u8(self.ballast)?;
         cursor.write_f32::<LittleEndian>(self.fuel_load)?;
 
-        Ok(buffer)
+        Ok(bytes)
     }
 }
 
@@ -120,14 +120,14 @@ impl PacketCarSetupData {
 
     #[allow(dead_code)]
     pub fn serialize(&self) -> Result<Vec<u8>, std::io::Error> {
-        let mut buffer: Vec<u8> = Vec::with_capacity(size_of::<CarSetupData>());
-        let mut cursor: Cursor<&mut Vec<u8>> = Cursor::new(&mut buffer);
+        let mut bytes: Vec<u8> = Vec::with_capacity(size_of::<CarSetupData>());
+        let mut cursor: Cursor<&mut Vec<u8>> = Cursor::new(&mut bytes);
 
         cursor.write_all(&self.header.serialize()?)?;
         for car_setups in self.car_setups {
             cursor.write_all(&car_setups.serialize()?)?;
         }
 
-        Ok(buffer)
+        Ok(bytes)
     }
 }

@@ -69,8 +69,8 @@ impl CarStatusData {
 
     #[allow(dead_code)]
     pub fn serialize(&self) -> Result<Vec<u8>, std::io::Error> {
-        let mut buffer: Vec<u8> = Vec::with_capacity(size_of::<CarStatusData>());
-        let mut cursor: Cursor<&mut Vec<u8>> = Cursor::new(&mut buffer);
+        let mut bytes: Vec<u8> = Vec::with_capacity(size_of::<CarStatusData>());
+        let mut cursor: Cursor<&mut Vec<u8>> = Cursor::new(&mut bytes);
 
         cursor.write_u8(self.traction_control)?;
         cursor.write_u8(self.anti_lock_brakes)?;
@@ -98,7 +98,7 @@ impl CarStatusData {
         cursor.write_f32::<LittleEndian>(self.ers_deployed_this_lap)?;
         cursor.write_u8(self.network_paused)?;
 
-        Ok(buffer)
+        Ok(bytes)
     }
 }
 
@@ -129,14 +129,14 @@ impl PacketCarStatusData {
 
     #[allow(dead_code)]
     pub fn serialize(&self) -> Result<Vec<u8>, std::io::Error> {
-        let mut buffer: Vec<u8> = Vec::with_capacity(size_of::<PacketCarStatusData>());
-        let mut cursor: Cursor<&mut Vec<u8>> = Cursor::new(&mut buffer);
+        let mut bytes: Vec<u8> = Vec::with_capacity(size_of::<PacketCarStatusData>());
+        let mut cursor: Cursor<&mut Vec<u8>> = Cursor::new(&mut bytes);
 
         cursor.write_all(&self.header.serialize()?)?;
         for car_status_data in self.car_status_data {
             cursor.write_all(&car_status_data.serialize()?)?;
         }
 
-        Ok(buffer)
+        Ok(bytes)
     }
 }

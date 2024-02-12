@@ -83,8 +83,8 @@ impl ParticipantData {
 
     #[allow(dead_code)]
     pub fn serialize(&self) -> Result<Vec<u8>, std::io::Error> {
-        let mut buffer: Vec<u8> = Vec::with_capacity(size_of::<ParticipantData>());
-        let mut cursor: Cursor<&mut Vec<u8>> = Cursor::new(&mut buffer);
+        let mut bytes: Vec<u8> = Vec::with_capacity(size_of::<ParticipantData>());
+        let mut cursor: Cursor<&mut Vec<u8>> = Cursor::new(&mut bytes);
 
         cursor.write_u8(self.ai_controlled)?;
         cursor.write_u8(self.driver_id)?;
@@ -100,7 +100,7 @@ impl ParticipantData {
         cursor.write_u8(self.show_online_names)?;
         cursor.write_u8(self.platform)?;
 
-        Ok(buffer)
+        Ok(bytes)
     }
 }
 
@@ -131,8 +131,8 @@ impl PacketParticipantsData {
 
     #[allow(dead_code)]
     pub fn serialize(&self) -> Result<Vec<u8>, std::io::Error> {
-        let mut buffer: Vec<u8> = Vec::with_capacity(size_of::<PacketParticipantsData>());
-        let mut cursor: Cursor<&mut Vec<u8>> = Cursor::new(&mut buffer);
+        let mut bytes: Vec<u8> = Vec::with_capacity(size_of::<PacketParticipantsData>());
+        let mut cursor: Cursor<&mut Vec<u8>> = Cursor::new(&mut bytes);
 
         cursor.write_all(&self.header.serialize()?)?;
         cursor.write_u8(self.num_active_cars)?;
@@ -140,6 +140,6 @@ impl PacketParticipantsData {
             cursor.write_all(&participants.serialize()?)?;
         }
 
-        Ok(buffer)
+        Ok(bytes)
     }
 }

@@ -76,8 +76,8 @@ impl CarTelemetryData {
 
     #[allow(dead_code)]
     pub fn serialize(&self) -> Result<Vec<u8>, std::io::Error> {
-        let mut buffer: Vec<u8> = Vec::with_capacity(size_of::<CarTelemetryData>());
-        let mut cursor: Cursor<&mut Vec<u8>> = Cursor::new(&mut buffer);
+        let mut bytes: Vec<u8> = Vec::with_capacity(size_of::<CarTelemetryData>());
+        let mut cursor: Cursor<&mut Vec<u8>> = Cursor::new(&mut bytes);
 
         cursor.write_u16::<LittleEndian>(self.speed)?;
         cursor.write_f32::<LittleEndian>(self.throttle)?;
@@ -106,7 +106,7 @@ impl CarTelemetryData {
             cursor.write_u8(element)?;
         }
 
-        Ok(buffer)
+        Ok(bytes)
     }
 }
 
@@ -147,8 +147,8 @@ impl PacketCarTelemetryData {
 
     #[allow(dead_code)]
     pub fn serialize(&self) -> Result<Vec<u8>, std::io::Error> {
-        let mut buffer: Vec<u8> = Vec::with_capacity(size_of::<PacketCarTelemetryData>());
-        let mut cursor: Cursor<&mut Vec<u8>> = Cursor::new(&mut buffer);
+        let mut bytes: Vec<u8> = Vec::with_capacity(size_of::<PacketCarTelemetryData>());
+        let mut cursor: Cursor<&mut Vec<u8>> = Cursor::new(&mut bytes);
 
         cursor.write_all(&self.header.serialize()?)?;
         for car_telemetry_data in self.car_telemetry_data {
@@ -158,6 +158,6 @@ impl PacketCarTelemetryData {
         cursor.write_u8(self.mfd_panel_index_secondary_player)?;
         cursor.write_i8(self.suggested_gear)?;
 
-        Ok(buffer)
+        Ok(bytes)
     }
 }

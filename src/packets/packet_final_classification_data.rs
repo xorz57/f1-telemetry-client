@@ -73,8 +73,8 @@ impl FinalClassificationData {
 
     #[allow(dead_code)]
     pub fn serialize(&self) -> Result<Vec<u8>, std::io::Error> {
-        let mut buffer: Vec<u8> = Vec::with_capacity(size_of::<FinalClassificationData>());
-        let mut cursor: Cursor<&mut Vec<u8>> = Cursor::new(&mut buffer);
+        let mut bytes: Vec<u8> = Vec::with_capacity(size_of::<FinalClassificationData>());
+        let mut cursor: Cursor<&mut Vec<u8>> = Cursor::new(&mut bytes);
 
         cursor.write_u8(self.position)?;
         cursor.write_u8(self.num_laps)?;
@@ -97,7 +97,7 @@ impl FinalClassificationData {
             cursor.write_u8(tyre_stints_end_laps)?;
         }
 
-        Ok(buffer)
+        Ok(bytes)
     }
 }
 
@@ -125,8 +125,8 @@ impl PacketFinalClassificationData {
 
     #[allow(dead_code)]
     pub fn serialize(&self) -> Result<Vec<u8>, std::io::Error> {
-        let mut buffer: Vec<u8> = Vec::with_capacity(size_of::<FinalClassificationData>());
-        let mut cursor: Cursor<&mut Vec<u8>> = Cursor::new(&mut buffer);
+        let mut bytes: Vec<u8> = Vec::with_capacity(size_of::<FinalClassificationData>());
+        let mut cursor: Cursor<&mut Vec<u8>> = Cursor::new(&mut bytes);
 
         cursor.write_all(&self.header.serialize()?)?;
         cursor.write_u8(self.num_cars)?;
@@ -134,6 +134,6 @@ impl PacketFinalClassificationData {
             cursor.write_all(&classification_data.serialize()?)?;
         }
 
-        Ok(buffer)
+        Ok(bytes)
     }
 }

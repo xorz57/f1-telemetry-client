@@ -42,8 +42,8 @@ impl PacketHeader {
 
     #[allow(dead_code)]
     pub fn serialize(&self) -> Result<Vec<u8>, std::io::Error> {
-        let mut buffer: Vec<u8> = Vec::with_capacity(size_of::<PacketHeader>());
-        let mut cursor: Cursor<&mut Vec<u8>> = Cursor::new(&mut buffer);
+        let mut bytes: Vec<u8> = Vec::with_capacity(size_of::<PacketHeader>());
+        let mut cursor: Cursor<&mut Vec<u8>> = Cursor::new(&mut bytes);
 
         cursor.write_u16::<LittleEndian>(self.packet_format)?;
         cursor.write_u8(self.game_year)?;
@@ -58,6 +58,6 @@ impl PacketHeader {
         cursor.write_u8(self.player_car_index)?;
         cursor.write_u8(self.secondary_player_car_index)?;
 
-        Ok(buffer)
+        Ok(bytes)
     }
 }

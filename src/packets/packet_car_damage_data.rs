@@ -76,8 +76,8 @@ impl CarDamageData {
 
     #[allow(dead_code)]
     pub fn serialize(&self) -> Result<Vec<u8>, std::io::Error> {
-        let mut buffer: Vec<u8> = Vec::with_capacity(size_of::<CarDamageData>());
-        let mut cursor: Cursor<&mut Vec<u8>> = Cursor::new(&mut buffer);
+        let mut bytes: Vec<u8> = Vec::with_capacity(size_of::<CarDamageData>());
+        let mut cursor: Cursor<&mut Vec<u8>> = Cursor::new(&mut bytes);
 
         for element in self.tyres_wear {
             cursor.write_f32::<LittleEndian>(element)?;
@@ -107,7 +107,7 @@ impl CarDamageData {
         cursor.write_u8(self.engine_blown)?;
         cursor.write_u8(self.engine_seized)?;
 
-        Ok(buffer)
+        Ok(bytes)
     }
 }
 
@@ -138,14 +138,14 @@ impl PacketCarDamageData {
 
     #[allow(dead_code)]
     pub fn serialize(&self) -> Result<Vec<u8>, std::io::Error> {
-        let mut buffer: Vec<u8> = Vec::with_capacity(size_of::<PacketCarDamageData>());
-        let mut cursor: Cursor<&mut Vec<u8>> = Cursor::new(&mut buffer);
+        let mut bytes: Vec<u8> = Vec::with_capacity(size_of::<PacketCarDamageData>());
+        let mut cursor: Cursor<&mut Vec<u8>> = Cursor::new(&mut bytes);
 
         cursor.write_all(&self.header.serialize()?)?;
         for car_damage_data in self.car_damage_data {
             cursor.write_all(&car_damage_data.serialize()?)?;
         }
 
-        Ok(buffer)
+        Ok(bytes)
     }
 }

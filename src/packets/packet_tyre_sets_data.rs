@@ -37,8 +37,8 @@ impl TyreSetData {
 
     #[allow(dead_code)]
     pub fn serialize(&self) -> Result<Vec<u8>, std::io::Error> {
-        let mut buffer: Vec<u8> = Vec::with_capacity(size_of::<TyreSetData>());
-        let mut cursor: Cursor<&mut Vec<u8>> = Cursor::new(&mut buffer);
+        let mut bytes: Vec<u8> = Vec::with_capacity(size_of::<TyreSetData>());
+        let mut cursor: Cursor<&mut Vec<u8>> = Cursor::new(&mut bytes);
 
         cursor.write_u8(self.actual_tyre_compound)?;
         cursor.write_u8(self.visual_tyre_compound)?;
@@ -50,7 +50,7 @@ impl TyreSetData {
         cursor.write_i16::<LittleEndian>(self.lap_delta_time)?;
         cursor.write_u8(self.fitted)?;
 
-        Ok(buffer)
+        Ok(bytes)
     }
 }
 
@@ -87,8 +87,8 @@ impl PacketTyreSetsData {
 
     #[allow(dead_code)]
     pub fn serialize(&self) -> Result<Vec<u8>, std::io::Error> {
-        let mut buffer: Vec<u8> = Vec::with_capacity(size_of::<PacketTyreSetsData>());
-        let mut cursor: Cursor<&mut Vec<u8>> = Cursor::new(&mut buffer);
+        let mut bytes: Vec<u8> = Vec::with_capacity(size_of::<PacketTyreSetsData>());
+        let mut cursor: Cursor<&mut Vec<u8>> = Cursor::new(&mut bytes);
 
         cursor.write_all(&self.header.serialize()?)?;
         cursor.write_u8(self.car_idx)?;
@@ -97,6 +97,6 @@ impl PacketTyreSetsData {
         }
         cursor.write_u8(self.fitted_idx)?;
 
-        Ok(buffer)
+        Ok(bytes)
     }
 }

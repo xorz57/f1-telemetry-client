@@ -86,8 +86,8 @@ impl LapData {
 
     #[allow(dead_code)]
     pub fn serialize(&self) -> Result<Vec<u8>, std::io::Error> {
-        let mut buffer: Vec<u8> = Vec::with_capacity(size_of::<LapData>());
-        let mut cursor: Cursor<&mut Vec<u8>> = Cursor::new(&mut buffer);
+        let mut bytes: Vec<u8> = Vec::with_capacity(size_of::<LapData>());
+        let mut cursor: Cursor<&mut Vec<u8>> = Cursor::new(&mut bytes);
 
         cursor.write_u32::<LittleEndian>(self.last_lap_time_in_ms)?;
         cursor.write_u32::<LittleEndian>(self.current_lap_time_in_ms)?;
@@ -119,7 +119,7 @@ impl LapData {
         cursor.write_u16::<LittleEndian>(self.pit_stop_timer_in_ms)?;
         cursor.write_u8(self.pit_stop_should_serve_pen)?;
 
-        Ok(buffer)
+        Ok(bytes)
     }
 }
 
@@ -147,8 +147,8 @@ impl PacketLapData {
 
     #[allow(dead_code)]
     pub fn serialize(&self) -> Result<Vec<u8>, std::io::Error> {
-        let mut buffer: Vec<u8> = Vec::with_capacity(size_of::<PacketLapData>());
-        let mut cursor: Cursor<&mut Vec<u8>> = Cursor::new(&mut buffer);
+        let mut bytes: Vec<u8> = Vec::with_capacity(size_of::<PacketLapData>());
+        let mut cursor: Cursor<&mut Vec<u8>> = Cursor::new(&mut bytes);
 
         cursor.write_all(&self.header.serialize()?)?;
         for lap_data in self.lap_data {
@@ -157,6 +157,6 @@ impl PacketLapData {
         cursor.write_u8(self.time_trial_pb_car_idx)?;
         cursor.write_u8(self.time_trial_rival_car_idx)?;
 
-        Ok(buffer)
+        Ok(bytes)
     }
 }

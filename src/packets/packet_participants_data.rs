@@ -45,6 +45,16 @@ pub struct PacketParticipantsData {
     pub participants: [ParticipantData; 22], // 1276 Bytes
 } // 1306 Bytes
 
+impl Default for PacketParticipantsData {
+    fn default() -> Self {
+        PacketParticipantsData {
+            header: PacketHeader::default(),
+            num_active_cars: 0u8,
+            participants: [ParticipantData::default(); 22],
+        }
+    }
+}
+
 impl ParticipantData {
     #[allow(dead_code)]
     pub fn from_bytes(bytes: &[u8]) -> Result<Self, std::io::Error> {

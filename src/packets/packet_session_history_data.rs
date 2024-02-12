@@ -99,6 +99,23 @@ pub struct PacketSessionHistoryData {
     pub tyre_stints_history_data: [TyreStintHistoryData; 8], // 24 Bytes
 } // 1460 Bytes
 
+impl Default for PacketSessionHistoryData {
+    fn default() -> Self {
+        PacketSessionHistoryData {
+            header: PacketHeader::default(),
+            car_idx: 0u8,
+            num_laps: 0u8,
+            num_tyre_stints: 0u8,
+            best_lap_time_lap_num: 0u8,
+            best_sector1_lap_num: 0u8,
+            best_sector2_lap_num: 0u8,
+            best_sector3_lap_num: 0u8,
+            lap_history_data: [LapHistoryData::default(); 100],
+            tyre_stints_history_data: [TyreStintHistoryData::default(); 8],
+        }
+    }
+}
+
 impl PacketSessionHistoryData {
     #[allow(dead_code)]
     pub fn from_bytes(bytes: &[u8]) -> Result<Self, std::io::Error> {

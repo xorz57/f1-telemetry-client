@@ -194,10 +194,10 @@ impl F1TelemetryClient {
                             };
                         }
                         8 => {
-                            // match PacketFinalClassificationData::from_bytes(&self.buffer[..received]) {
-                            //     Ok(packet) => (self.final_classification_handler)(&packet),
-                            //     Err(e) => eprintln!("{e:?}"),
-                            // };
+                            match PacketFinalClassificationData::from_bytes(&self.buffer[..received]) {
+                                Ok(packet) => (self.final_classification_handler)(&packet),
+                                Err(e) => eprintln!("{e:?}"),
+                            };
                         }
                         9 => {
                             match PacketLobbyInfoData::from_bytes(&self.buffer[..received]) {

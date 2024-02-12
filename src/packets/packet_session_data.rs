@@ -46,7 +46,7 @@ pub struct PacketSessionData {
     pub num_weather_forecast_samples: u8,                      // 1 Byte
     pub weather_forecast_samples: [WeatherForecastSample; 56], // 448 Bytes
     pub forecast_accuracy: u8,                                 // 1 Byte
-    pub ai_fifficulty: u8,                                     // 1 Byte
+    pub ai_difficulty: u8,                                     // 1 Byte
     pub season_link_identifier: u32,                           // 4 Bytes
     pub weekend_link_identifier: u32,                          // 4 Bytes
     pub session_link_identifier: u32,                          // 4 Bytes
@@ -101,7 +101,7 @@ impl Default for PacketSessionData {
             num_weather_forecast_samples: 0u8,
             weather_forecast_samples: [WeatherForecastSample::default(); 56],
             forecast_accuracy: 0u8,
-            ai_fifficulty: 0u8,
+            ai_difficulty: 0u8,
             season_link_identifier: 0u32,
             weekend_link_identifier: 0u32,
             session_link_identifier: 0u32,

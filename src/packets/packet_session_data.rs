@@ -8,7 +8,7 @@ pub struct MarshalZone {
 } // 5 Bytes
 
 #[repr(C, packed)]
-#[derive(Debug, Clone, Copy)]
+#[derive(Debug, Default, Clone, Copy)]
 pub struct WeatherForecastSample {
     pub session_type: u8,             // 1 Byte
     pub time_offset: u8,              // 1 Byte
@@ -74,3 +74,60 @@ pub struct PacketSessionData {
     pub num_virtual_safety_car_periods: u8,                    // 1 Byte
     pub num_red_flag_periods: u8,                              // 1 Byte
 } // 644 Bytes
+
+impl Default for PacketSessionData {
+    fn default() -> Self {
+        PacketSessionData {
+            header: PacketHeader::default(),
+            weather: 0u8,
+            track_temperature: 0i8,
+            air_temperature: 0i8,
+            total_laps: 0u8,
+            track_length: 0u16,
+            session_type: 0u8,
+            track_id: 0i8,
+            formula: 0u8,
+            session_time_left: 0u16,
+            session_duration: 0u16,
+            pit_speed_limit: 0u8,
+            game_paused: 0u8,
+            is_spectating: 0u8,
+            spectator_car_index: 0u8,
+            sli_pro_native_support: 0u8,
+            num_marshal_zones: 0u8,
+            marshal_zones: [MarshalZone::default(); 21],
+            safety_car_status: 0u8,
+            network_game: 0u8,
+            num_weather_forecast_samples: 0u8,
+            weather_forecast_samples: [WeatherForecastSample::default(); 56],
+            forecast_accuracy: 0u8,
+            ai_fifficulty: 0u8,
+            season_link_identifier: 0u32,
+            weekend_link_identifier: 0u32,
+            session_link_identifier: 0u32,
+            pit_stop_window_ideal_lap: 0u8,
+            pit_stop_window_latest_lap: 0u8,
+            pit_stop_rejoin_position: 0u8,
+            steering_assist: 0u8,
+            braking_assist: 0u8,
+            gearbox_assist: 0u8,
+            pit_assist: 0u8,
+            pit_release_assist: 0u8,
+            ers_assist: 0u8,
+            drs_assist: 0u8,
+            dynamic_racing_line: 0u8,
+            dynamic_racing_line_type: 0u8,
+            game_mode: 0u8,
+            rule_set: 0u8,
+            time_of_day: 0u32,
+            session_length: 0u8,
+            speed_units_lead_player: 0u8,
+            temperature_units_lead_player: 0u8,
+            speed_units_secondary_player: 0u8,
+            temperature_units_secondary_player: 0u8,
+            num_safety_car_periods: 0u8,
+            num_virtual_safety_car_periods: 0u8,
+            num_red_flag_periods: 0u8,
+        }
+    }
+}

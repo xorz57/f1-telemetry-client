@@ -158,10 +158,10 @@ impl F1TelemetryClient {
                             // };
                         }
                         2 => {
-                            // match PacketLapData::from_bytes(&self.buffer[..received]) {
-                            //     Ok(packet) => (self.lap_data_handler)(&packet),
-                            //     Err(e) => eprintln!("{e:?}"),
-                            // };
+                            match PacketLapData::from_bytes(&self.buffer[..received]) {
+                                Ok(packet) => (self.lap_data_handler)(&packet),
+                                Err(e) => eprintln!("{e:?}"),
+                            };
                         }
                         3 => {
                             // match PacketEventData::from_bytes(&self.buffer[..received]) {

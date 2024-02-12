@@ -34,8 +34,8 @@ fn main() {
     client.on_final_classification(Box::new(|_: &PacketFinalClassificationData| {
         // println!("{packet:?}");
     }));
-    client.on_lap_data(Box::new(|_: &PacketLapData| {
-        // println!("{packet:?}");
+    client.on_lap_data(Box::new(|packet: &PacketLapData| {
+        println!("{packet:?}");
     }));
     client.on_lobby_info(Box::new(|packet: &PacketLobbyInfoData| {
         println!("{packet:?}");

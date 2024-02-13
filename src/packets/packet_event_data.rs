@@ -114,6 +114,69 @@ pub struct PacketEventData {
     pub event_details: EventDataDetails, // 12 Bytes
 } // 45 Bytes
 
+impl Retirement {
+    #[allow(dead_code)]
+    pub fn unserialize(bytes: &[u8]) -> Result<Self, std::io::Error> {
+        let mut cursor: Cursor<&[u8]> = Cursor::new(bytes);
+
+        Ok(Retirement {
+            vehicle_idx: cursor.read_u8()?,
+        })
+    }
+
+    #[allow(dead_code)]
+    pub fn serialize(&self) -> Result<Vec<u8>, std::io::Error> {
+        let mut bytes: Vec<u8> = Vec::with_capacity(size_of::<Retirement>());
+        let mut cursor: Cursor<&mut Vec<u8>> = Cursor::new(&mut bytes);
+
+        cursor.write_u8(self.vehicle_idx)?;
+
+        Ok(bytes)
+    }
+}
+
+impl TeamMateInPits {
+    #[allow(dead_code)]
+    pub fn unserialize(bytes: &[u8]) -> Result<Self, std::io::Error> {
+        let mut cursor: Cursor<&[u8]> = Cursor::new(bytes);
+
+        Ok(TeamMateInPits {
+            vehicle_idx: cursor.read_u8()?,
+        })
+    }
+
+    #[allow(dead_code)]
+    pub fn serialize(&self) -> Result<Vec<u8>, std::io::Error> {
+        let mut bytes: Vec<u8> = Vec::with_capacity(size_of::<TeamMateInPits>());
+        let mut cursor: Cursor<&mut Vec<u8>> = Cursor::new(&mut bytes);
+
+        cursor.write_u8(self.vehicle_idx)?;
+
+        Ok(bytes)
+    }
+}
+
+impl RaceWinner {
+    #[allow(dead_code)]
+    pub fn unserialize(bytes: &[u8]) -> Result<Self, std::io::Error> {
+        let mut cursor: Cursor<&[u8]> = Cursor::new(bytes);
+
+        Ok(RaceWinner {
+            vehicle_idx: cursor.read_u8()?,
+        })
+    }
+
+    #[allow(dead_code)]
+    pub fn serialize(&self) -> Result<Vec<u8>, std::io::Error> {
+        let mut bytes: Vec<u8> = Vec::with_capacity(size_of::<RaceWinner>());
+        let mut cursor: Cursor<&mut Vec<u8>> = Cursor::new(&mut bytes);
+
+        cursor.write_u8(self.vehicle_idx)?;
+
+        Ok(bytes)
+    }
+}
+
 impl StartLights {
     #[allow(dead_code)]
     pub fn unserialize(bytes: &[u8]) -> Result<Self, std::io::Error> {

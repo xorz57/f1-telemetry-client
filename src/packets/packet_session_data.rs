@@ -157,3 +157,38 @@ impl MarshalZone {
         Ok(bytes)
     }
 }
+
+impl WeatherForecastSample {
+    #[allow(dead_code)]
+    pub fn unserialize(bytes: &[u8]) -> Result<Self, std::io::Error> {
+        let mut cursor: Cursor<&[u8]> = Cursor::new(bytes);
+
+        Ok(WeatherForecastSample {
+            session_type: cursor.read_u8()?,
+            time_offset: cursor.read_u8()?,
+            weather: cursor.read_u8()?,
+            track_temperature: cursor.read_i8()?,
+            track_temperature_change: cursor.read_i8()?,
+            air_temperature: cursor.read_i8()?,
+            air_temperature_change: cursor.read_i8()?,
+            rain_percentage: cursor.read_u8()?,
+        })
+    }
+
+    #[allow(dead_code)]
+    pub fn serialize(&self) -> Result<Vec<u8>, std::io::Error> {
+        let mut bytes: Vec<u8> = Vec::with_capacity(size_of::<WeatherForecastSample>());
+        let mut cursor: Cursor<&mut Vec<u8>> = Cursor::new(&mut bytes);
+
+        cursor.write_u8(self.session_type)?;
+        cursor.write_u8(self.time_offset)?;
+        cursor.write_u8(self.weather)?;
+        cursor.write_i8(self.track_temperature)?;
+        cursor.write_i8(self.track_temperature_change)?;
+        cursor.write_i8(self.air_temperature)?;
+        cursor.write_i8(self.air_temperature_change)?;
+        cursor.write_u8(self.rain_percentage)?;
+
+        Ok(bytes)
+    }
+}

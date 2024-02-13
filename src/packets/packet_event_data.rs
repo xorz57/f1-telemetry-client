@@ -1,4 +1,7 @@
 use super::packet_header::PacketHeader;
+use byteorder::{LittleEndian, ReadBytesExt, WriteBytesExt};
+use std::io::Cursor;
+use std::mem::size_of;
 
 #[repr(C, packed)]
 #[derive(Clone, Copy)]
@@ -110,3 +113,133 @@ pub struct PacketEventData {
     pub event_string_code: [u8; 4],      // 4 Bytes
     pub event_details: EventDataDetails, // 12 Bytes
 } // 45 Bytes
+
+impl StartLights {
+    #[allow(dead_code)]
+    pub fn unserialize(bytes: &[u8]) -> Result<Self, std::io::Error> {
+        let mut cursor: Cursor<&[u8]> = Cursor::new(bytes);
+
+        Ok(StartLights {
+            num_lights: cursor.read_u8()?,
+        })
+    }
+
+    #[allow(dead_code)]
+    pub fn serialize(&self) -> Result<Vec<u8>, std::io::Error> {
+        let mut bytes: Vec<u8> = Vec::with_capacity(size_of::<StartLights>());
+        let mut cursor: Cursor<&mut Vec<u8>> = Cursor::new(&mut bytes);
+
+        cursor.write_u8(self.num_lights)?;
+
+        Ok(bytes)
+    }
+}
+
+impl DriveThroughPenaltyServed {
+    #[allow(dead_code)]
+    pub fn unserialize(bytes: &[u8]) -> Result<Self, std::io::Error> {
+        let mut cursor: Cursor<&[u8]> = Cursor::new(bytes);
+
+        Ok(DriveThroughPenaltyServed {
+            vehicle_idx: cursor.read_u8()?,
+        })
+    }
+
+    #[allow(dead_code)]
+    pub fn serialize(&self) -> Result<Vec<u8>, std::io::Error> {
+        let mut bytes: Vec<u8> = Vec::with_capacity(size_of::<DriveThroughPenaltyServed>());
+        let mut cursor: Cursor<&mut Vec<u8>> = Cursor::new(&mut bytes);
+
+        cursor.write_u8(self.vehicle_idx)?;
+
+        Ok(bytes)
+    }
+}
+
+impl StopGoPenaltyServed {
+    #[allow(dead_code)]
+    pub fn unserialize(bytes: &[u8]) -> Result<Self, std::io::Error> {
+        let mut cursor: Cursor<&[u8]> = Cursor::new(bytes);
+
+        Ok(StopGoPenaltyServed {
+            vehicle_idx: cursor.read_u8()?,
+        })
+    }
+
+    #[allow(dead_code)]
+    pub fn serialize(&self) -> Result<Vec<u8>, std::io::Error> {
+        let mut bytes: Vec<u8> = Vec::with_capacity(size_of::<StopGoPenaltyServed>());
+        let mut cursor: Cursor<&mut Vec<u8>> = Cursor::new(&mut bytes);
+
+        cursor.write_u8(self.vehicle_idx)?;
+
+        Ok(bytes)
+    }
+}
+
+impl Flashback {
+    #[allow(dead_code)]
+    pub fn unserialize(bytes: &[u8]) -> Result<Self, std::io::Error> {
+        let mut cursor: Cursor<&[u8]> = Cursor::new(bytes);
+
+        Ok(Flashback {
+            flashback_frame_identifier: cursor.read_u32::<LittleEndian>()?,
+            flashback_session_time: cursor.read_f32::<LittleEndian>()?,
+        })
+    }
+
+    #[allow(dead_code)]
+    pub fn serialize(&self) -> Result<Vec<u8>, std::io::Error> {
+        let mut bytes: Vec<u8> = Vec::with_capacity(size_of::<Flashback>());
+        let mut cursor: Cursor<&mut Vec<u8>> = Cursor::new(&mut bytes);
+
+        cursor.write_u32::<LittleEndian>(self.flashback_frame_identifier)?;
+        cursor.write_f32::<LittleEndian>(self.flashback_session_time)?;
+
+        Ok(bytes)
+    }
+}
+
+impl Buttons {
+    #[allow(dead_code)]
+    pub fn unserialize(bytes: &[u8]) -> Result<Self, std::io::Error> {
+        let mut cursor: Cursor<&[u8]> = Cursor::new(bytes);
+
+        Ok(Buttons {
+            button_status: cursor.read_u32::<LittleEndian>()?,
+        })
+    }
+
+    #[allow(dead_code)]
+    pub fn serialize(&self) -> Result<Vec<u8>, std::io::Error> {
+        let mut bytes: Vec<u8> = Vec::with_capacity(size_of::<Buttons>());
+        let mut cursor: Cursor<&mut Vec<u8>> = Cursor::new(&mut bytes);
+
+        cursor.write_u32::<LittleEndian>(self.button_status)?;
+
+        Ok(bytes)
+    }
+}
+
+impl Overtake {
+    #[allow(dead_code)]
+    pub fn unserialize(bytes: &[u8]) -> Result<Self, std::io::Error> {
+        let mut cursor: Cursor<&[u8]> = Cursor::new(bytes);
+
+        Ok(Overtake {
+            overtaking_vehicle_idx: cursor.read_u8()?,
+            being_overtaken_vehicle_idx: cursor.read_u8()?,
+        })
+    }
+
+    #[allow(dead_code)]
+    pub fn serialize(&self) -> Result<Vec<u8>, std::io::Error> {
+        let mut bytes: Vec<u8> = Vec::with_capacity(size_of::<Overtake>());
+        let mut cursor: Cursor<&mut Vec<u8>> = Cursor::new(&mut bytes);
+
+        cursor.write_u8(self.overtaking_vehicle_idx)?;
+        cursor.write_u8(self.being_overtaken_vehicle_idx)?;
+
+        Ok(bytes)
+    }
+}

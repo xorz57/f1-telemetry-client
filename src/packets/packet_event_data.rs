@@ -114,6 +114,29 @@ pub struct PacketEventData {
     pub event_details: EventDataDetails, // 12 Bytes
 } // 45 Bytes
 
+impl FastestLap {
+    #[allow(dead_code)]
+    pub fn unserialize(bytes: &[u8]) -> Result<Self, std::io::Error> {
+        let mut cursor: Cursor<&[u8]> = Cursor::new(bytes);
+
+        Ok(FastestLap {
+            vehicle_idx: cursor.read_u8()?,
+            lap_time: cursor.read_f32::<LittleEndian>()?,
+        })
+    }
+
+    #[allow(dead_code)]
+    pub fn serialize(&self) -> Result<Vec<u8>, std::io::Error> {
+        let mut bytes: Vec<u8> = Vec::with_capacity(size_of::<FastestLap>());
+        let mut cursor: Cursor<&mut Vec<u8>> = Cursor::new(&mut bytes);
+
+        cursor.write_u8(self.vehicle_idx)?;
+        cursor.write_f32::<LittleEndian>(self.lap_time)?;
+
+        Ok(bytes)
+    }
+}
+
 impl Retirement {
     #[allow(dead_code)]
     pub fn unserialize(bytes: &[u8]) -> Result<Self, std::io::Error> {
@@ -172,6 +195,70 @@ impl RaceWinner {
         let mut cursor: Cursor<&mut Vec<u8>> = Cursor::new(&mut bytes);
 
         cursor.write_u8(self.vehicle_idx)?;
+
+        Ok(bytes)
+    }
+}
+
+impl Penalty {
+    #[allow(dead_code)]
+    pub fn unserialize(bytes: &[u8]) -> Result<Self, std::io::Error> {
+        let mut cursor: Cursor<&[u8]> = Cursor::new(bytes);
+
+        Ok(Penalty {
+            penalty_type: cursor.read_u8()?,
+            infringement_type: cursor.read_u8()?,
+            vehicle_idx: cursor.read_u8()?,
+            other_vehicle_idx: cursor.read_u8()?,
+            time: cursor.read_u8()?,
+            lap_num: cursor.read_u8()?,
+            places_gained: cursor.read_u8()?,
+        })
+    }
+
+    #[allow(dead_code)]
+    pub fn serialize(&self) -> Result<Vec<u8>, std::io::Error> {
+        let mut bytes: Vec<u8> = Vec::with_capacity(size_of::<Penalty>());
+        let mut cursor: Cursor<&mut Vec<u8>> = Cursor::new(&mut bytes);
+
+        cursor.write_u8(self.penalty_type)?;
+        cursor.write_u8(self.infringement_type)?;
+        cursor.write_u8(self.vehicle_idx)?;
+        cursor.write_u8(self.other_vehicle_idx)?;
+        cursor.write_u8(self.time)?;
+        cursor.write_u8(self.lap_num)?;
+        cursor.write_u8(self.places_gained)?;
+
+        Ok(bytes)
+    }
+}
+
+impl SpeedTrap {
+    #[allow(dead_code)]
+    pub fn unserialize(bytes: &[u8]) -> Result<Self, std::io::Error> {
+        let mut cursor: Cursor<&[u8]> = Cursor::new(bytes);
+
+        Ok(SpeedTrap {
+            vehicle_idx: cursor.read_u8()?,
+            speed: cursor.read_f32::<LittleEndian>()?,
+            is_overall_fastest_in_session: cursor.read_u8()?,
+            is_driver_fastest_in_session: cursor.read_u8()?,
+            fastest_vehicle_idx_in_session: cursor.read_u8()?,
+            fastest_speed_in_session: cursor.read_f32::<LittleEndian>()?,
+        })
+    }
+
+    #[allow(dead_code)]
+    pub fn serialize(&self) -> Result<Vec<u8>, std::io::Error> {
+        let mut bytes: Vec<u8> = Vec::with_capacity(size_of::<SpeedTrap>());
+        let mut cursor: Cursor<&mut Vec<u8>> = Cursor::new(&mut bytes);
+
+        cursor.write_u8(self.vehicle_idx)?;
+        cursor.write_f32::<LittleEndian>(self.speed)?;
+        cursor.write_u8(self.is_overall_fastest_in_session)?;
+        cursor.write_u8(self.is_driver_fastest_in_session)?;
+        cursor.write_u8(self.fastest_vehicle_idx_in_session)?;
+        cursor.write_f32::<LittleEndian>(self.fastest_speed_in_session)?;
 
         Ok(bytes)
     }

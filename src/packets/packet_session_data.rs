@@ -1,4 +1,7 @@
 use super::packet_header::PacketHeader;
+use byteorder::{LittleEndian, ReadBytesExt, WriteBytesExt};
+use std::io::Cursor;
+use std::mem::size_of;
 
 #[repr(C, packed)]
 #[derive(Debug, Default, Clone, Copy)]
@@ -129,5 +132,28 @@ impl Default for PacketSessionData {
             num_virtual_safety_car_periods: 0u8,
             num_red_flag_periods: 0u8,
         }
+    }
+}
+
+impl MarshalZone {
+    #[allow(dead_code)]
+    pub fn unserialize(bytes: &[u8]) -> Result<Self, std::io::Error> {
+        let mut cursor: Cursor<&[u8]> = Cursor::new(bytes);
+
+        Ok(MarshalZone {
+            zone_start: cursor.read_f32::<LittleEndian>()?,
+            zone_flag: cursor.read_i8()?,
+        })
+    }
+
+    #[allow(dead_code)]
+    pub fn serialize(&self) -> Result<Vec<u8>, std::io::Error> {
+        let mut bytes: Vec<u8> = Vec::with_capacity(size_of::<MarshalZone>());
+        let mut cursor: Cursor<&mut Vec<u8>> = Cursor::new(&mut bytes);
+
+        cursor.write_f32::<LittleEndian>(self.zone_start)?;
+        cursor.write_i8(self.zone_flag)?;
+
+        Ok(bytes)
     }
 }

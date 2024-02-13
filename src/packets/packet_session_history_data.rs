@@ -16,6 +16,46 @@ pub struct LapHistoryData {
     pub lap_valid_bit_flags: u8,  // 1 Byte
 } // 14 Bytes
 
+#[repr(C, packed)]
+#[derive(Debug, Default, Clone, Copy)]
+pub struct TyreStintHistoryData {
+    pub end_lap: u8,              // 1 Byte
+    pub tyre_actual_compound: u8, // 1 Byte
+    pub tyre_visual_compound: u8, // 1 Byte
+} // 3 Bytes
+
+#[repr(C, packed)]
+#[derive(Debug, Clone, Copy)]
+pub struct PacketSessionHistoryData {
+    pub header: PacketHeader,                                // 29 Bytes
+    pub car_idx: u8,                                         // 1 Byte
+    pub num_laps: u8,                                        // 1 Byte
+    pub num_tyre_stints: u8,                                 // 1 Byte
+    pub best_lap_time_lap_num: u8,                           // 1 Byte
+    pub best_sector1_lap_num: u8,                            // 1 Byte
+    pub best_sector2_lap_num: u8,                            // 1 Byte
+    pub best_sector3_lap_num: u8,                            // 1 Byte
+    pub lap_history_data: [LapHistoryData; 100],             // 1400 Bytes
+    pub tyre_stints_history_data: [TyreStintHistoryData; 8], // 24 Bytes
+} // 1460 Bytes
+
+impl Default for PacketSessionHistoryData {
+    fn default() -> Self {
+        PacketSessionHistoryData {
+            header: PacketHeader::default(),
+            car_idx: 0u8,
+            num_laps: 0u8,
+            num_tyre_stints: 0u8,
+            best_lap_time_lap_num: 0u8,
+            best_sector1_lap_num: 0u8,
+            best_sector2_lap_num: 0u8,
+            best_sector3_lap_num: 0u8,
+            lap_history_data: [LapHistoryData::default(); 100],
+            tyre_stints_history_data: [TyreStintHistoryData::default(); 8],
+        }
+    }
+}
+
 impl LapHistoryData {
     #[allow(dead_code)]
     pub fn unserialize(bytes: &[u8]) -> Result<Self, std::io::Error> {
@@ -51,14 +91,6 @@ impl LapHistoryData {
     }
 }
 
-#[repr(C, packed)]
-#[derive(Debug, Default, Clone, Copy)]
-pub struct TyreStintHistoryData {
-    pub end_lap: u8,              // 1 Byte
-    pub tyre_actual_compound: u8, // 1 Byte
-    pub tyre_visual_compound: u8, // 1 Byte
-} // 3 Bytes
-
 impl TyreStintHistoryData {
     #[allow(dead_code)]
     pub fn unserialize(bytes: &[u8]) -> Result<Self, std::io::Error> {
@@ -81,38 +113,6 @@ impl TyreStintHistoryData {
         cursor.write_u8(self.tyre_visual_compound)?;
 
         Ok(bytes)
-    }
-}
-
-#[repr(C, packed)]
-#[derive(Debug, Clone, Copy)]
-pub struct PacketSessionHistoryData {
-    pub header: PacketHeader,                                // 29 Bytes
-    pub car_idx: u8,                                         // 1 Byte
-    pub num_laps: u8,                                        // 1 Byte
-    pub num_tyre_stints: u8,                                 // 1 Byte
-    pub best_lap_time_lap_num: u8,                           // 1 Byte
-    pub best_sector1_lap_num: u8,                            // 1 Byte
-    pub best_sector2_lap_num: u8,                            // 1 Byte
-    pub best_sector3_lap_num: u8,                            // 1 Byte
-    pub lap_history_data: [LapHistoryData; 100],             // 1400 Bytes
-    pub tyre_stints_history_data: [TyreStintHistoryData; 8], // 24 Bytes
-} // 1460 Bytes
-
-impl Default for PacketSessionHistoryData {
-    fn default() -> Self {
-        PacketSessionHistoryData {
-            header: PacketHeader::default(),
-            car_idx: 0u8,
-            num_laps: 0u8,
-            num_tyre_stints: 0u8,
-            best_lap_time_lap_num: 0u8,
-            best_sector1_lap_num: 0u8,
-            best_sector2_lap_num: 0u8,
-            best_sector3_lap_num: 0u8,
-            lap_history_data: [LapHistoryData::default(); 100],
-            tyre_stints_history_data: [TyreStintHistoryData::default(); 8],
-        }
     }
 }
 

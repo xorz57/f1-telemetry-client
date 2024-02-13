@@ -17,6 +17,15 @@ pub struct TyreSetData {
     pub fitted: u8,               // 1 Byte
 } // 10 Bytes
 
+#[repr(C, packed)]
+#[derive(Debug, Default, Clone, Copy)]
+pub struct PacketTyreSetsData {
+    pub header: PacketHeader,             // 29 Bytes
+    pub car_idx: u8,                      // 1 Byte
+    pub tyre_set_data: [TyreSetData; 20], // 200 Bytes
+    pub fitted_idx: u8,                   // 1 Byte
+} // 231 Bytes
+
 impl TyreSetData {
     #[allow(dead_code)]
     pub fn unserialize(bytes: &[u8]) -> Result<Self, std::io::Error> {
@@ -53,15 +62,6 @@ impl TyreSetData {
         Ok(bytes)
     }
 }
-
-#[repr(C, packed)]
-#[derive(Debug, Default, Clone, Copy)]
-pub struct PacketTyreSetsData {
-    pub header: PacketHeader,             // 29 Bytes
-    pub car_idx: u8,                      // 1 Byte
-    pub tyre_set_data: [TyreSetData; 20], // 200 Bytes
-    pub fitted_idx: u8,                   // 1 Byte
-} // 231 Bytes
 
 impl PacketTyreSetsData {
     #[allow(dead_code)]

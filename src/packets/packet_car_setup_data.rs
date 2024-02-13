@@ -30,6 +30,13 @@ pub struct CarSetupData {
     pub fuel_load: f32,                 // 4 Bytes
 } // 49 Bytes
 
+#[repr(C, packed)]
+#[derive(Debug, Default, Clone, Copy)]
+pub struct PacketCarSetupData {
+    pub header: PacketHeader,           // 29 Bytes
+    pub car_setups: [CarSetupData; 22], // 1078 Bytes
+} // 1107 Bytes
+
 impl CarSetupData {
     #[allow(dead_code)]
     pub fn unserialize(bytes: &[u8]) -> Result<Self, std::io::Error> {
@@ -92,13 +99,6 @@ impl CarSetupData {
         Ok(bytes)
     }
 }
-
-#[repr(C, packed)]
-#[derive(Debug, Default, Clone, Copy)]
-pub struct PacketCarSetupData {
-    pub header: PacketHeader,           // 29 Bytes
-    pub car_setups: [CarSetupData; 22], // 1078 Bytes
-} // 1107 Bytes
 
 impl PacketCarSetupData {
     #[allow(dead_code)]

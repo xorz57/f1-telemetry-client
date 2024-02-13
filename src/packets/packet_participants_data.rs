@@ -19,6 +19,14 @@ pub struct ParticipantData {
     pub platform: u8,          // 1 Byte
 } // 58 Bytes
 
+#[repr(C, packed)]
+#[derive(Debug, Clone, Copy)]
+pub struct PacketParticipantsData {
+    pub header: PacketHeader,                // 29 Bytes
+    pub num_active_cars: u8,                 // 1 Byte
+    pub participants: [ParticipantData; 22], // 1276 Bytes
+} // 1306 Bytes
+
 impl Default for ParticipantData {
     fn default() -> Self {
         ParticipantData {
@@ -36,14 +44,6 @@ impl Default for ParticipantData {
         }
     }
 }
-
-#[repr(C, packed)]
-#[derive(Debug, Clone, Copy)]
-pub struct PacketParticipantsData {
-    pub header: PacketHeader,                // 29 Bytes
-    pub num_active_cars: u8,                 // 1 Byte
-    pub participants: [ParticipantData; 22], // 1276 Bytes
-} // 1306 Bytes
 
 impl Default for PacketParticipantsData {
     fn default() -> Self {

@@ -24,6 +24,16 @@ pub struct CarTelemetryData {
     pub surface_type: [u8; 4],              // 4 Bytes
 } // 60 Bytes
 
+#[repr(C, packed)]
+#[derive(Debug, Default, Clone, Copy)]
+pub struct PacketCarTelemetryData {
+    pub header: PacketHeader,                       // 29 Bytes
+    pub car_telemetry_data: [CarTelemetryData; 22], // 1320 Bytes
+    pub mfd_panel_index: u8,                        // 1 Byte
+    pub mfd_panel_index_secondary_player: u8,       // 1 Byte
+    pub suggested_gear: i8,                         // 1 Byte
+} // 1352 Bytes
+
 impl CarTelemetryData {
     #[allow(dead_code)]
     pub fn unserialize(bytes: &[u8]) -> Result<Self, std::io::Error> {
@@ -109,16 +119,6 @@ impl CarTelemetryData {
         Ok(bytes)
     }
 }
-
-#[repr(C, packed)]
-#[derive(Debug, Default, Clone, Copy)]
-pub struct PacketCarTelemetryData {
-    pub header: PacketHeader,                       // 29 Bytes
-    pub car_telemetry_data: [CarTelemetryData; 22], // 1320 Bytes
-    pub mfd_panel_index: u8,                        // 1 Byte
-    pub mfd_panel_index_secondary_player: u8,       // 1 Byte
-    pub suggested_gear: i8,                         // 1 Byte
-} // 1352 Bytes
 
 impl PacketCarTelemetryData {
     #[allow(dead_code)]

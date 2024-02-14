@@ -4,7 +4,7 @@ use std::io::{Cursor, Write};
 use std::mem::size_of;
 
 #[repr(C, packed)]
-#[derive(Debug, Default, Clone, Copy)]
+#[derive(Debug, Default, Clone, Copy, PartialEq)]
 pub struct CarStatusData {
     pub traction_control: u8,             // 1 Byte
     pub anti_lock_brakes: u8,             // 1 Byte
@@ -34,7 +34,7 @@ pub struct CarStatusData {
 } // 55 Bytes
 
 #[repr(C, packed)]
-#[derive(Debug, Default, Clone, Copy)]
+#[derive(Debug, Default, Clone, Copy, PartialEq)]
 pub struct PacketCarStatusData {
     pub header: PacketHeader,                 // 29 Bytes
     pub car_status_data: [CarStatusData; 22], // 1210 Bytes
@@ -138,5 +138,51 @@ impl PacketCarStatusData {
         }
 
         Ok(bytes)
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_serialization_deserialization() {
+        // Create some sample car status data
+        let original_car_status_data: CarStatusData = CarStatusData {
+            traction_control: 1,
+            anti_lock_brakes: 2,
+            fuel_mix: 3,
+            front_brake_bias: 4,
+            pit_limiter_status: 5,
+            fuel_in_tank: 0.1,
+            fuel_capacity: 0.2,
+            fuel_remaining_laps: 0.3,
+            max_rpm: 1000,
+            idle_rpm: 500,
+            max_gears: 7,
+            drs_allowed: 1,
+            drs_activation_distance: 50,
+            actual_tyre_compound: 1,
+            visual_tyre_compound: 2,
+            tyres_age_laps: 10,
+            vehicle_fia_flags: -1,
+            engine_power_ice: 300.0,
+            engine_power_mguk: 200.0,
+            ers_store_energy: 150.0,
+            ers_deploy_mode: 1,
+            ers_harvested_this_lap_mguk: 100.0,
+            ers_harvested_this_lap_mguh: 50.0,
+            ers_deployed_this_lap: 75.0,
+            network_paused: 0,
+        };
+
+        // Serialize the data
+        let serialized_data: Vec<u8> = original_car_status_data.serialize().unwrap();
+
+        // Deserialize the serialized data
+        let deserialized_car_status_data: CarStatusData = CarStatusData::unserialize(&serialized_data).unwrap();
+
+        // Check if the deserialized data matches the original data
+        assert_eq!(original_car_status_data, deserialized_car_status_data);
     }
 }

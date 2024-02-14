@@ -4,7 +4,7 @@ use std::io::{Cursor, Write};
 use std::mem::size_of;
 
 #[repr(C, packed)]
-#[derive(Debug, Default, Clone, Copy)]
+#[derive(Debug, Default, Clone, Copy, PartialEq)]
 pub struct CarSetupData {
     pub front_wing: u8,                 // 1 Byte
     pub rear_wing: u8,                  // 1 Byte
@@ -31,7 +31,7 @@ pub struct CarSetupData {
 } // 49 Bytes
 
 #[repr(C, packed)]
-#[derive(Debug, Default, Clone, Copy)]
+#[derive(Debug, Default, Clone, Copy, PartialEq)]
 pub struct PacketCarSetupData {
     pub header: PacketHeader,           // 29 Bytes
     pub car_setups: [CarSetupData; 22], // 1078 Bytes
@@ -129,5 +129,48 @@ impl PacketCarSetupData {
         }
 
         Ok(bytes)
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_serialization_deserialization() {
+        // Create some sample car setup data
+        let original_car_setup_data: CarSetupData = CarSetupData {
+            front_wing: 1,
+            rear_wing: 2,
+            on_throttle: 3,
+            off_throttle: 4,
+            front_camber: 0.1,
+            rear_camber: 0.2,
+            front_toe: 0.3,
+            rear_toe: 0.4,
+            front_suspension: 5,
+            rear_suspension: 6,
+            front_anti_roll_bar: 7,
+            rear_anti_roll_bar: 8,
+            front_suspension_height: 9,
+            rear_suspension_height: 10,
+            brake_pressure: 11,
+            brake_bias: 12,
+            rear_left_tyre_pressure: 0.5,
+            rear_right_tyre_pressure: 0.6,
+            front_left_tyre_pressure: 0.7,
+            front_right_tyre_pressure: 0.8,
+            ballast: 13,
+            fuel_load: 0.9,
+        };
+
+        // Serialize the data
+        let serialized_data: Vec<u8> = original_car_setup_data.serialize().unwrap();
+
+        // Deserialize the serialized data
+        let deserialized_car_setup_data: CarSetupData = CarSetupData::unserialize(&serialized_data).unwrap();
+
+        // Check if the deserialized data matches the original data
+        assert_eq!(original_car_setup_data, deserialized_car_setup_data);
     }
 }

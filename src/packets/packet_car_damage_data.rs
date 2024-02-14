@@ -4,7 +4,7 @@ use std::io::{Cursor, Write};
 use std::mem::size_of;
 
 #[repr(C, packed)]
-#[derive(Debug, Default, Clone, Copy)]
+#[derive(Debug, Default, Clone, Copy, PartialEq)]
 pub struct CarDamageData {
     pub tyres_wear: [f32; 4],        // 16 Bytes
     pub tyres_damage: [u8; 4],       // 4 Bytes
@@ -30,7 +30,7 @@ pub struct CarDamageData {
 } // 42 Bytes
 
 #[repr(C, packed)]
-#[derive(Debug, Default, Clone, Copy)]
+#[derive(Debug, Default, Clone, Copy, PartialEq)]
 pub struct PacketCarDamageData {
     pub header: PacketHeader,                 // 29 Bytes
     pub car_damage_data: [CarDamageData; 22], // 924 Bytes
@@ -147,5 +147,47 @@ impl PacketCarDamageData {
         }
 
         Ok(bytes)
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_serialization_deserialization() {
+        // Create some sample car damage data
+        let original_car_damage_data: CarDamageData = CarDamageData {
+            tyres_wear: [0.1, 0.2, 0.3, 0.4],
+            tyres_damage: [10, 20, 30, 40],
+            brakes_damage: [5, 10, 15, 20],
+            front_left_wing_damage: 25,
+            front_right_wing_damage: 30,
+            rear_wing_damage: 35,
+            floor_damage: 5,
+            diffuser_damage: 8,
+            sidepod_damage: 12,
+            drs_fault: 0,
+            ers_fault: 0,
+            gearbox_damage: 15,
+            engine_damage: 20,
+            engine_mguh_wear: 25,
+            engine_es_wear: 30,
+            engine_ce_wear: 35,
+            engine_ice_wear: 40,
+            engine_mguk_wear: 45,
+            engine_tc_wear: 50,
+            engine_blown: 0,
+            engine_seized: 0,
+        };
+
+        // Serialize the data
+        let serialized_data: Vec<u8> = original_car_damage_data.serialize().unwrap();
+
+        // Deserialize the serialized data
+        let deserialized_car_damage_data: CarDamageData = CarDamageData::unserialize(&serialized_data).unwrap();
+
+        // Check if the deserialized data matches the original data
+        assert_eq!(original_car_damage_data, deserialized_car_damage_data);
     }
 }

@@ -4,14 +4,14 @@ use std::io::{Cursor, Write};
 use std::mem::size_of;
 
 #[repr(C, packed)]
-#[derive(Debug, Default, Clone, Copy)]
+#[derive(Debug, Default, Clone, Copy, PartialEq)]
 pub struct MarshalZone {
     pub zone_start: f32, // 4 Bytes
     pub zone_flag: i8,   // 1 Byte
 } // 5 Bytes
 
 #[repr(C, packed)]
-#[derive(Debug, Default, Clone, Copy)]
+#[derive(Debug, Default, Clone, Copy, PartialEq)]
 pub struct WeatherForecastSample {
     pub session_type: u8,             // 1 Byte
     pub time_offset: u8,              // 1 Byte
@@ -24,7 +24,7 @@ pub struct WeatherForecastSample {
 } // 8 Bytes
 
 #[repr(C, packed)]
-#[derive(Debug, Clone, Copy)]
+#[derive(Debug, Clone, Copy, PartialEq)]
 pub struct PacketSessionData {
     pub header: PacketHeader,                                  // 29 Bytes
     pub weather: u8,                                           // 1 Byte
@@ -351,5 +351,50 @@ impl PacketSessionData {
         cursor.write_u8(self.num_red_flag_periods)?;
 
         Ok(bytes)
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_serialization_deserialization() {
+        // Create some sample marshal zones
+        let original_marshal_zones: [MarshalZone; 21] = [MarshalZone {
+            zone_start: 10.0,
+            zone_flag: 1,
+        }; 21];
+
+        // Create some sample weather forecast samples
+        let original_weather_forecast_samples: [WeatherForecastSample; 56] =
+            [WeatherForecastSample {
+                session_type: 1,
+                time_offset: 2,
+                weather: 3,
+                track_temperature: 20,
+                track_temperature_change: 1,
+                air_temperature: 25,
+                air_temperature_change: -2,
+                rain_percentage: 10,
+            }; 56];
+
+        // Create a sample packet session data
+        let mut original_packet_session_data: PacketSessionData = PacketSessionData::default();
+        original_packet_session_data.marshal_zones = original_marshal_zones;
+        original_packet_session_data.weather_forecast_samples = original_weather_forecast_samples;
+
+        // Serialize the data
+        let serialized_data: Vec<u8> = original_packet_session_data.serialize().unwrap();
+
+        // Deserialize the serialized data
+        let deserialized_packet_session_data: PacketSessionData =
+            PacketSessionData::unserialize(&serialized_data).unwrap();
+
+        // Check if the deserialized data matches the original data
+        assert_eq!(
+            original_packet_session_data,
+            deserialized_packet_session_data
+        );
     }
 }

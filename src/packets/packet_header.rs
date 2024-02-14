@@ -3,7 +3,7 @@ use std::io::Cursor;
 use std::mem::size_of;
 
 #[repr(C, packed)]
-#[derive(Debug, Default, Clone, Copy)]
+#[derive(Debug, Default, Clone, Copy, PartialEq)]
 pub struct PacketHeader {
     pub packet_format: u16,             // 2 Bytes
     pub game_year: u8,                  // 1 Byte
@@ -59,5 +59,38 @@ impl PacketHeader {
         cursor.write_u8(self.secondary_player_car_index)?;
 
         Ok(bytes)
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_packet_header_serialization_deserialization() {
+        // Create some sample packet header data
+        let original_packet_header: PacketHeader = PacketHeader {
+            packet_format: 2021,
+            game_year: 21,
+            game_major_version: 1,
+            game_minor_version: 3,
+            packet_version: 1,
+            packet_id: 0,
+            session_uid: 123456789,
+            session_time: 123.456,
+            frame_identifier: 1000,
+            overall_frame_identifier: 5000,
+            player_car_index: 1,
+            secondary_player_car_index: 255,
+        };
+
+        // Serialize the data
+        let serialized_data: Vec<u8> = original_packet_header.serialize().unwrap();
+
+        // Deserialize the serialized data
+        let deserialized_packet_header: PacketHeader = PacketHeader::unserialize(&serialized_data).unwrap();
+
+        // Check if the deserialized data matches the original data
+        assert_eq!(original_packet_header, deserialized_packet_header);
     }
 }

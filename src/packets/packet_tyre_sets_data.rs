@@ -4,7 +4,7 @@ use std::io::{Cursor, Write};
 use std::mem::size_of;
 
 #[repr(C, packed)]
-#[derive(Debug, Default, Clone, Copy)]
+#[derive(Debug, Default, Clone, Copy, PartialEq)]
 pub struct TyreSetData {
     pub actual_tyre_compound: u8, // 1 Byte
     pub visual_tyre_compound: u8, // 1 Byte
@@ -18,7 +18,7 @@ pub struct TyreSetData {
 } // 10 Bytes
 
 #[repr(C, packed)]
-#[derive(Debug, Default, Clone, Copy)]
+#[derive(Debug, Default, Clone, Copy, PartialEq)]
 pub struct PacketTyreSetsData {
     pub header: PacketHeader,             // 29 Bytes
     pub car_idx: u8,                      // 1 Byte
@@ -98,5 +98,35 @@ impl PacketTyreSetsData {
         cursor.write_u8(self.fitted_idx)?;
 
         Ok(bytes)
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_serialization_deserialization() {
+        // Create some sample tyre set data
+        let original_tyre_set_data = TyreSetData {
+            actual_tyre_compound: 1,
+            visual_tyre_compound: 2,
+            wear: 50,
+            available: 1,
+            recommended_session: 0,
+            life_span: 80,
+            usable_life: 60,
+            lap_delta_time: 500,
+            fitted: 1,
+        };
+
+        // Serialize the data
+        let serialized_data = original_tyre_set_data.serialize().unwrap();
+
+        // Deserialize the serialized data
+        let deserialized_tyre_set_data = TyreSetData::unserialize(&serialized_data).unwrap();
+
+        // Check if the deserialized data matches the original data
+        assert_eq!(original_tyre_set_data, deserialized_tyre_set_data);
     }
 }

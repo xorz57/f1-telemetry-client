@@ -4,7 +4,7 @@ use std::io::{Cursor, Write};
 use std::mem::size_of;
 
 #[repr(C, packed)]
-#[derive(Debug, Default, Clone, Copy)]
+#[derive(Debug, Default, Clone, Copy, PartialEq)]
 pub struct LapHistoryData {
     pub lap_time_in_ms: u32,      // 4 Bytes
     pub sector1_time_in_ms: u16,  // 2 Bytes
@@ -17,7 +17,7 @@ pub struct LapHistoryData {
 } // 14 Bytes
 
 #[repr(C, packed)]
-#[derive(Debug, Default, Clone, Copy)]
+#[derive(Debug, Default, Clone, Copy, PartialEq)]
 pub struct TyreStintHistoryData {
     pub end_lap: u8,              // 1 Byte
     pub tyre_actual_compound: u8, // 1 Byte
@@ -25,7 +25,7 @@ pub struct TyreStintHistoryData {
 } // 3 Bytes
 
 #[repr(C, packed)]
-#[derive(Debug, Clone, Copy)]
+#[derive(Debug, Clone, Copy, PartialEq)]
 pub struct PacketSessionHistoryData {
     pub header: PacketHeader,                                // 29 Bytes
     pub car_idx: u8,                                         // 1 Byte
@@ -185,5 +185,58 @@ impl PacketSessionHistoryData {
         }
 
         Ok(bytes)
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_serialization_deserialization() {
+        // Create some sample lap history data
+        let original_lap_history_data = LapHistoryData {
+            lap_time_in_ms: 120_000,
+            sector1_time_in_ms: 30_000,
+            sector1_time_minutes: 1,
+            sector2_time_in_ms: 40_000,
+            sector2_time_minutes: 1,
+            sector3_time_in_ms: 50_000,
+            sector3_time_minutes: 1,
+            lap_valid_bit_flags: 1,
+        };
+
+        // Create some sample tyre stint history data
+        let original_tyre_stint_history_data = TyreStintHistoryData {
+            end_lap: 20,
+            tyre_actual_compound: 1,
+            tyre_visual_compound: 2,
+        };
+
+        // Create a sample packet session history data
+        let mut original_packet_session_history_data = PacketSessionHistoryData::default();
+        original_packet_session_history_data.car_idx = 1;
+        original_packet_session_history_data.num_laps = 20;
+        original_packet_session_history_data.num_tyre_stints = 3;
+        original_packet_session_history_data.best_lap_time_lap_num = 10;
+        original_packet_session_history_data.best_sector1_lap_num = 5;
+        original_packet_session_history_data.best_sector2_lap_num = 8;
+        original_packet_session_history_data.best_sector3_lap_num = 15;
+        original_packet_session_history_data.lap_history_data[0] = original_lap_history_data;
+        original_packet_session_history_data.tyre_stints_history_data[0] =
+            original_tyre_stint_history_data;
+
+        // Serialize the data
+        let serialized_data = original_packet_session_history_data.serialize().unwrap();
+
+        // Deserialize the serialized data
+        let deserialized_packet_session_history_data =
+            PacketSessionHistoryData::unserialize(&serialized_data).unwrap();
+
+        // Check if the deserialized data matches the original data
+        assert_eq!(
+            original_packet_session_history_data,
+            deserialized_packet_session_history_data
+        );
     }
 }

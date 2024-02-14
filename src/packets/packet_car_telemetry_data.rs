@@ -4,7 +4,7 @@ use std::io::{Cursor, Write};
 use std::mem::size_of;
 
 #[repr(C, packed)]
-#[derive(Debug, Default, Clone, Copy)]
+#[derive(Debug, Default, Clone, Copy, PartialEq)]
 pub struct CarTelemetryData {
     pub speed: u16,                         // 2 Bytes
     pub throttle: f32,                      // 4 Bytes
@@ -25,7 +25,7 @@ pub struct CarTelemetryData {
 } // 60 Bytes
 
 #[repr(C, packed)]
-#[derive(Debug, Default, Clone, Copy)]
+#[derive(Debug, Default, Clone, Copy, PartialEq)]
 pub struct PacketCarTelemetryData {
     pub header: PacketHeader,                       // 29 Bytes
     pub car_telemetry_data: [CarTelemetryData; 22], // 1320 Bytes
@@ -159,5 +159,43 @@ impl PacketCarTelemetryData {
         cursor.write_i8(self.suggested_gear)?;
 
         Ok(bytes)
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_serialization_deserialization() {
+        // Create some sample car telemetry data
+        let original_car_telemetry_data: CarTelemetryData = CarTelemetryData {
+            speed: 200,
+            throttle: 0.8,
+            steer: 0.2,
+            brake: 0.0,
+            clutch: 0,
+            gear: 3,
+            engine_rpm: 8000,
+            drs: 1,
+            rev_lights_percent: 50,
+            rev_lights_bit_value: 1000,
+            brakes_temperature: [500, 550, 600, 625],
+            tyres_surface_temperature: [90, 91, 92, 93],
+            tyres_inner_temperature: [85, 86, 87, 88],
+            engine_temperature: 95,
+            tyres_pressure: [1.9, 1.8, 1.9, 2.0],
+            surface_type: [1, 2, 3, 4],
+        };
+
+        // Serialize the data
+        let serialized_data: Vec<u8> = original_car_telemetry_data.serialize().unwrap();
+
+        // Deserialize the serialized data
+        let deserialized_car_telemetry_data: CarTelemetryData =
+            CarTelemetryData::unserialize(&serialized_data).unwrap();
+
+        // Check if the deserialized data matches the original data
+        assert_eq!(original_car_telemetry_data, deserialized_car_telemetry_data);
     }
 }

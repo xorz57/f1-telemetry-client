@@ -60,8 +60,8 @@ fn main() {
     client.on_participants_data(Box::new(|packet: &PacketParticipantsData| {
         println!("{packet:?}");
     }));
-    client.on_session_data(Box::new(|_: &PacketSessionData| {
-        // println!("{packet:?}");
+    client.on_session_data(Box::new(|packet: &PacketSessionData| {
+        println!("{packet:?}");
     }));
     client.on_session_history_data(Box::new(|packet: &PacketSessionHistoryData| {
         println!("{packet:?}");

@@ -152,10 +152,10 @@ impl F1TelemetryClient {
                             };
                         }
                         1 => {
-                            // match PacketSessionData::unserialize(&self.buf[..received]) {
-                            //     Ok(packet) => (self.session_data_handler)(&packet),
-                            //     Err(e) => eprintln!("{e:?}"),
-                            // };
+                            match PacketSessionData::unserialize(&self.buf[..received]) {
+                                Ok(packet) => (self.session_data_handler)(&packet),
+                                Err(e) => eprintln!("{e:?}"),
+                            };
                         }
                         2 => {
                             match PacketLapData::unserialize(&self.buf[..received]) {

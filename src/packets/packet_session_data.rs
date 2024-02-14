@@ -1,6 +1,6 @@
 use super::packet_header::PacketHeader;
 use byteorder::{LittleEndian, ReadBytesExt, WriteBytesExt};
-use std::io::Cursor;
+use std::io::{Cursor, Write};
 use std::mem::size_of;
 
 #[repr(C, packed)]
@@ -188,6 +188,167 @@ impl WeatherForecastSample {
         cursor.write_i8(self.air_temperature)?;
         cursor.write_i8(self.air_temperature_change)?;
         cursor.write_u8(self.rain_percentage)?;
+
+        Ok(bytes)
+    }
+}
+
+impl PacketSessionData {
+    #[allow(dead_code)]
+    pub fn unserialize(bytes: &[u8]) -> Result<Self, std::io::Error> {
+        let mut cursor: Cursor<&[u8]> = Cursor::new(bytes);
+
+        Ok(PacketSessionData {
+            header: {
+                let pos: usize = size_of::<PacketHeader>();
+                cursor.set_position(pos as u64);
+                PacketHeader::unserialize(&bytes[..pos])?
+            },
+            weather: cursor.read_u8()?,
+            track_temperature: cursor.read_i8()?,
+            air_temperature: cursor.read_i8()?,
+            total_laps: cursor.read_u8()?,
+            track_length: cursor.read_u16::<LittleEndian>()?,
+            session_type: cursor.read_u8()?,
+            track_id: cursor.read_i8()?,
+            formula: cursor.read_u8()?,
+            session_time_left: cursor.read_u16::<LittleEndian>()?,
+            session_duration: cursor.read_u16::<LittleEndian>()?,
+            pit_speed_limit: cursor.read_u8()?,
+            game_paused: cursor.read_u8()?,
+            is_spectating: cursor.read_u8()?,
+            spectator_car_index: cursor.read_u8()?,
+            sli_pro_native_support: cursor.read_u8()?,
+            num_marshal_zones: cursor.read_u8()?,
+            marshal_zones: {
+                let offset: usize = size_of::<PacketHeader>()
+                    + 3 * size_of::<i8>()
+                    + 10 * size_of::<u8>()
+                    + 3 * size_of::<u16>();
+                let pos: usize = offset + size_of::<[MarshalZone; 21]>();
+                cursor.set_position(pos as u64);
+                let mut marshal_zones: [MarshalZone; 21] = [MarshalZone::default(); 21];
+                for i in 0..21 {
+                    marshal_zones[i] = MarshalZone::unserialize(
+                        &bytes[offset + i * size_of::<MarshalZone>()
+                            ..offset + (i + 1) * size_of::<MarshalZone>()],
+                    )?
+                }
+
+                marshal_zones
+            },
+            safety_car_status: cursor.read_u8()?,
+            network_game: cursor.read_u8()?,
+            num_weather_forecast_samples: cursor.read_u8()?,
+            weather_forecast_samples: {
+                let offset: usize = size_of::<PacketHeader>()
+                    + 3 * size_of::<i8>()
+                    + 13 * size_of::<u8>()
+                    + 3 * size_of::<u16>()
+                    + size_of::<[MarshalZone; 21]>();
+                let pos: usize = offset + size_of::<[WeatherForecastSample; 56]>();
+                cursor.set_position(pos as u64);
+
+                let mut weather_forecast_samples: [WeatherForecastSample; 56] =
+                    [WeatherForecastSample::default(); 56];
+                for i in 0..56 {
+                    weather_forecast_samples[i] = WeatherForecastSample::unserialize(
+                        &bytes[offset + i * size_of::<WeatherForecastSample>()
+                            ..offset + (i + 1) * size_of::<WeatherForecastSample>()],
+                    )?;
+                }
+                weather_forecast_samples
+            },
+            forecast_accuracy: cursor.read_u8()?,
+            ai_difficulty: cursor.read_u8()?,
+            season_link_identifier: cursor.read_u32::<LittleEndian>()?,
+            weekend_link_identifier: cursor.read_u32::<LittleEndian>()?,
+            session_link_identifier: cursor.read_u32::<LittleEndian>()?,
+            pit_stop_window_ideal_lap: cursor.read_u8()?,
+            pit_stop_window_latest_lap: cursor.read_u8()?,
+            pit_stop_rejoin_position: cursor.read_u8()?,
+            steering_assist: cursor.read_u8()?,
+            braking_assist: cursor.read_u8()?,
+            gearbox_assist: cursor.read_u8()?,
+            pit_assist: cursor.read_u8()?,
+            pit_release_assist: cursor.read_u8()?,
+            ers_assist: cursor.read_u8()?,
+            drs_assist: cursor.read_u8()?,
+            dynamic_racing_line: cursor.read_u8()?,
+            dynamic_racing_line_type: cursor.read_u8()?,
+            game_mode: cursor.read_u8()?,
+            rule_set: cursor.read_u8()?,
+            time_of_day: cursor.read_u32::<LittleEndian>()?,
+            session_length: cursor.read_u8()?,
+            speed_units_lead_player: cursor.read_u8()?,
+            temperature_units_lead_player: cursor.read_u8()?,
+            speed_units_secondary_player: cursor.read_u8()?,
+            temperature_units_secondary_player: cursor.read_u8()?,
+            num_safety_car_periods: cursor.read_u8()?,
+            num_virtual_safety_car_periods: cursor.read_u8()?,
+            num_red_flag_periods: cursor.read_u8()?,
+        })
+    }
+
+    #[allow(dead_code)]
+    pub fn serialize(&self) -> Result<Vec<u8>, std::io::Error> {
+        let mut bytes: Vec<u8> = Vec::with_capacity(size_of::<MarshalZone>());
+        let mut cursor: Cursor<&mut Vec<u8>> = Cursor::new(&mut bytes);
+
+        cursor.write_all(&self.header.serialize()?)?;
+        cursor.write_u8(self.weather)?;
+        cursor.write_i8(self.track_temperature)?;
+        cursor.write_i8(self.air_temperature)?;
+        cursor.write_u8(self.total_laps)?;
+        cursor.write_u16::<LittleEndian>(self.track_length)?;
+        cursor.write_u8(self.session_type)?;
+        cursor.write_i8(self.track_id)?;
+        cursor.write_u8(self.formula)?;
+        cursor.write_u16::<LittleEndian>(self.session_time_left)?;
+        cursor.write_u16::<LittleEndian>(self.session_duration)?;
+        cursor.write_u8(self.pit_speed_limit)?;
+        cursor.write_u8(self.game_paused)?;
+        cursor.write_u8(self.is_spectating)?;
+        cursor.write_u8(self.spectator_car_index)?;
+        cursor.write_u8(self.sli_pro_native_support)?;
+        cursor.write_u8(self.num_marshal_zones)?;
+        for element in self.marshal_zones {
+            cursor.write_all(&element.serialize()?)?;
+        }
+        cursor.write_u8(self.safety_car_status)?;
+        cursor.write_u8(self.network_game)?;
+        cursor.write_u8(self.num_weather_forecast_samples)?;
+        for element in self.weather_forecast_samples {
+            cursor.write_all(&element.serialize()?)?;
+        }
+        cursor.write_u8(self.forecast_accuracy)?;
+        cursor.write_u8(self.ai_difficulty)?;
+        cursor.write_u32::<LittleEndian>(self.season_link_identifier)?;
+        cursor.write_u32::<LittleEndian>(self.weekend_link_identifier)?;
+        cursor.write_u32::<LittleEndian>(self.session_link_identifier)?;
+        cursor.write_u8(self.pit_stop_window_ideal_lap)?;
+        cursor.write_u8(self.pit_stop_window_latest_lap)?;
+        cursor.write_u8(self.pit_stop_rejoin_position)?;
+        cursor.write_u8(self.steering_assist)?;
+        cursor.write_u8(self.braking_assist)?;
+        cursor.write_u8(self.gearbox_assist)?;
+        cursor.write_u8(self.pit_assist)?;
+        cursor.write_u8(self.pit_release_assist)?;
+        cursor.write_u8(self.ers_assist)?;
+        cursor.write_u8(self.drs_assist)?;
+        cursor.write_u8(self.dynamic_racing_line)?;
+        cursor.write_u8(self.dynamic_racing_line_type)?;
+        cursor.write_u8(self.game_mode)?;
+        cursor.write_u8(self.rule_set)?;
+        cursor.write_u32::<LittleEndian>(self.time_of_day)?;
+        cursor.write_u8(self.session_length)?;
+        cursor.write_u8(self.speed_units_lead_player)?;
+        cursor.write_u8(self.temperature_units_lead_player)?;
+        cursor.write_u8(self.speed_units_secondary_player)?;
+        cursor.write_u8(self.temperature_units_secondary_player)?;
+        cursor.write_u8(self.num_safety_car_periods)?;
+        cursor.write_u8(self.num_virtual_safety_car_periods)?;
+        cursor.write_u8(self.num_red_flag_periods)?;
 
         Ok(bytes)
     }

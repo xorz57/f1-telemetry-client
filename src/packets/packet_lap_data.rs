@@ -151,8 +151,8 @@ impl PacketLapData {
         let mut cursor: Cursor<&mut Vec<u8>> = Cursor::new(&mut bytes);
 
         cursor.write_all(&self.header.serialize()?)?;
-        for lap_data in self.lap_data {
-            cursor.write_all(&lap_data.serialize()?)?;
+        for element in self.lap_data {
+            cursor.write_all(&element.serialize()?)?;
         }
         cursor.write_u8(self.time_trial_pb_car_idx)?;
         cursor.write_u8(self.time_trial_rival_car_idx)?;

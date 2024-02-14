@@ -151,8 +151,8 @@ impl PacketCarTelemetryData {
         let mut cursor: Cursor<&mut Vec<u8>> = Cursor::new(&mut bytes);
 
         cursor.write_all(&self.header.serialize()?)?;
-        for car_telemetry_data in self.car_telemetry_data {
-            cursor.write_all(&car_telemetry_data.serialize()?)?;
+        for element in self.car_telemetry_data {
+            cursor.write_all(&element.serialize()?)?;
         }
         cursor.write_u8(self.mfd_panel_index)?;
         cursor.write_u8(self.mfd_panel_index_secondary_player)?;

@@ -133,8 +133,8 @@ impl PacketCarStatusData {
         let mut cursor: Cursor<&mut Vec<u8>> = Cursor::new(&mut bytes);
 
         cursor.write_all(&self.header.serialize()?)?;
-        for car_status_data in self.car_status_data {
-            cursor.write_all(&car_status_data.serialize()?)?;
+        for element in self.car_status_data {
+            cursor.write_all(&element.serialize()?)?;
         }
 
         Ok(bytes)

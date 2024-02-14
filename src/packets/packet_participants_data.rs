@@ -93,8 +93,8 @@ impl ParticipantData {
         cursor.write_u8(self.my_team)?;
         cursor.write_u8(self.race_number)?;
         cursor.write_u8(self.nationality)?;
-        for name in self.name {
-            cursor.write_u8(name)?;
+        for element in self.name {
+            cursor.write_u8(element)?;
         }
         cursor.write_u8(self.your_telemetry)?;
         cursor.write_u8(self.show_online_names)?;
@@ -136,8 +136,8 @@ impl PacketParticipantsData {
 
         cursor.write_all(&self.header.serialize()?)?;
         cursor.write_u8(self.num_active_cars)?;
-        for participants in self.participants {
-            cursor.write_all(&participants.serialize()?)?;
+        for element in self.participants {
+            cursor.write_all(&element.serialize()?)?;
         }
 
         Ok(bytes)

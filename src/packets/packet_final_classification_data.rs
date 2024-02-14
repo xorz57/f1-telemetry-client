@@ -87,14 +87,14 @@ impl FinalClassificationData {
         cursor.write_u8(self.penalties_time)?;
         cursor.write_u8(self.num_penalties)?;
         cursor.write_u8(self.num_tyre_stints)?;
-        for tyre_stints_actual in self.tyre_stints_actual {
-            cursor.write_u8(tyre_stints_actual)?;
+        for element in self.tyre_stints_actual {
+            cursor.write_u8(element)?;
         }
-        for tyre_stints_visual in self.tyre_stints_visual {
-            cursor.write_u8(tyre_stints_visual)?;
+        for element in self.tyre_stints_visual {
+            cursor.write_u8(element)?;
         }
-        for tyre_stints_end_laps in self.tyre_stints_end_laps {
-            cursor.write_u8(tyre_stints_end_laps)?;
+        for element in self.tyre_stints_end_laps {
+            cursor.write_u8(element)?;
         }
 
         Ok(bytes)
@@ -130,8 +130,8 @@ impl PacketFinalClassificationData {
 
         cursor.write_all(&self.header.serialize()?)?;
         cursor.write_u8(self.num_cars)?;
-        for classification_data in self.classification_data {
-            cursor.write_all(&classification_data.serialize()?)?;
+        for element in self.classification_data {
+            cursor.write_all(&element.serialize()?)?;
         }
 
         Ok(bytes)

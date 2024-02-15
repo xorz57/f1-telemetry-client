@@ -70,18 +70,32 @@ impl PacketTyreSetsData {
 
         Ok(PacketTyreSetsData {
             header: PacketHeader::unserialize(&bytes[..size_of::<PacketHeader>()])?,
-            car_idx: cursor.read_u8()?,
+            car_idx: {
+                let pos: usize = size_of::<PacketHeader>();
+                cursor.set_position(pos as u64);
+                cursor.read_u8()?
+            },
             tyre_set_data: {
                 let mut tyre_set_data: [TyreSetData; 20] = [TyreSetData::default(); 20];
                 for i in 0..20 {
                     tyre_set_data[i] = TyreSetData::unserialize(
-                        &bytes[size_of::<PacketHeader>() + i * size_of::<TyreSetData>()
-                            ..size_of::<PacketHeader>() + (i + 1) * size_of::<TyreSetData>()],
+                        &bytes[size_of::<PacketHeader>()
+                            + 1 * size_of::<u8>()
+                            + i * size_of::<TyreSetData>()
+                            ..size_of::<PacketHeader>()
+                                + 1 * size_of::<u8>()
+                                + (i + 1) * size_of::<TyreSetData>()],
                     )?;
                 }
                 tyre_set_data
             },
-            fitted_idx: cursor.read_u8()?,
+            fitted_idx: {
+                let pos: usize = size_of::<PacketHeader>()
+                    + 1 * size_of::<u8>()
+                    + size_of::<[TyreSetData; 20]>();
+                cursor.set_position(pos as u64);
+                cursor.read_u8()?
+            },
         })
     }
 
@@ -129,5 +143,53 @@ mod tests {
 
         // Check if the deserialized data matches the original data
         assert_eq!(original_tyre_set_data, deserialized_tyre_set_data);
+    }
+
+    #[test]
+    fn test_packet_tyre_sets_data_serialization_deserialization() {
+        // Create some sample packet tyre sets data
+        let mut original_packet_tyre_sets_data: PacketTyreSetsData = PacketTyreSetsData::default();
+        original_packet_tyre_sets_data.header.packet_format = 2021;
+        original_packet_tyre_sets_data.header.game_year = 21;
+        original_packet_tyre_sets_data.header.game_major_version = 1;
+        original_packet_tyre_sets_data.header.game_minor_version = 3;
+        original_packet_tyre_sets_data.header.packet_version = 1;
+        original_packet_tyre_sets_data.header.packet_id = 0;
+        original_packet_tyre_sets_data.header.session_uid = 123456789;
+        original_packet_tyre_sets_data.header.session_time = 123.456;
+        original_packet_tyre_sets_data.header.frame_identifier = 1000;
+        original_packet_tyre_sets_data
+            .header
+            .overall_frame_identifier = 5000;
+        original_packet_tyre_sets_data.header.player_car_index = 1;
+        original_packet_tyre_sets_data
+            .header
+            .secondary_player_car_index = 255;
+        original_packet_tyre_sets_data.car_idx = 1;
+        for i in 0..20 {
+            original_packet_tyre_sets_data.tyre_set_data[i].actual_tyre_compound = (i + 1) as u8;
+            original_packet_tyre_sets_data.tyre_set_data[i].visual_tyre_compound = (i + 2) as u8;
+            original_packet_tyre_sets_data.tyre_set_data[i].wear = (i + 3) as u8;
+            original_packet_tyre_sets_data.tyre_set_data[i].available = (i + 4) as u8;
+            original_packet_tyre_sets_data.tyre_set_data[i].recommended_session = (i + 5) as u8;
+            original_packet_tyre_sets_data.tyre_set_data[i].life_span = (i + 6) as u8;
+            original_packet_tyre_sets_data.tyre_set_data[i].usable_life = (i + 7) as u8;
+            original_packet_tyre_sets_data.tyre_set_data[i].lap_delta_time = (i + 8) as i16;
+            original_packet_tyre_sets_data.tyre_set_data[i].fitted = (i + 9) as u8;
+        }
+        original_packet_tyre_sets_data.fitted_idx = 2;
+
+        // Serialize the data
+        let serialized_data: Vec<u8> = original_packet_tyre_sets_data.serialize().unwrap();
+
+        // Deserialize the serialized data
+        let deserialized_packet_tyre_sets_data: PacketTyreSetsData =
+            PacketTyreSetsData::unserialize(&serialized_data).unwrap();
+
+        // Check if the deserialized data matches the original data
+        assert_eq!(
+            original_packet_tyre_sets_data,
+            deserialized_packet_tyre_sets_data
+        );
     }
 }

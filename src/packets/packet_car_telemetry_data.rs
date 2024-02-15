@@ -123,8 +123,7 @@ impl CarTelemetryData {
 impl PacketCarTelemetryData {
     #[allow(dead_code)]
     pub fn unserialize(bytes: &[u8]) -> Result<Self, std::io::Error> {
-        let mut cursor: Cursor<&[u8]> =
-            Cursor::new(&bytes[size_of::<PacketHeader>() + size_of::<[CarTelemetryData; 22]>()..]);
+        let mut cursor: Cursor<&[u8]> = Cursor::new(&bytes);
 
         Ok(PacketCarTelemetryData {
             header: PacketHeader::unserialize(&bytes[..size_of::<PacketHeader>()])?,
@@ -139,7 +138,11 @@ impl PacketCarTelemetryData {
                 }
                 car_telemetry_data
             },
-            mfd_panel_index: cursor.read_u8()?,
+            mfd_panel_index: {
+                let pos: usize = size_of::<PacketHeader>() + size_of::<[CarTelemetryData; 22]>();
+                cursor.set_position(pos as u64);
+                cursor.read_u8()?
+            },
             mfd_panel_index_secondary_player: cursor.read_u8()?,
             suggested_gear: cursor.read_i8()?,
         })
@@ -197,5 +200,74 @@ mod tests {
 
         // Check if the deserialized data matches the original data
         assert_eq!(original_car_telemetry_data, deserialized_car_telemetry_data);
+    }
+
+    #[test]
+    fn test_packet_car_telemetry_data_serialization_deserialization() {
+        // Create some sample packet car telemetry data
+        let mut original_packet_car_telemetry_data: PacketCarTelemetryData =
+            PacketCarTelemetryData::default();
+        original_packet_car_telemetry_data.header.packet_format = 2021;
+        original_packet_car_telemetry_data.header.game_year = 21;
+        original_packet_car_telemetry_data.header.game_major_version = 1;
+        original_packet_car_telemetry_data.header.game_minor_version = 3;
+        original_packet_car_telemetry_data.header.packet_version = 1;
+        original_packet_car_telemetry_data.header.packet_id = 0;
+        original_packet_car_telemetry_data.header.session_uid = 123456789;
+        original_packet_car_telemetry_data.header.session_time = 123.456;
+        original_packet_car_telemetry_data.header.frame_identifier = 1000;
+        original_packet_car_telemetry_data
+            .header
+            .overall_frame_identifier = 5000;
+        original_packet_car_telemetry_data.header.player_car_index = 1;
+        original_packet_car_telemetry_data
+            .header
+            .secondary_player_car_index = 255;
+
+        // Populate car telemetry data array with some sample data
+        for i in 0..22 {
+            original_packet_car_telemetry_data.car_telemetry_data[i].speed = (i * 10) as u16;
+            original_packet_car_telemetry_data.car_telemetry_data[i].throttle = (i as f32) * 0.1;
+            original_packet_car_telemetry_data.car_telemetry_data[i].steer = (i as f32) * 0.01;
+            original_packet_car_telemetry_data.car_telemetry_data[i].brake = (i as f32) * 0.02;
+            original_packet_car_telemetry_data.car_telemetry_data[i].clutch = i as u8;
+            original_packet_car_telemetry_data.car_telemetry_data[i].gear = i as i8 - 10;
+            original_packet_car_telemetry_data.car_telemetry_data[i].engine_rpm = (i * 1000) as u16;
+            original_packet_car_telemetry_data.car_telemetry_data[i].drs = i as u8 % 2;
+            original_packet_car_telemetry_data.car_telemetry_data[i].rev_lights_percent =
+                (i * 5) as u8;
+            original_packet_car_telemetry_data.car_telemetry_data[i].rev_lights_bit_value =
+                (i * 100) as u16;
+            for j in 0..4 {
+                original_packet_car_telemetry_data.car_telemetry_data[i].brakes_temperature[j] =
+                    (i * 100 + j * 10) as u16;
+                original_packet_car_telemetry_data.car_telemetry_data[i]
+                    .tyres_surface_temperature[j] = (i * 10 + j) as u8;
+                original_packet_car_telemetry_data.car_telemetry_data[i].tyres_inner_temperature
+                    [j] = (i * 5 + j) as u8;
+                original_packet_car_telemetry_data.car_telemetry_data[i].tyres_pressure[j] =
+                    (i * 1 + j) as f32;
+                original_packet_car_telemetry_data.car_telemetry_data[i].surface_type[j] =
+                    (i * 10 + j) as u8;
+            }
+        }
+
+        // Set other fields
+        original_packet_car_telemetry_data.mfd_panel_index = 3;
+        original_packet_car_telemetry_data.mfd_panel_index_secondary_player = 2;
+        original_packet_car_telemetry_data.suggested_gear = -1;
+
+        // Serialize the data
+        let serialized_data: Vec<u8> = original_packet_car_telemetry_data.serialize().unwrap();
+
+        // Deserialize the serialized data
+        let deserialized_packet_car_telemetry_data: PacketCarTelemetryData =
+            PacketCarTelemetryData::unserialize(&serialized_data).unwrap();
+
+        // Check if the deserialized data matches the original data
+        assert_eq!(
+            original_packet_car_telemetry_data,
+            deserialized_packet_car_telemetry_data
+        );
     }
 }

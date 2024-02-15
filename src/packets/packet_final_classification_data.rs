@@ -107,12 +107,12 @@ impl PacketFinalClassificationData {
         let mut cursor: Cursor<&[u8]> = Cursor::new(&bytes);
 
         Ok(PacketFinalClassificationData {
-            header: {
+            header: PacketHeader::unserialize(&bytes[..size_of::<PacketHeader>()])?,
+            num_cars: {
                 let pos: usize = size_of::<PacketHeader>();
                 cursor.set_position(pos as u64);
-                PacketHeader::unserialize(&bytes[..size_of::<PacketHeader>()])?
+                cursor.read_u8()?
             },
-            num_cars: cursor.read_u8()?,
             classification_data: {
                 let mut classification_data: [FinalClassificationData; 22] =
                     [FinalClassificationData::default(); 22];

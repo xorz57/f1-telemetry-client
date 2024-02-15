@@ -104,8 +104,12 @@ impl PacketLobbyInfoData {
                 let mut lobby_players: [LobbyInfoData; 22] = [LobbyInfoData::default(); 22];
                 for i in 0..22 {
                     lobby_players[i] = LobbyInfoData::unserialize(
-                        &bytes[size_of::<PacketHeader>() + 1 * size_of::<u8>() + i * size_of::<LobbyInfoData>()
-                            ..size_of::<PacketHeader>() + 1 * size_of::<u8>() + (i + 1) * size_of::<LobbyInfoData>()],
+                        &bytes[size_of::<PacketHeader>()
+                            + 1 * size_of::<u8>()
+                            + i * size_of::<LobbyInfoData>()
+                            ..size_of::<PacketHeader>()
+                                + 1 * size_of::<u8>()
+                                + (i + 1) * size_of::<LobbyInfoData>()],
                     )?;
                 }
                 lobby_players
@@ -159,7 +163,8 @@ mod tests {
     #[test]
     fn test_packet_lobby_info_data_serialization_deserialization() {
         // Create some sample data
-        let mut original_packet_lobby_info_data: PacketLobbyInfoData = PacketLobbyInfoData::default();
+        let mut original_packet_lobby_info_data: PacketLobbyInfoData =
+            PacketLobbyInfoData::default();
         original_packet_lobby_info_data.num_players = 5;
         for i in 0..22 {
             original_packet_lobby_info_data.lobby_players[i].ai_controlled = i as u8;

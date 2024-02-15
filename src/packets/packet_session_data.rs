@@ -199,12 +199,12 @@ impl PacketSessionData {
         let mut cursor: Cursor<&[u8]> = Cursor::new(bytes);
 
         Ok(PacketSessionData {
-            header: {
+            header: PacketHeader::unserialize(&bytes[..size_of::<PacketHeader>()])?,
+            weather: {
                 let pos: usize = size_of::<PacketHeader>();
                 cursor.set_position(pos as u64);
-                PacketHeader::unserialize(&bytes[..pos])?
+                cursor.read_u8()?
             },
-            weather: cursor.read_u8()?,
             track_temperature: cursor.read_i8()?,
             air_temperature: cursor.read_i8()?,
             total_laps: cursor.read_u8()?,
@@ -221,45 +221,66 @@ impl PacketSessionData {
             sli_pro_native_support: cursor.read_u8()?,
             num_marshal_zones: cursor.read_u8()?,
             marshal_zones: {
-                let offset: usize = size_of::<PacketHeader>()
-                    + 3 * size_of::<i8>()
-                    + 10 * size_of::<u8>()
-                    + 3 * size_of::<u16>();
-                let pos: usize = offset + size_of::<[MarshalZone; 21]>();
-                cursor.set_position(pos as u64);
                 let mut marshal_zones: [MarshalZone; 21] = [MarshalZone::default(); 21];
                 for i in 0..21 {
                     marshal_zones[i] = MarshalZone::unserialize(
-                        &bytes[offset + i * size_of::<MarshalZone>()
-                            ..offset + (i + 1) * size_of::<MarshalZone>()],
+                        &bytes[size_of::<PacketHeader>()
+                            + 3 * size_of::<i8>()
+                            + 10 * size_of::<u8>()
+                            + 3 * size_of::<u16>()
+                            + i * size_of::<MarshalZone>()
+                            ..size_of::<PacketHeader>()
+                                + 3 * size_of::<i8>()
+                                + 10 * size_of::<u8>()
+                                + 3 * size_of::<u16>()
+                                + (i + 1) * size_of::<MarshalZone>()],
                     )?
                 }
 
                 marshal_zones
             },
-            safety_car_status: cursor.read_u8()?,
+            safety_car_status: {
+                let pos: usize = size_of::<PacketHeader>()
+                    + 3 * size_of::<i8>()
+                    + 10 * size_of::<u8>()
+                    + 3 * size_of::<u16>()
+                    + size_of::<[MarshalZone; 21]>();
+                cursor.set_position(pos as u64);
+                cursor.read_u8()?
+            },
             network_game: cursor.read_u8()?,
             num_weather_forecast_samples: cursor.read_u8()?,
             weather_forecast_samples: {
-                let offset: usize = size_of::<PacketHeader>()
-                    + 3 * size_of::<i8>()
-                    + 13 * size_of::<u8>()
-                    + 3 * size_of::<u16>()
-                    + size_of::<[MarshalZone; 21]>();
-                let pos: usize = offset + size_of::<[WeatherForecastSample; 56]>();
-                cursor.set_position(pos as u64);
-
                 let mut weather_forecast_samples: [WeatherForecastSample; 56] =
                     [WeatherForecastSample::default(); 56];
                 for i in 0..56 {
                     weather_forecast_samples[i] = WeatherForecastSample::unserialize(
-                        &bytes[offset + i * size_of::<WeatherForecastSample>()
-                            ..offset + (i + 1) * size_of::<WeatherForecastSample>()],
+                        &bytes[size_of::<PacketHeader>()
+                            + 3 * size_of::<i8>()
+                            + 13 * size_of::<u8>()
+                            + 3 * size_of::<u16>()
+                            + size_of::<[MarshalZone; 21]>()
+                            + i * size_of::<WeatherForecastSample>()
+                            ..size_of::<PacketHeader>()
+                                + 3 * size_of::<i8>()
+                                + 13 * size_of::<u8>()
+                                + 3 * size_of::<u16>()
+                                + size_of::<[MarshalZone; 21]>()
+                                + (i + 1) * size_of::<WeatherForecastSample>()],
                     )?;
                 }
                 weather_forecast_samples
             },
-            forecast_accuracy: cursor.read_u8()?,
+            forecast_accuracy: {
+                let pos: usize = size_of::<PacketHeader>()
+                    + 3 * size_of::<i8>()
+                    + 13 * size_of::<u8>()
+                    + 3 * size_of::<u16>()
+                    + size_of::<[MarshalZone; 21]>()
+                    + size_of::<[WeatherForecastSample; 56]>();
+                cursor.set_position(pos as u64);
+                cursor.read_u8()?
+            },
             ai_difficulty: cursor.read_u8()?,
             season_link_identifier: cursor.read_u32::<LittleEndian>()?,
             weekend_link_identifier: cursor.read_u32::<LittleEndian>()?,

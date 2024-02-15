@@ -106,8 +106,8 @@ impl PacketTyreSetsData {
 
         cursor.write_all(&self.header.serialize()?)?;
         cursor.write_u8(self.car_idx)?;
-        for tyre_set_data in self.tyre_set_data {
-            cursor.write_all(&tyre_set_data.serialize()?)?;
+        for element in self.tyre_set_data {
+            cursor.write_all(&element.serialize()?)?;
         }
         cursor.write_u8(self.fitted_idx)?;
 

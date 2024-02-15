@@ -149,31 +149,31 @@ mod tests {
     fn test_car_status_data_serialization_deserialization() {
         // Create some sample car status data
         let original_car_status_data: CarStatusData = CarStatusData {
-            traction_control: 1,
-            anti_lock_brakes: 2,
-            fuel_mix: 3,
-            front_brake_bias: 4,
-            pit_limiter_status: 5,
-            fuel_in_tank: 0.1,
-            fuel_capacity: 0.2,
-            fuel_remaining_laps: 0.3,
-            max_rpm: 1000,
-            idle_rpm: 500,
-            max_gears: 7,
-            drs_allowed: 1,
-            drs_activation_distance: 50,
-            actual_tyre_compound: 1,
-            visual_tyre_compound: 2,
-            tyres_age_laps: 10,
-            vehicle_fia_flags: -1,
-            engine_power_ice: 300.0,
-            engine_power_mguk: 200.0,
-            ers_store_energy: 150.0,
-            ers_deploy_mode: 1,
-            ers_harvested_this_lap_mguk: 100.0,
-            ers_harvested_this_lap_mguh: 50.0,
-            ers_deployed_this_lap: 75.0,
-            network_paused: 0,
+            traction_control: 1u8,
+            anti_lock_brakes: 2u8,
+            fuel_mix: 3u8,
+            front_brake_bias: 4u8,
+            pit_limiter_status: 5u8,
+            fuel_in_tank: 0.1f32,
+            fuel_capacity: 0.2f32,
+            fuel_remaining_laps: 0.3f32,
+            max_rpm: 1000u16,
+            idle_rpm: 500u16,
+            max_gears: 7u8,
+            drs_allowed: 1u8,
+            drs_activation_distance: 50u16,
+            actual_tyre_compound: 1u8,
+            visual_tyre_compound: 2u8,
+            tyres_age_laps: 10u8,
+            vehicle_fia_flags: -1i8,
+            engine_power_ice: 300.0f32,
+            engine_power_mguk: 200.0f32,
+            ers_store_energy: 150.0f32,
+            ers_deploy_mode: 1u8,
+            ers_harvested_this_lap_mguk: 100.0f32,
+            ers_harvested_this_lap_mguh: 50.0f32,
+            ers_deployed_this_lap: 75.0f32,
+            network_paused: 0u8,
         };
 
         // Serialize the data
@@ -192,50 +192,50 @@ mod tests {
         // Create some sample packet car status data
         let mut original_packet_car_status_data: PacketCarStatusData =
             PacketCarStatusData::default();
-        original_packet_car_status_data.header.packet_format = 2021;
-        original_packet_car_status_data.header.game_year = 21;
-        original_packet_car_status_data.header.game_major_version = 1;
-        original_packet_car_status_data.header.game_minor_version = 3;
-        original_packet_car_status_data.header.packet_version = 1;
-        original_packet_car_status_data.header.packet_id = 0;
-        original_packet_car_status_data.header.session_uid = 123456789;
-        original_packet_car_status_data.header.session_time = 123.456;
-        original_packet_car_status_data.header.frame_identifier = 1000;
+        original_packet_car_status_data.header.packet_format = 2021u16;
+        original_packet_car_status_data.header.game_year = 21u8;
+        original_packet_car_status_data.header.game_major_version = 1u8;
+        original_packet_car_status_data.header.game_minor_version = 3u8;
+        original_packet_car_status_data.header.packet_version = 1u8;
+        original_packet_car_status_data.header.packet_id = 0u8;
+        original_packet_car_status_data.header.session_uid = 123456789u64;
+        original_packet_car_status_data.header.session_time = 123.456f32;
+        original_packet_car_status_data.header.frame_identifier = 1000u32;
         original_packet_car_status_data
             .header
-            .overall_frame_identifier = 5000;
-        original_packet_car_status_data.header.player_car_index = 1;
+            .overall_frame_identifier = 5000u32;
+        original_packet_car_status_data.header.player_car_index = 1u8;
         original_packet_car_status_data
             .header
-            .secondary_player_car_index = 255;
+            .secondary_player_car_index = 255u8;
 
         // Populate car status data array with some sample data
         for car_data in original_packet_car_status_data.car_status_data.iter_mut() {
-            car_data.traction_control = 1;
-            car_data.anti_lock_brakes = 2;
-            car_data.fuel_mix = 3;
-            car_data.front_brake_bias = 4;
-            car_data.pit_limiter_status = 5;
-            car_data.fuel_in_tank = 0.1;
-            car_data.fuel_capacity = 0.2;
-            car_data.fuel_remaining_laps = 0.3;
-            car_data.max_rpm = 1000;
-            car_data.idle_rpm = 500;
-            car_data.max_gears = 7;
-            car_data.drs_allowed = 1;
-            car_data.drs_activation_distance = 50;
-            car_data.actual_tyre_compound = 1;
-            car_data.visual_tyre_compound = 2;
-            car_data.tyres_age_laps = 10;
-            car_data.vehicle_fia_flags = -1;
-            car_data.engine_power_ice = 300.0;
-            car_data.engine_power_mguk = 200.0;
-            car_data.ers_store_energy = 150.0;
-            car_data.ers_deploy_mode = 1;
-            car_data.ers_harvested_this_lap_mguk = 100.0;
-            car_data.ers_harvested_this_lap_mguh = 50.0;
-            car_data.ers_deployed_this_lap = 75.0;
-            car_data.network_paused = 0;
+            car_data.traction_control = 1u8;
+            car_data.anti_lock_brakes = 2u8;
+            car_data.fuel_mix = 3u8;
+            car_data.front_brake_bias = 4u8;
+            car_data.pit_limiter_status = 5u8;
+            car_data.fuel_in_tank = 0.1f32;
+            car_data.fuel_capacity = 0.2f32;
+            car_data.fuel_remaining_laps = 0.3f32;
+            car_data.max_rpm = 1000u16;
+            car_data.idle_rpm = 500u16;
+            car_data.max_gears = 7u8;
+            car_data.drs_allowed = 1u8;
+            car_data.drs_activation_distance = 50u16;
+            car_data.actual_tyre_compound = 1u8;
+            car_data.visual_tyre_compound = 2u8;
+            car_data.tyres_age_laps = 10u8;
+            car_data.vehicle_fia_flags = -1i8;
+            car_data.engine_power_ice = 300.0f32;
+            car_data.engine_power_mguk = 200.0f32;
+            car_data.ers_store_energy = 150.0f32;
+            car_data.ers_deploy_mode = 1u8;
+            car_data.ers_harvested_this_lap_mguk = 100.0f32;
+            car_data.ers_harvested_this_lap_mguh = 50.0f32;
+            car_data.ers_deployed_this_lap = 75.0f32;
+            car_data.network_paused = 0u8;
         }
 
         // Serialize the data

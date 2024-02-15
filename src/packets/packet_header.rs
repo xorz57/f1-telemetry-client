@@ -70,18 +70,18 @@ mod tests {
     fn test_packet_header_serialization_deserialization() {
         // Create some sample packet header data
         let original_packet_header: PacketHeader = PacketHeader {
-            packet_format: 2021,
-            game_year: 21,
-            game_major_version: 1,
-            game_minor_version: 3,
-            packet_version: 1,
-            packet_id: 0,
-            session_uid: 123456789,
-            session_time: 123.456,
-            frame_identifier: 1000,
-            overall_frame_identifier: 5000,
-            player_car_index: 1,
-            secondary_player_car_index: 255,
+            packet_format: 2021u16,
+            game_year: 21u8,
+            game_major_version: 1u8,
+            game_minor_version: 3u8,
+            packet_version: 1u8,
+            packet_id: 0u8,
+            session_uid: 123456789u64,
+            session_time: 123.456f32,
+            frame_identifier: 1000u32,
+            overall_frame_identifier: 5000u32,
+            player_car_index: 1u8,
+            secondary_player_car_index: 255u8,
         };
 
         // Serialize the data

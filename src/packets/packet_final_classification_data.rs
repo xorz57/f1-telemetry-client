@@ -154,20 +154,20 @@ mod tests {
     fn test_final_classification_data_serialization_deserialization() {
         // Create some sample data
         let original_final_classification_data: FinalClassificationData = FinalClassificationData {
-            position: 1,
-            num_laps: 2,
-            grid_position: 3,
-            points: 4,
-            num_pit_stops: 5,
-            result_status: 6,
-            best_lap_time_in_ms: 100,
-            total_race_time: 123.456,
-            penalties_time: 7,
-            num_penalties: 8,
-            num_tyre_stints: 9,
-            tyre_stints_actual: [1, 1, 1, 1, 1, 1, 1, 1],
-            tyre_stints_visual: [2, 2, 2, 2, 2, 2, 2, 2],
-            tyre_stints_end_laps: [3, 3, 3, 3, 3, 3, 3, 3],
+            position: 1u8,
+            num_laps: 2u8,
+            grid_position: 3u8,
+            points: 4u8,
+            num_pit_stops: 5u8,
+            result_status: 6u8,
+            best_lap_time_in_ms: 100u32,
+            total_race_time: 123.456f64,
+            penalties_time: 7u8,
+            num_penalties: 8u8,
+            num_tyre_stints: 9u8,
+            tyre_stints_actual: [1u8, 1u8, 1u8, 1u8, 1u8, 1u8, 1u8, 1u8],
+            tyre_stints_visual: [2u8, 2u8, 2u8, 2u8, 2u8, 2u8, 2u8, 2u8],
+            tyre_stints_end_laps: [3u8, 3u8, 3u8, 3u8, 3u8, 3u8, 3u8, 3u8],
         };
 
         // Serialize the data
@@ -191,35 +191,35 @@ mod tests {
             PacketFinalClassificationData::default();
         original_packet_final_classification_data
             .header
-            .packet_format = 2021;
-        original_packet_final_classification_data.header.game_year = 21;
+            .packet_format = 2021u16;
+        original_packet_final_classification_data.header.game_year = 21u8;
         original_packet_final_classification_data
             .header
-            .game_major_version = 1;
+            .game_major_version = 1u8;
         original_packet_final_classification_data
             .header
-            .game_minor_version = 3;
+            .game_minor_version = 3u8;
         original_packet_final_classification_data
             .header
-            .packet_version = 1;
-        original_packet_final_classification_data.header.packet_id = 0;
-        original_packet_final_classification_data.header.session_uid = 123456789;
+            .packet_version = 1u8;
+        original_packet_final_classification_data.header.packet_id = 0u8;
+        original_packet_final_classification_data.header.session_uid = 123456789u64;
         original_packet_final_classification_data
             .header
-            .session_time = 123.456;
+            .session_time = 123.456f32;
         original_packet_final_classification_data
             .header
-            .frame_identifier = 1000;
+            .frame_identifier = 1000u32;
         original_packet_final_classification_data
             .header
-            .overall_frame_identifier = 5000;
+            .overall_frame_identifier = 5000u32;
         original_packet_final_classification_data
             .header
-            .player_car_index = 1;
+            .player_car_index = 1u8;
         original_packet_final_classification_data
             .header
-            .secondary_player_car_index = 255;
-        original_packet_final_classification_data.num_cars = 22;
+            .secondary_player_car_index = 255u8;
+        original_packet_final_classification_data.num_cars = 22u8;
         for i in 0..22 {
             original_packet_final_classification_data.classification_data[i].position =
                 (i + 1) as u8;

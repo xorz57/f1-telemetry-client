@@ -173,22 +173,22 @@ mod tests {
     fn test_car_telemetry_data_serialization_deserialization() {
         // Create some sample car telemetry data
         let original_car_telemetry_data: CarTelemetryData = CarTelemetryData {
-            speed: 200,
-            throttle: 0.8,
-            steer: 0.2,
-            brake: 0.0,
-            clutch: 0,
-            gear: 3,
-            engine_rpm: 8000,
-            drs: 1,
-            rev_lights_percent: 50,
-            rev_lights_bit_value: 1000,
-            brakes_temperature: [500, 550, 600, 625],
-            tyres_surface_temperature: [90, 91, 92, 93],
-            tyres_inner_temperature: [85, 86, 87, 88],
-            engine_temperature: 95,
-            tyres_pressure: [1.9, 1.8, 1.9, 2.0],
-            surface_type: [1, 2, 3, 4],
+            speed: 200u16,
+            throttle: 0.8f32,
+            steer: 0.2f32,
+            brake: 0.0f32,
+            clutch: 0u8,
+            gear: 3i8,
+            engine_rpm: 8000u16,
+            drs: 1u8,
+            rev_lights_percent: 50u8,
+            rev_lights_bit_value: 1000u16,
+            brakes_temperature: [500u16, 550u16, 600u16, 625u16],
+            tyres_surface_temperature: [90u8, 91u8, 92u8, 93u8],
+            tyres_inner_temperature: [85u8, 86u8, 87u8, 88u8],
+            engine_temperature: 95u16,
+            tyres_pressure: [1.9f32, 1.8f32, 1.9f32, 2.0f32],
+            surface_type: [1u8, 2u8, 3u8, 4u8],
         };
 
         // Serialize the data
@@ -207,22 +207,22 @@ mod tests {
         // Create some sample packet car telemetry data
         let mut original_packet_car_telemetry_data: PacketCarTelemetryData =
             PacketCarTelemetryData::default();
-        original_packet_car_telemetry_data.header.packet_format = 2021;
-        original_packet_car_telemetry_data.header.game_year = 21;
-        original_packet_car_telemetry_data.header.game_major_version = 1;
-        original_packet_car_telemetry_data.header.game_minor_version = 3;
-        original_packet_car_telemetry_data.header.packet_version = 1;
-        original_packet_car_telemetry_data.header.packet_id = 0;
-        original_packet_car_telemetry_data.header.session_uid = 123456789;
-        original_packet_car_telemetry_data.header.session_time = 123.456;
-        original_packet_car_telemetry_data.header.frame_identifier = 1000;
+        original_packet_car_telemetry_data.header.packet_format = 2021u16;
+        original_packet_car_telemetry_data.header.game_year = 21u8;
+        original_packet_car_telemetry_data.header.game_major_version = 1u8;
+        original_packet_car_telemetry_data.header.game_minor_version = 3u8;
+        original_packet_car_telemetry_data.header.packet_version = 1u8;
+        original_packet_car_telemetry_data.header.packet_id = 0u8;
+        original_packet_car_telemetry_data.header.session_uid = 123456789u64;
+        original_packet_car_telemetry_data.header.session_time = 123.456f32;
+        original_packet_car_telemetry_data.header.frame_identifier = 1000u32;
         original_packet_car_telemetry_data
             .header
-            .overall_frame_identifier = 5000;
-        original_packet_car_telemetry_data.header.player_car_index = 1;
+            .overall_frame_identifier = 5000u32;
+        original_packet_car_telemetry_data.header.player_car_index = 1u8;
         original_packet_car_telemetry_data
             .header
-            .secondary_player_car_index = 255;
+            .secondary_player_car_index = 255u8;
 
         // Populate car telemetry data array with some sample data
         for i in 0..22 {
@@ -253,9 +253,9 @@ mod tests {
         }
 
         // Set other fields
-        original_packet_car_telemetry_data.mfd_panel_index = 3;
-        original_packet_car_telemetry_data.mfd_panel_index_secondary_player = 2;
-        original_packet_car_telemetry_data.suggested_gear = -1;
+        original_packet_car_telemetry_data.mfd_panel_index = 3u8;
+        original_packet_car_telemetry_data.mfd_panel_index_secondary_player = 2u8;
+        original_packet_car_telemetry_data.suggested_gear = -1i8;
 
         // Serialize the data
         let serialized_data: Vec<u8> = original_packet_car_telemetry_data.serialize().unwrap();

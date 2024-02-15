@@ -383,8 +383,8 @@ mod tests {
     fn test_marshal_zone_serialization_deserialization() {
         // Create a sample marshal zone
         let original_marshal_zone: MarshalZone = MarshalZone {
-            zone_start: 10.0,
-            zone_flag: 1,
+            zone_start: 10.0f32,
+            zone_flag: 1i8,
         };
 
         // Serialize the data
@@ -402,14 +402,14 @@ mod tests {
     fn test_weather_forecast_sample_serialization_deserialization() {
         // Create a sample weather forecast sample
         let original_weather_forecast_sample: WeatherForecastSample = WeatherForecastSample {
-            session_type: 1,
-            time_offset: 2,
-            weather: 3,
-            track_temperature: 20,
-            track_temperature_change: 1,
-            air_temperature: 25,
-            air_temperature_change: -2,
-            rain_percentage: 10,
+            session_type: 1u8,
+            time_offset: 2u8,
+            weather: 3u8,
+            track_temperature: 20i8,
+            track_temperature_change: 1i8,
+            air_temperature: 25i8,
+            air_temperature_change: -2i8,
+            rain_percentage: 10u8,
         };
 
         // Serialize the data
@@ -430,21 +430,21 @@ mod tests {
     fn test_packet_session_data_serialization_deserialization() {
         // Create some sample marshal zones
         let original_marshal_zones: [MarshalZone; 21] = [MarshalZone {
-            zone_start: 10.0,
-            zone_flag: 1,
+            zone_start: 10.0f32,
+            zone_flag: 1i8,
         }; 21];
 
         // Create some sample weather forecast samples
         let original_weather_forecast_samples: [WeatherForecastSample; 56] =
             [WeatherForecastSample {
-                session_type: 1,
-                time_offset: 2,
-                weather: 3,
-                track_temperature: 20,
-                track_temperature_change: 1,
-                air_temperature: 25,
-                air_temperature_change: -2,
-                rain_percentage: 10,
+                session_type: 1u8,
+                time_offset: 2u8,
+                weather: 3u8,
+                track_temperature: 20i8,
+                track_temperature_change: 1i8,
+                air_temperature: 25i8,
+                air_temperature_change: -2i8,
+                rain_percentage: 10u8,
             }; 56];
 
         // Create a sample packet session data

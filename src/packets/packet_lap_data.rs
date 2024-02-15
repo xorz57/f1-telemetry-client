@@ -173,35 +173,35 @@ mod tests {
     fn test_lap_data_serialization_deserialization() {
         // Create some sample data
         let original_lap_data: LapData = LapData {
-            last_lap_time_in_ms: 100,
-            current_lap_time_in_ms: 120,
-            sector1_time_in_ms: 30,
-            sector1_time_minutes: 1,
-            sector2_time_in_ms: 40,
-            sector2_time_minutes: 1,
-            delta_to_car_in_front_in_ms: 5,
-            delta_to_race_leader_in_ms: 10,
-            lap_distance: 100.5,
-            total_distance: 1000.0,
-            safety_car_delta: 3.5,
-            car_position: 2,
-            current_lap_num: 3,
-            pit_status: 1,
-            num_pit_stops: 0,
-            sector: 1,
-            current_lap_invalid: 0,
-            penalties: 0,
-            total_warnings: 0,
-            corner_cutting_warnings: 0,
-            num_unserved_drive_through_pens: 0,
-            num_unserved_stop_go_pens: 0,
-            grid_position: 4,
-            driver_status: 1,
-            result_status: 0,
-            pit_lane_timer_active: 1,
-            pit_lane_time_in_lane_in_ms: 20,
-            pit_stop_timer_in_ms: 0,
-            pit_stop_should_serve_pen: 0,
+            last_lap_time_in_ms: 100u32,
+            current_lap_time_in_ms: 120u32,
+            sector1_time_in_ms: 30u16,
+            sector1_time_minutes: 1u8,
+            sector2_time_in_ms: 40u16,
+            sector2_time_minutes: 1u8,
+            delta_to_car_in_front_in_ms: 5u16,
+            delta_to_race_leader_in_ms: 10u16,
+            lap_distance: 100.5f32,
+            total_distance: 1000.0f32,
+            safety_car_delta: 3.5f32,
+            car_position: 2u8,
+            current_lap_num: 3u8,
+            pit_status: 1u8,
+            num_pit_stops: 0u8,
+            sector: 1u8,
+            current_lap_invalid: 0u8,
+            penalties: 0u8,
+            total_warnings: 0u8,
+            corner_cutting_warnings: 0u8,
+            num_unserved_drive_through_pens: 0u8,
+            num_unserved_stop_go_pens: 0u8,
+            grid_position: 4u8,
+            driver_status: 1u8,
+            result_status: 0u8,
+            pit_lane_timer_active: 1u8,
+            pit_lane_time_in_lane_in_ms: 20u16,
+            pit_stop_timer_in_ms: 0u16,
+            pit_stop_should_serve_pen: 0u8,
         };
 
         // Serialize the data
@@ -225,8 +225,8 @@ mod tests {
             original_packet_lap_data.lap_data[i].current_lap_num = (i + 2) as u8;
             original_packet_lap_data.lap_data[i].grid_position = (i + 3) as u8;
         }
-        original_packet_lap_data.time_trial_pb_car_idx = 1;
-        original_packet_lap_data.time_trial_rival_car_idx = 2;
+        original_packet_lap_data.time_trial_pb_car_idx = 1u8;
+        original_packet_lap_data.time_trial_rival_car_idx = 2u8;
 
         // Serialize the data
         let serialized_data: Vec<u8> = original_packet_lap_data.serialize().unwrap();

@@ -152,17 +152,17 @@ mod tests {
     fn test_participant_data_serialization_deserialization() {
         // Create some sample participant data
         let original_participant_data: ParticipantData = ParticipantData {
-            ai_controlled: 1,
-            driver_id: 2,
-            network_id: 3,
-            team_id: 4,
-            my_team: 5,
-            race_number: 6,
-            nationality: 7,
-            name: [65; 48], // 65 is ASCII for 'A'
-            your_telemetry: 8,
-            show_online_names: 9,
-            platform: 10,
+            ai_controlled: 1u8,
+            driver_id: 2u8,
+            network_id: 3u8,
+            team_id: 4u8,
+            my_team: 5u8,
+            race_number: 6u8,
+            nationality: 7u8,
+            name: [65u8; 48], // 65 is ASCII for 'A'
+            your_telemetry: 8u8,
+            show_online_names: 9u8,
+            platform: 10u8,
         };
 
         // Serialize the data
@@ -181,23 +181,23 @@ mod tests {
         // Create some sample packet participants data
         let mut original_packet_participants_data: PacketParticipantsData =
             PacketParticipantsData::default();
-        original_packet_participants_data.header.packet_format = 2021;
-        original_packet_participants_data.header.game_year = 21;
-        original_packet_participants_data.header.game_major_version = 1;
-        original_packet_participants_data.header.game_minor_version = 3;
-        original_packet_participants_data.header.packet_version = 1;
-        original_packet_participants_data.header.packet_id = 0;
-        original_packet_participants_data.header.session_uid = 123456789;
-        original_packet_participants_data.header.session_time = 123.456;
-        original_packet_participants_data.header.frame_identifier = 1000;
+        original_packet_participants_data.header.packet_format = 2021u16;
+        original_packet_participants_data.header.game_year = 21u8;
+        original_packet_participants_data.header.game_major_version = 1u8;
+        original_packet_participants_data.header.game_minor_version = 3u8;
+        original_packet_participants_data.header.packet_version = 1u8;
+        original_packet_participants_data.header.packet_id = 0u8;
+        original_packet_participants_data.header.session_uid = 123456789u64;
+        original_packet_participants_data.header.session_time = 123.456f32;
+        original_packet_participants_data.header.frame_identifier = 1000u32;
         original_packet_participants_data
             .header
-            .overall_frame_identifier = 5000;
-        original_packet_participants_data.header.player_car_index = 1;
+            .overall_frame_identifier = 5000u32;
+        original_packet_participants_data.header.player_car_index = 1u8;
         original_packet_participants_data
             .header
-            .secondary_player_car_index = 255;
-        original_packet_participants_data.num_active_cars = 20; // Just for testing
+            .secondary_player_car_index = 255u8;
+        original_packet_participants_data.num_active_cars = 20u8; // Just for testing
 
         // Serialize the data
         let serialized_data: Vec<u8> = original_packet_participants_data.serialize().unwrap();

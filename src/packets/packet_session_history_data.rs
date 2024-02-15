@@ -196,14 +196,14 @@ mod tests {
     fn test_lap_history_data_serialization_deserialization() {
         // Create some sample lap history data
         let original_lap_history_data: LapHistoryData = LapHistoryData {
-            lap_time_in_ms: 120_000,
-            sector1_time_in_ms: 30_000,
-            sector1_time_minutes: 1,
-            sector2_time_in_ms: 40_000,
-            sector2_time_minutes: 1,
-            sector3_time_in_ms: 50_000,
-            sector3_time_minutes: 1,
-            lap_valid_bit_flags: 1,
+            lap_time_in_ms: 120_000u32,
+            sector1_time_in_ms: 30_000u16,
+            sector1_time_minutes: 1u8,
+            sector2_time_in_ms: 40_000u16,
+            sector2_time_minutes: 1u8,
+            sector3_time_in_ms: 50_000u16,
+            sector3_time_minutes: 1u8,
+            lap_valid_bit_flags: 1u8,
         };
 
         // Serialize the data
@@ -221,9 +221,9 @@ mod tests {
     fn test_tyre_stint_history_data_serialization_deserialization() {
         // Create some sample tyre stint history data
         let original_tyre_stint_history_data: TyreStintHistoryData = TyreStintHistoryData {
-            end_lap: 20,
-            tyre_actual_compound: 1,
-            tyre_visual_compound: 2,
+            end_lap: 20u8,
+            tyre_actual_compound: 1u8,
+            tyre_visual_compound: 2u8,
         };
 
         // Serialize the data
@@ -244,33 +244,33 @@ mod tests {
     fn test_packet_session_history_data_serialization_deserialization() {
         // Create some sample lap history data
         let original_lap_history_data: LapHistoryData = LapHistoryData {
-            lap_time_in_ms: 120_000,
-            sector1_time_in_ms: 30_000,
-            sector1_time_minutes: 1,
-            sector2_time_in_ms: 40_000,
-            sector2_time_minutes: 1,
-            sector3_time_in_ms: 50_000,
-            sector3_time_minutes: 1,
-            lap_valid_bit_flags: 1,
+            lap_time_in_ms: 120_000u32,
+            sector1_time_in_ms: 30_000u16,
+            sector1_time_minutes: 1u8,
+            sector2_time_in_ms: 40_000u16,
+            sector2_time_minutes: 1u8,
+            sector3_time_in_ms: 50_000u16,
+            sector3_time_minutes: 1u8,
+            lap_valid_bit_flags: 1u8,
         };
 
         // Create some sample tyre stint history data
         let original_tyre_stint_history_data: TyreStintHistoryData = TyreStintHistoryData {
-            end_lap: 20,
-            tyre_actual_compound: 1,
-            tyre_visual_compound: 2,
+            end_lap: 20u8,
+            tyre_actual_compound: 1u8,
+            tyre_visual_compound: 2u8,
         };
 
         // Create a sample packet session history data
         let mut original_packet_session_history_data: PacketSessionHistoryData =
             PacketSessionHistoryData::default();
-        original_packet_session_history_data.car_idx = 1;
-        original_packet_session_history_data.num_laps = 20;
-        original_packet_session_history_data.num_tyre_stints = 3;
-        original_packet_session_history_data.best_lap_time_lap_num = 10;
-        original_packet_session_history_data.best_sector1_lap_num = 5;
-        original_packet_session_history_data.best_sector2_lap_num = 8;
-        original_packet_session_history_data.best_sector3_lap_num = 15;
+        original_packet_session_history_data.car_idx = 1u8;
+        original_packet_session_history_data.num_laps = 20u8;
+        original_packet_session_history_data.num_tyre_stints = 3u8;
+        original_packet_session_history_data.best_lap_time_lap_num = 10u8;
+        original_packet_session_history_data.best_sector1_lap_num = 5u8;
+        original_packet_session_history_data.best_sector2_lap_num = 8u8;
+        original_packet_session_history_data.best_sector3_lap_num = 15u8;
         original_packet_session_history_data.lap_history_data[0] = original_lap_history_data;
         original_packet_session_history_data.tyre_stints_history_data[0] =
             original_tyre_stint_history_data;

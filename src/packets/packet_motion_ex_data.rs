@@ -165,22 +165,22 @@ mod tests {
     fn test_packet_motion_ex_data_serialization_deserialization() {
         // Create some sample packet motion ex data
         let mut original_packet_motion_ex_data: PacketMotionExData = PacketMotionExData::default();
-        original_packet_motion_ex_data.header.packet_format = 2021;
-        original_packet_motion_ex_data.header.game_year = 21;
-        original_packet_motion_ex_data.header.game_major_version = 1;
-        original_packet_motion_ex_data.header.game_minor_version = 3;
-        original_packet_motion_ex_data.header.packet_version = 1;
-        original_packet_motion_ex_data.header.packet_id = 0;
-        original_packet_motion_ex_data.header.session_uid = 123456789;
-        original_packet_motion_ex_data.header.session_time = 123.456;
-        original_packet_motion_ex_data.header.frame_identifier = 1000;
+        original_packet_motion_ex_data.header.packet_format = 2021u16;
+        original_packet_motion_ex_data.header.game_year = 21u8;
+        original_packet_motion_ex_data.header.game_major_version = 1u8;
+        original_packet_motion_ex_data.header.game_minor_version = 3u8;
+        original_packet_motion_ex_data.header.packet_version = 1u8;
+        original_packet_motion_ex_data.header.packet_id = 0u8;
+        original_packet_motion_ex_data.header.session_uid = 123456789u64;
+        original_packet_motion_ex_data.header.session_time = 123.456f32;
+        original_packet_motion_ex_data.header.frame_identifier = 1000u32;
         original_packet_motion_ex_data
             .header
-            .overall_frame_identifier = 5000;
-        original_packet_motion_ex_data.header.player_car_index = 1;
+            .overall_frame_identifier = 5000u32;
+        original_packet_motion_ex_data.header.player_car_index = 1u8;
         original_packet_motion_ex_data
             .header
-            .secondary_player_car_index = 255;
+            .secondary_player_car_index = 255u8;
 
         // Populate arrays with some sample values
         for i in 0..4 {

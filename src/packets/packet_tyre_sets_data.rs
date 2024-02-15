@@ -123,15 +123,15 @@ mod tests {
     fn test_tyre_set_data_serialization_deserialization() {
         // Create some sample tyre set data
         let original_tyre_set_data: TyreSetData = TyreSetData {
-            actual_tyre_compound: 1,
-            visual_tyre_compound: 2,
-            wear: 50,
-            available: 1,
-            recommended_session: 0,
-            life_span: 80,
-            usable_life: 60,
-            lap_delta_time: 500,
-            fitted: 1,
+            actual_tyre_compound: 1u8,
+            visual_tyre_compound: 2u8,
+            wear: 50u8,
+            available: 1u8,
+            recommended_session: 0u8,
+            life_span: 80u8,
+            usable_life: 60u8,
+            lap_delta_time: 500i16,
+            fitted: 1u8,
         };
 
         // Serialize the data
@@ -149,23 +149,23 @@ mod tests {
     fn test_packet_tyre_sets_data_serialization_deserialization() {
         // Create some sample packet tyre sets data
         let mut original_packet_tyre_sets_data: PacketTyreSetsData = PacketTyreSetsData::default();
-        original_packet_tyre_sets_data.header.packet_format = 2021;
-        original_packet_tyre_sets_data.header.game_year = 21;
-        original_packet_tyre_sets_data.header.game_major_version = 1;
-        original_packet_tyre_sets_data.header.game_minor_version = 3;
-        original_packet_tyre_sets_data.header.packet_version = 1;
-        original_packet_tyre_sets_data.header.packet_id = 0;
-        original_packet_tyre_sets_data.header.session_uid = 123456789;
-        original_packet_tyre_sets_data.header.session_time = 123.456;
-        original_packet_tyre_sets_data.header.frame_identifier = 1000;
+        original_packet_tyre_sets_data.header.packet_format = 2021u16;
+        original_packet_tyre_sets_data.header.game_year = 21u8;
+        original_packet_tyre_sets_data.header.game_major_version = 1u8;
+        original_packet_tyre_sets_data.header.game_minor_version = 3u8;
+        original_packet_tyre_sets_data.header.packet_version = 1u8;
+        original_packet_tyre_sets_data.header.packet_id = 0u8;
+        original_packet_tyre_sets_data.header.session_uid = 123456789u64;
+        original_packet_tyre_sets_data.header.session_time = 123.456f32;
+        original_packet_tyre_sets_data.header.frame_identifier = 1000u32;
         original_packet_tyre_sets_data
             .header
-            .overall_frame_identifier = 5000;
-        original_packet_tyre_sets_data.header.player_car_index = 1;
+            .overall_frame_identifier = 5000u32;
+        original_packet_tyre_sets_data.header.player_car_index = 1u8;
         original_packet_tyre_sets_data
             .header
-            .secondary_player_car_index = 255;
-        original_packet_tyre_sets_data.car_idx = 1;
+            .secondary_player_car_index = 255u8;
+        original_packet_tyre_sets_data.car_idx = 1u8;
         for i in 0..20 {
             original_packet_tyre_sets_data.tyre_set_data[i].actual_tyre_compound = (i + 1) as u8;
             original_packet_tyre_sets_data.tyre_set_data[i].visual_tyre_compound = (i + 2) as u8;

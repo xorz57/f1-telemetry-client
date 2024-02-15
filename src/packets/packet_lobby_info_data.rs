@@ -140,13 +140,13 @@ mod tests {
     fn test_lobby_info_data_serialization_deserialization() {
         // Create some sample data
         let original_lobby_info_data: LobbyInfoData = LobbyInfoData {
-            ai_controlled: 1,
-            team_id: 2,
-            nationality: 3,
-            platform: 4,
-            name: [65; 48], // 65 is ASCII 'A'
-            car_number: 6,
-            ready_status: 7,
+            ai_controlled: 1u8,
+            team_id: 2u8,
+            nationality: 3u8,
+            platform: 4u8,
+            name: [65u8; 48], // 65 is ASCII 'A'
+            car_number: 6u8,
+            ready_status: 7u8,
         };
 
         // Serialize the data
@@ -165,13 +165,13 @@ mod tests {
         // Create some sample data
         let mut original_packet_lobby_info_data: PacketLobbyInfoData =
             PacketLobbyInfoData::default();
-        original_packet_lobby_info_data.num_players = 5;
+        original_packet_lobby_info_data.num_players = 5u8;
         for i in 0..22 {
             original_packet_lobby_info_data.lobby_players[i].ai_controlled = i as u8;
             original_packet_lobby_info_data.lobby_players[i].team_id = (i + 1) as u8;
             original_packet_lobby_info_data.lobby_players[i].nationality = (i + 2) as u8;
             original_packet_lobby_info_data.lobby_players[i].platform = (i + 3) as u8;
-            original_packet_lobby_info_data.lobby_players[i].name = [65; 48]; // 'A'
+            original_packet_lobby_info_data.lobby_players[i].name = [65u8; 48]; // 'A'
             original_packet_lobby_info_data.lobby_players[i].car_number = (i + 4) as u8;
             original_packet_lobby_info_data.lobby_players[i].ready_status = (i + 5) as u8;
         }

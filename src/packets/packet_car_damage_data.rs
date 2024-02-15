@@ -158,27 +158,27 @@ mod tests {
     fn test_car_damage_data_serialization_deserialization() {
         // Create some sample car damage data
         let original_car_damage_data: CarDamageData = CarDamageData {
-            tyres_wear: [0.1, 0.2, 0.3, 0.4],
-            tyres_damage: [10, 20, 30, 40],
-            brakes_damage: [5, 10, 15, 20],
-            front_left_wing_damage: 25,
-            front_right_wing_damage: 30,
-            rear_wing_damage: 35,
-            floor_damage: 5,
-            diffuser_damage: 8,
-            sidepod_damage: 12,
-            drs_fault: 0,
-            ers_fault: 0,
-            gearbox_damage: 15,
-            engine_damage: 20,
-            engine_mguh_wear: 25,
-            engine_es_wear: 30,
-            engine_ce_wear: 35,
-            engine_ice_wear: 40,
-            engine_mguk_wear: 45,
-            engine_tc_wear: 50,
-            engine_blown: 0,
-            engine_seized: 0,
+            tyres_wear: [0.1f32, 0.2f32, 0.3f32, 0.4f32],
+            tyres_damage: [10u8, 20u8, 30u8, 40u8],
+            brakes_damage: [5u8, 10u8, 15u8, 20u8],
+            front_left_wing_damage: 25u8,
+            front_right_wing_damage: 30u8,
+            rear_wing_damage: 35u8,
+            floor_damage: 5u8,
+            diffuser_damage: 8u8,
+            sidepod_damage: 12u8,
+            drs_fault: 0u8,
+            ers_fault: 0u8,
+            gearbox_damage: 15u8,
+            engine_damage: 20u8,
+            engine_mguh_wear: 25u8,
+            engine_es_wear: 30u8,
+            engine_ce_wear: 35u8,
+            engine_ice_wear: 40u8,
+            engine_mguk_wear: 45u8,
+            engine_tc_wear: 50u8,
+            engine_blown: 0u8,
+            engine_seized: 0u8,
         };
 
         // Serialize the data
@@ -197,46 +197,46 @@ mod tests {
         // Create some sample packet car damage data
         let mut original_packet_car_damage_data: PacketCarDamageData =
             PacketCarDamageData::default();
-        original_packet_car_damage_data.header.packet_format = 2021;
-        original_packet_car_damage_data.header.game_year = 21;
-        original_packet_car_damage_data.header.game_major_version = 1;
-        original_packet_car_damage_data.header.game_minor_version = 3;
-        original_packet_car_damage_data.header.packet_version = 1;
-        original_packet_car_damage_data.header.packet_id = 0;
-        original_packet_car_damage_data.header.session_uid = 123456789;
-        original_packet_car_damage_data.header.session_time = 123.456;
-        original_packet_car_damage_data.header.frame_identifier = 1000;
+        original_packet_car_damage_data.header.packet_format = 2021u16;
+        original_packet_car_damage_data.header.game_year = 21u8;
+        original_packet_car_damage_data.header.game_major_version = 1u8;
+        original_packet_car_damage_data.header.game_minor_version = 3u8;
+        original_packet_car_damage_data.header.packet_version = 1u8;
+        original_packet_car_damage_data.header.packet_id = 0u8;
+        original_packet_car_damage_data.header.session_uid = 123456789u64;
+        original_packet_car_damage_data.header.session_time = 123.456f32;
+        original_packet_car_damage_data.header.frame_identifier = 1000u32;
         original_packet_car_damage_data
             .header
-            .overall_frame_identifier = 5000;
-        original_packet_car_damage_data.header.player_car_index = 1;
+            .overall_frame_identifier = 5000u32;
+        original_packet_car_damage_data.header.player_car_index = 1u8;
         original_packet_car_damage_data
             .header
-            .secondary_player_car_index = 255;
+            .secondary_player_car_index = 255u8;
 
         // Populate car damage data array with some sample data
         for car_data in original_packet_car_damage_data.car_damage_data.iter_mut() {
-            car_data.tyres_wear = [0.1, 0.2, 0.3, 0.4];
-            car_data.tyres_damage = [10, 20, 30, 40];
-            car_data.brakes_damage = [5, 10, 15, 20];
-            car_data.front_left_wing_damage = 25;
-            car_data.front_right_wing_damage = 30;
-            car_data.rear_wing_damage = 35;
-            car_data.floor_damage = 5;
-            car_data.diffuser_damage = 8;
-            car_data.sidepod_damage = 12;
-            car_data.drs_fault = 0;
-            car_data.ers_fault = 0;
-            car_data.gearbox_damage = 15;
-            car_data.engine_damage = 20;
-            car_data.engine_mguh_wear = 25;
-            car_data.engine_es_wear = 30;
-            car_data.engine_ce_wear = 35;
-            car_data.engine_ice_wear = 40;
-            car_data.engine_mguk_wear = 45;
-            car_data.engine_tc_wear = 50;
-            car_data.engine_blown = 0;
-            car_data.engine_seized = 0;
+            car_data.tyres_wear = [0.1f32, 0.2f32, 0.3f32, 0.4f32];
+            car_data.tyres_damage = [10u8, 20u8, 30u8, 40u8];
+            car_data.brakes_damage = [5u8, 10u8, 15u8, 20u8];
+            car_data.front_left_wing_damage = 25u8;
+            car_data.front_right_wing_damage = 30u8;
+            car_data.rear_wing_damage = 35u8;
+            car_data.floor_damage = 5u8;
+            car_data.diffuser_damage = 8u8;
+            car_data.sidepod_damage = 12u8;
+            car_data.drs_fault = 0u8;
+            car_data.ers_fault = 0u8;
+            car_data.gearbox_damage = 15u8;
+            car_data.engine_damage = 20u8;
+            car_data.engine_mguh_wear = 25u8;
+            car_data.engine_es_wear = 30u8;
+            car_data.engine_ce_wear = 35u8;
+            car_data.engine_ice_wear = 40u8;
+            car_data.engine_mguk_wear = 45u8;
+            car_data.engine_tc_wear = 50u8;
+            car_data.engine_blown = 0u8;
+            car_data.engine_seized = 0u8;
         }
 
         // Serialize the data

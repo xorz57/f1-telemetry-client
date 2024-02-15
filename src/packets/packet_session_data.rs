@@ -359,6 +359,53 @@ mod tests {
     use super::*;
 
     #[test]
+    fn test_marshal_zone_serialization_deserialization() {
+        // Create a sample marshal zone
+        let original_marshal_zone: MarshalZone = MarshalZone {
+            zone_start: 10.0,
+            zone_flag: 1,
+        };
+
+        // Serialize the data
+        let serialized_data: Vec<u8> = original_marshal_zone.serialize().unwrap();
+
+        // Deserialize the serialized data
+        let deserialized_marshal_zone: MarshalZone =
+            MarshalZone::unserialize(&serialized_data).unwrap();
+
+        // Check if the deserialized data matches the original data
+        assert_eq!(original_marshal_zone, deserialized_marshal_zone);
+    }
+
+    #[test]
+    fn test_weather_forecast_sample_serialization_deserialization() {
+        // Create a sample weather forecast sample
+        let original_weather_forecast_sample: WeatherForecastSample = WeatherForecastSample {
+            session_type: 1,
+            time_offset: 2,
+            weather: 3,
+            track_temperature: 20,
+            track_temperature_change: 1,
+            air_temperature: 25,
+            air_temperature_change: -2,
+            rain_percentage: 10,
+        };
+
+        // Serialize the data
+        let serialized_data: Vec<u8> = original_weather_forecast_sample.serialize().unwrap();
+
+        // Deserialize the serialized data
+        let deserialized_weather_forecast_sample: WeatherForecastSample =
+            WeatherForecastSample::unserialize(&serialized_data).unwrap();
+
+        // Check if the deserialized data matches the original data
+        assert_eq!(
+            original_weather_forecast_sample,
+            deserialized_weather_forecast_sample
+        );
+    }
+
+    #[test]
     fn test_packet_session_data_serialization_deserialization() {
         // Create some sample marshal zones
         let original_marshal_zones: [MarshalZone; 21] = [MarshalZone {

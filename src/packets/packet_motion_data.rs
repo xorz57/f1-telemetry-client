@@ -4,7 +4,7 @@ use std::io::{Cursor, Write};
 use std::mem::size_of;
 
 #[repr(C, packed)]
-#[derive(Debug, Default, Clone, Copy)]
+#[derive(Debug, Default, Clone, Copy, PartialEq)]
 pub struct CarMotionData {
     pub world_position_x: f32,     // 4 Bytes
     pub world_position_y: f32,     // 4 Bytes
@@ -27,7 +27,7 @@ pub struct CarMotionData {
 } // 60 Bytes
 
 #[repr(C, packed)]
-#[derive(Debug, Default, Clone, Copy)]
+#[derive(Debug, Default, Clone, Copy, PartialEq)]
 pub struct PacketMotionData {
     pub header: PacketHeader,
     pub car_motion_data: [CarMotionData; 22],
@@ -117,5 +117,64 @@ impl PacketMotionData {
         }
 
         Ok(bytes)
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_car_motion_data_serialization_deserialization() {
+        // Create some sample data
+        let original_car_motion_data = CarMotionData {
+            world_position_x: 1.0,
+            world_position_y: 2.0,
+            world_position_z: 3.0,
+            world_velocity_x: 4.0,
+            world_velocity_y: 5.0,
+            world_velocity_z: 6.0,
+            world_forward_dir_x: 7,
+            world_forward_dir_y: 8,
+            world_forward_dir_z: 9,
+            world_right_dir_x: 10,
+            world_right_dir_y: 11,
+            world_right_dir_z: 12,
+            g_force_lateral: 13.0,
+            g_force_longitudinal: 14.0,
+            g_force_vertical: 15.0,
+            yaw: 16.0,
+            pitch: 17.0,
+            roll: 18.0,
+        };
+
+        // Serialize the data
+        let serialized_data: Vec<u8> = original_car_motion_data.serialize().unwrap();
+
+        // Deserialize the serialized data
+        let deserialized_car_motion_data: CarMotionData =
+            CarMotionData::unserialize(&serialized_data).unwrap();
+
+        // Check if the deserialized data matches the original data
+        assert_eq!(original_car_motion_data, deserialized_car_motion_data);
+    }
+
+    #[test]
+    fn test_packet_motion_data_serialization_deserialization() {
+        // Create some sample data
+        let original_packet_motion_data = PacketMotionData {
+            header: PacketHeader::default(),
+            car_motion_data: [CarMotionData::default(); 22],
+        };
+
+        // Serialize the data
+        let serialized_data: Vec<u8> = original_packet_motion_data.serialize().unwrap();
+
+        // Deserialize the serialized data
+        let deserialized_packet_motion_data: PacketMotionData =
+            PacketMotionData::unserialize(&serialized_data).unwrap();
+
+        // Check if the deserialized data matches the original data
+        assert_eq!(original_packet_motion_data, deserialized_packet_motion_data);
     }
 }

@@ -185,7 +185,8 @@ mod tests {
         let serialized_data: Vec<u8> = original_car_damage_data.serialize().unwrap();
 
         // Deserialize the serialized data
-        let deserialized_car_damage_data: CarDamageData = CarDamageData::unserialize(&serialized_data).unwrap();
+        let deserialized_car_damage_data: CarDamageData =
+            CarDamageData::unserialize(&serialized_data).unwrap();
 
         // Check if the deserialized data matches the original data
         assert_eq!(original_car_damage_data, deserialized_car_damage_data);

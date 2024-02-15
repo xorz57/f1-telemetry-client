@@ -108,7 +108,7 @@ mod tests {
     #[test]
     fn test_tyre_set_data_serialization_deserialization() {
         // Create some sample tyre set data
-        let original_tyre_set_data = TyreSetData {
+        let original_tyre_set_data: TyreSetData = TyreSetData {
             actual_tyre_compound: 1,
             visual_tyre_compound: 2,
             wear: 50,
@@ -121,10 +121,11 @@ mod tests {
         };
 
         // Serialize the data
-        let serialized_data = original_tyre_set_data.serialize().unwrap();
+        let serialized_data: Vec<u8> = original_tyre_set_data.serialize().unwrap();
 
         // Deserialize the serialized data
-        let deserialized_tyre_set_data = TyreSetData::unserialize(&serialized_data).unwrap();
+        let deserialized_tyre_set_data: TyreSetData =
+            TyreSetData::unserialize(&serialized_data).unwrap();
 
         // Check if the deserialized data matches the original data
         assert_eq!(original_tyre_set_data, deserialized_tyre_set_data);

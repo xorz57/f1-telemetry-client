@@ -88,7 +88,8 @@ mod tests {
         let serialized_data: Vec<u8> = original_packet_header.serialize().unwrap();
 
         // Deserialize the serialized data
-        let deserialized_packet_header: PacketHeader = PacketHeader::unserialize(&serialized_data).unwrap();
+        let deserialized_packet_header: PacketHeader =
+            PacketHeader::unserialize(&serialized_data).unwrap();
 
         // Check if the deserialized data matches the original data
         assert_eq!(original_packet_header, deserialized_packet_header);

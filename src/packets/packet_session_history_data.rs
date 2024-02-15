@@ -195,7 +195,7 @@ mod tests {
     #[test]
     fn test_packet_session_history_data_serialization_deserialization() {
         // Create some sample lap history data
-        let original_lap_history_data = LapHistoryData {
+        let original_lap_history_data: LapHistoryData = LapHistoryData {
             lap_time_in_ms: 120_000,
             sector1_time_in_ms: 30_000,
             sector1_time_minutes: 1,
@@ -207,14 +207,15 @@ mod tests {
         };
 
         // Create some sample tyre stint history data
-        let original_tyre_stint_history_data = TyreStintHistoryData {
+        let original_tyre_stint_history_data: TyreStintHistoryData = TyreStintHistoryData {
             end_lap: 20,
             tyre_actual_compound: 1,
             tyre_visual_compound: 2,
         };
 
         // Create a sample packet session history data
-        let mut original_packet_session_history_data = PacketSessionHistoryData::default();
+        let mut original_packet_session_history_data: PacketSessionHistoryData =
+            PacketSessionHistoryData::default();
         original_packet_session_history_data.car_idx = 1;
         original_packet_session_history_data.num_laps = 20;
         original_packet_session_history_data.num_tyre_stints = 3;
@@ -227,10 +228,10 @@ mod tests {
             original_tyre_stint_history_data;
 
         // Serialize the data
-        let serialized_data = original_packet_session_history_data.serialize().unwrap();
+        let serialized_data: Vec<u8> = original_packet_session_history_data.serialize().unwrap();
 
         // Deserialize the serialized data
-        let deserialized_packet_session_history_data =
+        let deserialized_packet_session_history_data: PacketSessionHistoryData =
             PacketSessionHistoryData::unserialize(&serialized_data).unwrap();
 
         // Check if the deserialized data matches the original data

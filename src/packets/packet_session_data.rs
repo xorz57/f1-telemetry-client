@@ -359,7 +359,7 @@ mod tests {
     use super::*;
 
     #[test]
-    fn test_serialization_deserialization() {
+    fn test_packet_session_data_serialization_deserialization() {
         // Create some sample marshal zones
         let original_marshal_zones: [MarshalZone; 21] = [MarshalZone {
             zone_start: 10.0,

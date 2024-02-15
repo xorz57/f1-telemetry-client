@@ -4,7 +4,7 @@ use std::io::{Cursor, Write};
 use std::mem::size_of;
 
 #[repr(C, packed)]
-#[derive(Debug, Default, Clone, Copy)]
+#[derive(Debug, Default, Clone, Copy, PartialEq)]
 pub struct FinalClassificationData {
     pub position: u8,                  // 1 Byte
     pub num_laps: u8,                  // 1 Byte
@@ -23,7 +23,7 @@ pub struct FinalClassificationData {
 } // 45 Bytes
 
 #[repr(C, packed)]
-#[derive(Debug, Default, Clone, Copy)]
+#[derive(Debug, Default, Clone, Copy, PartialEq)]
 pub struct PacketFinalClassificationData {
     pub header: PacketHeader,                               // 29 Bytes
     pub num_cars: u8,                                       // 1 Byte
@@ -104,18 +104,26 @@ impl FinalClassificationData {
 impl PacketFinalClassificationData {
     #[allow(dead_code)]
     pub fn unserialize(bytes: &[u8]) -> Result<Self, std::io::Error> {
-        let mut cursor: Cursor<&[u8]> = Cursor::new(&bytes[..size_of::<PacketHeader>()]);
+        let mut cursor: Cursor<&[u8]> = Cursor::new(&bytes);
 
         Ok(PacketFinalClassificationData {
-            header: PacketHeader::unserialize(&bytes[..size_of::<PacketHeader>()])?,
+            header: {
+                let pos: usize = size_of::<PacketHeader>();
+                cursor.set_position(pos as u64);
+                PacketHeader::unserialize(&bytes[..size_of::<PacketHeader>()])?
+            },
             num_cars: cursor.read_u8()?,
             classification_data: {
                 let mut classification_data: [FinalClassificationData; 22] =
                     [FinalClassificationData::default(); 22];
                 for i in 0..22 {
                     classification_data[i] = FinalClassificationData::unserialize(
-                        &bytes[1 * size_of::<u8>() + i * size_of::<FinalClassificationData>()
-                            ..1 * size_of::<u8>() + (i + 1) * size_of::<FinalClassificationData>()],
+                        &bytes[size_of::<PacketHeader>()
+                            + 1 * size_of::<u8>()
+                            + i * size_of::<FinalClassificationData>()
+                            ..size_of::<PacketHeader>()
+                                + 1 * size_of::<u8>()
+                                + (i + 1) * size_of::<FinalClassificationData>()],
                     )?;
                 }
                 classification_data
@@ -135,5 +143,94 @@ impl PacketFinalClassificationData {
         }
 
         Ok(bytes)
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_packet_final_classification_data_serialization_deserialization() {
+        // Create some sample packet final classification data
+        let mut original_packet_final_classification_data: PacketFinalClassificationData =
+            PacketFinalClassificationData::default();
+        original_packet_final_classification_data
+            .header
+            .packet_format = 2021;
+        original_packet_final_classification_data.header.game_year = 21;
+        original_packet_final_classification_data
+            .header
+            .game_major_version = 1;
+        original_packet_final_classification_data
+            .header
+            .game_minor_version = 3;
+        original_packet_final_classification_data
+            .header
+            .packet_version = 1;
+        original_packet_final_classification_data.header.packet_id = 0;
+        original_packet_final_classification_data.header.session_uid = 123456789;
+        original_packet_final_classification_data
+            .header
+            .session_time = 123.456;
+        original_packet_final_classification_data
+            .header
+            .frame_identifier = 1000;
+        original_packet_final_classification_data
+            .header
+            .overall_frame_identifier = 5000;
+        original_packet_final_classification_data
+            .header
+            .player_car_index = 1;
+        original_packet_final_classification_data
+            .header
+            .secondary_player_car_index = 255;
+        original_packet_final_classification_data.num_cars = 22;
+        for i in 0..22 {
+            original_packet_final_classification_data.classification_data[i].position =
+                (i + 1) as u8;
+            original_packet_final_classification_data.classification_data[i].num_laps =
+                (i + 1) as u8;
+            original_packet_final_classification_data.classification_data[i].grid_position =
+                (i + 1) as u8;
+            original_packet_final_classification_data.classification_data[i].points = (i + 1) as u8;
+            original_packet_final_classification_data.classification_data[i].num_pit_stops =
+                (i + 1) as u8;
+            original_packet_final_classification_data.classification_data[i].result_status =
+                (i + 1) as u8;
+            original_packet_final_classification_data.classification_data[i].best_lap_time_in_ms =
+                (i + 1) as u32;
+            original_packet_final_classification_data.classification_data[i].total_race_time =
+                (i + 1) as f64;
+            original_packet_final_classification_data.classification_data[i].penalties_time =
+                (i + 1) as u8;
+            original_packet_final_classification_data.classification_data[i].num_penalties =
+                (i + 1) as u8;
+            original_packet_final_classification_data.classification_data[i].num_tyre_stints =
+                (i + 1) as u8;
+            for j in 0..8 {
+                original_packet_final_classification_data.classification_data[i]
+                    .tyre_stints_actual[j] = (i + 1) as u8;
+                original_packet_final_classification_data.classification_data[i]
+                    .tyre_stints_visual[j] = (i + 1) as u8;
+                original_packet_final_classification_data.classification_data[i]
+                    .tyre_stints_end_laps[j] = (i + 1) as u8;
+            }
+        }
+
+        // Serialize the data
+        let serialized_data: Vec<u8> = original_packet_final_classification_data
+            .serialize()
+            .unwrap();
+
+        // Deserialize the serialized data
+        let deserialized_packet_final_classification_data: PacketFinalClassificationData =
+            PacketFinalClassificationData::unserialize(&serialized_data).unwrap();
+
+        // Check if the deserialized data matches the original data
+        assert_eq!(
+            original_packet_final_classification_data,
+            deserialized_packet_final_classification_data
+        );
     }
 }

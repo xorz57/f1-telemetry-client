@@ -106,7 +106,7 @@ mod tests {
     use super::*;
 
     #[test]
-    fn test_serialization_deserialization() {
+    fn test_tyre_set_data_serialization_deserialization() {
         // Create some sample tyre set data
         let original_tyre_set_data = TyreSetData {
             actual_tyre_compound: 1,

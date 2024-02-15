@@ -155,7 +155,7 @@ mod tests {
     use super::*;
 
     #[test]
-    fn test_serialization_deserialization() {
+    fn test_car_damage_data_serialization_deserialization() {
         // Create some sample car damage data
         let original_car_damage_data: CarDamageData = CarDamageData {
             tyres_wear: [0.1, 0.2, 0.3, 0.4],

@@ -193,7 +193,7 @@ mod tests {
     use super::*;
 
     #[test]
-    fn test_serialization_deserialization() {
+    fn test_packet_session_history_data_serialization_deserialization() {
         // Create some sample lap history data
         let original_lap_history_data = LapHistoryData {
             lap_time_in_ms: 120_000,

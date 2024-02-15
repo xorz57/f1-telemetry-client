@@ -146,7 +146,7 @@ mod tests {
     use super::*;
 
     #[test]
-    fn test_serialization_deserialization() {
+    fn test_car_status_data_serialization_deserialization() {
         // Create some sample car status data
         let original_car_status_data: CarStatusData = CarStatusData {
             traction_control: 1,

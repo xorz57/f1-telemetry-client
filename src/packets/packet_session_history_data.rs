@@ -193,6 +193,54 @@ mod tests {
     use super::*;
 
     #[test]
+    fn test_lap_history_data_serialization_deserialization() {
+        // Create some sample lap history data
+        let original_lap_history_data: LapHistoryData = LapHistoryData {
+            lap_time_in_ms: 120_000,
+            sector1_time_in_ms: 30_000,
+            sector1_time_minutes: 1,
+            sector2_time_in_ms: 40_000,
+            sector2_time_minutes: 1,
+            sector3_time_in_ms: 50_000,
+            sector3_time_minutes: 1,
+            lap_valid_bit_flags: 1,
+        };
+
+        // Serialize the data
+        let serialized_data: Vec<u8> = original_lap_history_data.serialize().unwrap();
+
+        // Deserialize the serialized data
+        let deserialized_lap_history_data: LapHistoryData =
+            LapHistoryData::unserialize(&serialized_data).unwrap();
+
+        // Check if the deserialized data matches the original data
+        assert_eq!(original_lap_history_data, deserialized_lap_history_data);
+    }
+
+    #[test]
+    fn test_tyre_stint_history_data_serialization_deserialization() {
+        // Create some sample tyre stint history data
+        let original_tyre_stint_history_data: TyreStintHistoryData = TyreStintHistoryData {
+            end_lap: 20,
+            tyre_actual_compound: 1,
+            tyre_visual_compound: 2,
+        };
+
+        // Serialize the data
+        let serialized_data: Vec<u8> = original_tyre_stint_history_data.serialize().unwrap();
+
+        // Deserialize the serialized data
+        let deserialized_tyre_stint_history_data: TyreStintHistoryData =
+            TyreStintHistoryData::unserialize(&serialized_data).unwrap();
+
+        // Check if the deserialized data matches the original data
+        assert_eq!(
+            original_tyre_stint_history_data,
+            deserialized_tyre_stint_history_data
+        );
+    }
+
+    #[test]
     fn test_packet_session_history_data_serialization_deserialization() {
         // Create some sample lap history data
         let original_lap_history_data: LapHistoryData = LapHistoryData {

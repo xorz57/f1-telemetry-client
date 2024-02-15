@@ -151,6 +151,40 @@ mod tests {
     use super::*;
 
     #[test]
+    fn test_final_classification_data_serialization_deserialization() {
+        // Create some sample data
+        let original_final_classification_data = FinalClassificationData {
+            position: 1,
+            num_laps: 2,
+            grid_position: 3,
+            points: 4,
+            num_pit_stops: 5,
+            result_status: 6,
+            best_lap_time_in_ms: 100,
+            total_race_time: 123.456,
+            penalties_time: 7,
+            num_penalties: 8,
+            num_tyre_stints: 9,
+            tyre_stints_actual: [1, 1, 1, 1, 1, 1, 1, 1],
+            tyre_stints_visual: [2, 2, 2, 2, 2, 2, 2, 2],
+            tyre_stints_end_laps: [3, 3, 3, 3, 3, 3, 3, 3],
+        };
+
+        // Serialize the data
+        let serialized_data: Vec<u8> = original_final_classification_data.serialize().unwrap();
+
+        // Deserialize the serialized data
+        let deserialized_final_classification_data: FinalClassificationData =
+            FinalClassificationData::unserialize(&serialized_data).unwrap();
+
+        // Check if the deserialized data matches the original data
+        assert_eq!(
+            original_final_classification_data,
+            deserialized_final_classification_data
+        );
+    }
+
+    #[test]
     fn test_packet_final_classification_data_serialization_deserialization() {
         // Create some sample packet final classification data
         let mut original_packet_final_classification_data: PacketFinalClassificationData =

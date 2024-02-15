@@ -186,4 +186,69 @@ mod tests {
         // Check if the deserialized data matches the original data
         assert_eq!(original_car_status_data, deserialized_car_status_data);
     }
+
+    #[test]
+    fn test_packet_car_status_data_serialization_deserialization() {
+        // Create some sample packet car status data
+        let mut original_packet_car_status_data: PacketCarStatusData =
+            PacketCarStatusData::default();
+        original_packet_car_status_data.header.packet_format = 2021;
+        original_packet_car_status_data.header.game_year = 21;
+        original_packet_car_status_data.header.game_major_version = 1;
+        original_packet_car_status_data.header.game_minor_version = 3;
+        original_packet_car_status_data.header.packet_version = 1;
+        original_packet_car_status_data.header.packet_id = 0;
+        original_packet_car_status_data.header.session_uid = 123456789;
+        original_packet_car_status_data.header.session_time = 123.456;
+        original_packet_car_status_data.header.frame_identifier = 1000;
+        original_packet_car_status_data
+            .header
+            .overall_frame_identifier = 5000;
+        original_packet_car_status_data.header.player_car_index = 1;
+        original_packet_car_status_data
+            .header
+            .secondary_player_car_index = 255;
+
+        // Populate car status data array with some sample data
+        for car_data in original_packet_car_status_data.car_status_data.iter_mut() {
+            car_data.traction_control = 1;
+            car_data.anti_lock_brakes = 2;
+            car_data.fuel_mix = 3;
+            car_data.front_brake_bias = 4;
+            car_data.pit_limiter_status = 5;
+            car_data.fuel_in_tank = 0.1;
+            car_data.fuel_capacity = 0.2;
+            car_data.fuel_remaining_laps = 0.3;
+            car_data.max_rpm = 1000;
+            car_data.idle_rpm = 500;
+            car_data.max_gears = 7;
+            car_data.drs_allowed = 1;
+            car_data.drs_activation_distance = 50;
+            car_data.actual_tyre_compound = 1;
+            car_data.visual_tyre_compound = 2;
+            car_data.tyres_age_laps = 10;
+            car_data.vehicle_fia_flags = -1;
+            car_data.engine_power_ice = 300.0;
+            car_data.engine_power_mguk = 200.0;
+            car_data.ers_store_energy = 150.0;
+            car_data.ers_deploy_mode = 1;
+            car_data.ers_harvested_this_lap_mguk = 100.0;
+            car_data.ers_harvested_this_lap_mguh = 50.0;
+            car_data.ers_deployed_this_lap = 75.0;
+            car_data.network_paused = 0;
+        }
+
+        // Serialize the data
+        let serialized_data: Vec<u8> = original_packet_car_status_data.serialize().unwrap();
+
+        // Deserialize the serialized data
+        let deserialized_packet_car_status_data: PacketCarStatusData =
+            PacketCarStatusData::unserialize(&serialized_data).unwrap();
+
+        // Check if the deserialized data matches the original data
+        assert_eq!(
+            original_packet_car_status_data,
+            deserialized_packet_car_status_data
+        );
+    }
 }

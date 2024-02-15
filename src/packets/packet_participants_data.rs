@@ -4,7 +4,7 @@ use std::io::{Cursor, Write};
 use std::mem::size_of;
 
 #[repr(C, packed)]
-#[derive(Debug, Clone, Copy)]
+#[derive(Debug, Clone, Copy, PartialEq)]
 pub struct ParticipantData {
     pub ai_controlled: u8,     // 1 Byte
     pub driver_id: u8,         // 1 Byte
@@ -20,7 +20,7 @@ pub struct ParticipantData {
 } // 58 Bytes
 
 #[repr(C, packed)]
-#[derive(Debug, Clone, Copy)]
+#[derive(Debug, Clone, Copy, PartialEq)]
 pub struct PacketParticipantsData {
     pub header: PacketHeader,                // 29 Bytes
     pub num_active_cars: u8,                 // 1 Byte
@@ -141,5 +141,75 @@ impl PacketParticipantsData {
         }
 
         Ok(bytes)
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_participant_data_serialization_deserialization() {
+        // Create some sample participant data
+        let original_participant_data: ParticipantData = ParticipantData {
+            ai_controlled: 1,
+            driver_id: 2,
+            network_id: 3,
+            team_id: 4,
+            my_team: 5,
+            race_number: 6,
+            nationality: 7,
+            name: [65; 48], // 65 is ASCII for 'A'
+            your_telemetry: 8,
+            show_online_names: 9,
+            platform: 10,
+        };
+
+        // Serialize the data
+        let serialized_data: Vec<u8> = original_participant_data.serialize().unwrap();
+
+        // Deserialize the serialized data
+        let deserialized_participant_data: ParticipantData =
+            ParticipantData::unserialize(&serialized_data).unwrap();
+
+        // Check if the deserialized data matches the original data
+        assert_eq!(original_participant_data, deserialized_participant_data);
+    }
+
+    #[test]
+    fn test_packet_participants_data_serialization_deserialization() {
+        // Create some sample packet participants data
+        let mut original_packet_participants_data: PacketParticipantsData =
+            PacketParticipantsData::default();
+        original_packet_participants_data.header.packet_format = 2021;
+        original_packet_participants_data.header.game_year = 21;
+        original_packet_participants_data.header.game_major_version = 1;
+        original_packet_participants_data.header.game_minor_version = 3;
+        original_packet_participants_data.header.packet_version = 1;
+        original_packet_participants_data.header.packet_id = 0;
+        original_packet_participants_data.header.session_uid = 123456789;
+        original_packet_participants_data.header.session_time = 123.456;
+        original_packet_participants_data.header.frame_identifier = 1000;
+        original_packet_participants_data
+            .header
+            .overall_frame_identifier = 5000;
+        original_packet_participants_data.header.player_car_index = 1;
+        original_packet_participants_data
+            .header
+            .secondary_player_car_index = 255;
+        original_packet_participants_data.num_active_cars = 20; // Just for testing
+
+        // Serialize the data
+        let serialized_data: Vec<u8> = original_packet_participants_data.serialize().unwrap();
+
+        // Deserialize the serialized data
+        let deserialized_packet_participants_data: PacketParticipantsData =
+            PacketParticipantsData::unserialize(&serialized_data).unwrap();
+
+        // Check if the deserialized data matches the original data
+        assert_eq!(
+            original_packet_participants_data,
+            deserialized_packet_participants_data
+        );
     }
 }

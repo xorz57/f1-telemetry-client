@@ -4,7 +4,7 @@ use std::io::{Cursor, Write};
 use std::mem::size_of;
 
 #[repr(C, packed)]
-#[derive(Debug, Default, Clone, Copy)]
+#[derive(Debug, Default, Clone, Copy, PartialEq)]
 pub struct PacketMotionExData {
     pub header: PacketHeader,              // 29 Bytes
     pub suspension_position: [f32; 4],     // 16 Bytes
@@ -36,12 +36,16 @@ impl PacketMotionExData {
 
         Ok(PacketMotionExData {
             header: PacketHeader::unserialize(&bytes[..size_of::<PacketHeader>()])?,
-            suspension_position: [
-                cursor.read_f32::<LittleEndian>()?,
-                cursor.read_f32::<LittleEndian>()?,
-                cursor.read_f32::<LittleEndian>()?,
-                cursor.read_f32::<LittleEndian>()?,
-            ],
+            suspension_position: {
+                let pos: usize = size_of::<PacketHeader>();
+                cursor.set_position(pos as u64);
+                [
+                    cursor.read_f32::<LittleEndian>()?,
+                    cursor.read_f32::<LittleEndian>()?,
+                    cursor.read_f32::<LittleEndian>()?,
+                    cursor.read_f32::<LittleEndian>()?,
+                ]
+            },
             suspension_velocity: [
                 cursor.read_f32::<LittleEndian>()?,
                 cursor.read_f32::<LittleEndian>()?,
@@ -150,5 +154,58 @@ impl PacketMotionExData {
         }
 
         Ok(bytes)
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_packet_motion_ex_data_serialization_deserialization() {
+        // Create some sample packet motion ex data
+        let mut original_packet_motion_ex_data: PacketMotionExData = PacketMotionExData::default();
+        original_packet_motion_ex_data.header.packet_format = 2021;
+        original_packet_motion_ex_data.header.game_year = 21;
+        original_packet_motion_ex_data.header.game_major_version = 1;
+        original_packet_motion_ex_data.header.game_minor_version = 3;
+        original_packet_motion_ex_data.header.packet_version = 1;
+        original_packet_motion_ex_data.header.packet_id = 0;
+        original_packet_motion_ex_data.header.session_uid = 123456789;
+        original_packet_motion_ex_data.header.session_time = 123.456;
+        original_packet_motion_ex_data.header.frame_identifier = 1000;
+        original_packet_motion_ex_data
+            .header
+            .overall_frame_identifier = 5000;
+        original_packet_motion_ex_data.header.player_car_index = 1;
+        original_packet_motion_ex_data
+            .header
+            .secondary_player_car_index = 255;
+
+        // Populate arrays with some sample values
+        for i in 0..4 {
+            original_packet_motion_ex_data.suspension_position[i] = (i + 1) as f32 * 10.0;
+            original_packet_motion_ex_data.suspension_velocity[i] = (i + 1) as f32 * 20.0;
+            original_packet_motion_ex_data.suspension_acceleration[i] = (i + 1) as f32 * 30.0;
+            original_packet_motion_ex_data.wheel_speed[i] = (i + 1) as f32 * 40.0;
+            original_packet_motion_ex_data.wheel_slip_ratio[i] = (i + 1) as f32 * 50.0;
+            original_packet_motion_ex_data.wheel_slip_angle[i] = (i + 1) as f32 * 60.0;
+            original_packet_motion_ex_data.wheel_lat_force[i] = (i + 1) as f32 * 70.0;
+            original_packet_motion_ex_data.wheel_long_force[i] = (i + 1) as f32 * 80.0;
+            original_packet_motion_ex_data.wheel_vert_force[i] = (i + 1) as f32 * 90.0;
+        }
+
+        // Serialize the data
+        let serialized_data: Vec<u8> = original_packet_motion_ex_data.serialize().unwrap();
+
+        // Deserialize the serialized data
+        let deserialized_packet_motion_ex_data: PacketMotionExData =
+            PacketMotionExData::unserialize(&serialized_data).unwrap();
+
+        // Check if the deserialized data matches the original data
+        assert_eq!(
+            original_packet_motion_ex_data,
+            deserialized_packet_motion_ex_data
+        );
     }
 }

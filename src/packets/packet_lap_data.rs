@@ -141,7 +141,7 @@ impl PacketLapData {
                 lap_data
             },
             time_trial_pb_car_idx: {
-                let pos = size_of::<PacketHeader>() + size_of::<[LapData; 22]>();
+                let pos: usize = size_of::<PacketHeader>() + size_of::<[LapData; 22]>();
                 cursor.set_position(pos as u64);
                 cursor.read_u8()?
             },
@@ -172,7 +172,7 @@ mod tests {
     #[test]
     fn test_lap_data_serialization_deserialization() {
         // Create some sample data
-        let original_lap_data = LapData {
+        let original_lap_data: LapData = LapData {
             last_lap_time_in_ms: 100,
             current_lap_time_in_ms: 120,
             sector1_time_in_ms: 30,
@@ -217,7 +217,7 @@ mod tests {
     #[test]
     fn test_packet_lap_data_serialization_deserialization() {
         // Create some sample data
-        let mut original_packet_lap_data = PacketLapData::default();
+        let mut original_packet_lap_data: PacketLapData = PacketLapData::default();
         for i in 0..22 {
             original_packet_lap_data.lap_data[i].last_lap_time_in_ms = (i * 100) as u32;
             original_packet_lap_data.lap_data[i].current_lap_time_in_ms = (i * 120) as u32;

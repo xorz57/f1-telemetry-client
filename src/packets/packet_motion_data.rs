@@ -127,7 +127,7 @@ mod tests {
     #[test]
     fn test_car_motion_data_serialization_deserialization() {
         // Create some sample data
-        let original_car_motion_data = CarMotionData {
+        let original_car_motion_data: CarMotionData = CarMotionData {
             world_position_x: 1.0,
             world_position_y: 2.0,
             world_position_z: 3.0,
@@ -162,7 +162,7 @@ mod tests {
     #[test]
     fn test_packet_motion_data_serialization_deserialization() {
         // Create some sample data
-        let original_packet_motion_data = PacketMotionData {
+        let original_packet_motion_data: PacketMotionData = PacketMotionData {
             header: PacketHeader::default(),
             car_motion_data: [CarMotionData::default(); 22],
         };

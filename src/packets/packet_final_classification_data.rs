@@ -153,7 +153,7 @@ mod tests {
     #[test]
     fn test_final_classification_data_serialization_deserialization() {
         // Create some sample data
-        let original_final_classification_data = FinalClassificationData {
+        let original_final_classification_data: FinalClassificationData = FinalClassificationData {
             position: 1,
             num_laps: 2,
             grid_position: 3,

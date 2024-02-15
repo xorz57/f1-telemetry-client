@@ -96,7 +96,7 @@ impl PacketLobbyInfoData {
         Ok(PacketLobbyInfoData {
             header: PacketHeader::unserialize(&bytes[..size_of::<PacketHeader>()])?,
             num_players: {
-                let pos = size_of::<PacketHeader>();
+                let pos: usize = size_of::<PacketHeader>();
                 cursor.set_position(pos as u64);
                 cursor.read_u8()?
             },
@@ -135,7 +135,7 @@ mod tests {
     #[test]
     fn test_lobby_info_data_serialization_deserialization() {
         // Create some sample data
-        let original_lobby_info_data = LobbyInfoData {
+        let original_lobby_info_data: LobbyInfoData = LobbyInfoData {
             ai_controlled: 1,
             team_id: 2,
             nationality: 3,
@@ -159,7 +159,7 @@ mod tests {
     #[test]
     fn test_packet_lobby_info_data_serialization_deserialization() {
         // Create some sample data
-        let mut original_packet_lobby_info_data = PacketLobbyInfoData::default();
+        let mut original_packet_lobby_info_data: PacketLobbyInfoData = PacketLobbyInfoData::default();
         original_packet_lobby_info_data.num_players = 5;
         for i in 0..22 {
             original_packet_lobby_info_data.lobby_players[i].ai_controlled = i as u8;

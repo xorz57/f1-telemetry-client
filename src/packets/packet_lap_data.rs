@@ -4,7 +4,7 @@ use std::io::{Cursor, Write};
 use std::mem::size_of;
 
 #[repr(C, packed)]
-#[derive(Debug, Default, Clone, Copy)]
+#[derive(Debug, Default, Clone, Copy, PartialEq)]
 pub struct LapData {
     pub last_lap_time_in_ms: u32,            // 4 Bytes
     pub current_lap_time_in_ms: u32,         // 4 Bytes
@@ -38,7 +38,7 @@ pub struct LapData {
 } // 50 Bytes
 
 #[repr(C, packed)]
-#[derive(Debug, Default, Clone, Copy)]
+#[derive(Debug, Default, Clone, Copy, PartialEq)]
 pub struct PacketLapData {
     pub header: PacketHeader,         // 29 Bytes
     pub lap_data: [LapData; 22],      // 1100 Bytes
@@ -140,7 +140,11 @@ impl PacketLapData {
                 }
                 lap_data
             },
-            time_trial_pb_car_idx: cursor.read_u8()?,
+            time_trial_pb_car_idx: {
+                let pos = size_of::<PacketHeader>() + size_of::<[LapData; 22]>();
+                cursor.set_position(pos as u64);
+                cursor.read_u8()?
+            },
             time_trial_rival_car_idx: cursor.read_u8()?,
         })
     }
@@ -158,5 +162,80 @@ impl PacketLapData {
         cursor.write_u8(self.time_trial_rival_car_idx)?;
 
         Ok(bytes)
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_lap_data_serialization_deserialization() {
+        // Create some sample data
+        let original_lap_data = LapData {
+            last_lap_time_in_ms: 100,
+            current_lap_time_in_ms: 120,
+            sector1_time_in_ms: 30,
+            sector1_time_minutes: 1,
+            sector2_time_in_ms: 40,
+            sector2_time_minutes: 1,
+            delta_to_car_in_front_in_ms: 5,
+            delta_to_race_leader_in_ms: 10,
+            lap_distance: 100.5,
+            total_distance: 1000.0,
+            safety_car_delta: 3.5,
+            car_position: 2,
+            current_lap_num: 3,
+            pit_status: 1,
+            num_pit_stops: 0,
+            sector: 1,
+            current_lap_invalid: 0,
+            penalties: 0,
+            total_warnings: 0,
+            corner_cutting_warnings: 0,
+            num_unserved_drive_through_pens: 0,
+            num_unserved_stop_go_pens: 0,
+            grid_position: 4,
+            driver_status: 1,
+            result_status: 0,
+            pit_lane_timer_active: 1,
+            pit_lane_time_in_lane_in_ms: 20,
+            pit_stop_timer_in_ms: 0,
+            pit_stop_should_serve_pen: 0,
+        };
+
+        // Serialize the data
+        let serialized_data: Vec<u8> = original_lap_data.serialize().unwrap();
+
+        // Deserialize the serialized data
+        let deserialized_lap_data: LapData = LapData::unserialize(&serialized_data).unwrap();
+
+        // Check if the deserialized data matches the original data
+        assert_eq!(original_lap_data, deserialized_lap_data);
+    }
+
+    #[test]
+    fn test_packet_lap_data_serialization_deserialization() {
+        // Create some sample data
+        let mut original_packet_lap_data = PacketLapData::default();
+        for i in 0..22 {
+            original_packet_lap_data.lap_data[i].last_lap_time_in_ms = (i * 100) as u32;
+            original_packet_lap_data.lap_data[i].current_lap_time_in_ms = (i * 120) as u32;
+            original_packet_lap_data.lap_data[i].car_position = (i + 1) as u8;
+            original_packet_lap_data.lap_data[i].current_lap_num = (i + 2) as u8;
+            original_packet_lap_data.lap_data[i].grid_position = (i + 3) as u8;
+        }
+        original_packet_lap_data.time_trial_pb_car_idx = 1;
+        original_packet_lap_data.time_trial_rival_car_idx = 2;
+
+        // Serialize the data
+        let serialized_data: Vec<u8> = original_packet_lap_data.serialize().unwrap();
+
+        // Deserialize the serialized data
+        let deserialized_packet_lap_data: PacketLapData =
+            PacketLapData::unserialize(&serialized_data).unwrap();
+
+        // Check if the deserialized data matches the original data
+        assert_eq!(original_packet_lap_data, deserialized_packet_lap_data);
     }
 }

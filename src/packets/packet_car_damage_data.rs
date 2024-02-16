@@ -156,8 +156,7 @@ mod tests {
 
     #[test]
     fn test_car_damage_data_serialization_deserialization() {
-        // Create some sample car damage data
-        let original_car_damage_data: CarDamageData = CarDamageData {
+        let original_data: CarDamageData = CarDamageData {
             tyres_wear: [0.1f32, 0.2f32, 0.3f32, 0.4f32],
             tyres_damage: [10u8, 20u8, 30u8, 40u8],
             brakes_damage: [5u8, 10u8, 15u8, 20u8],
@@ -181,75 +180,56 @@ mod tests {
             engine_seized: 0u8,
         };
 
-        // Serialize the data
-        let serialized_data: Vec<u8> = original_car_damage_data.serialize().unwrap();
-
-        // Deserialize the serialized data
-        let deserialized_car_damage_data: CarDamageData =
+        let serialized_data: Vec<u8> = original_data.serialize().unwrap();
+        let deserialized_data: CarDamageData =
             CarDamageData::unserialize(&serialized_data).unwrap();
 
-        // Check if the deserialized data matches the original data
-        assert_eq!(original_car_damage_data, deserialized_car_damage_data);
+        assert_eq!(original_data, deserialized_data);
     }
 
     #[test]
     fn test_packet_car_damage_data_serialization_deserialization() {
-        // Create some sample packet car damage data
-        let mut original_packet_car_damage_data: PacketCarDamageData =
-            PacketCarDamageData::default();
-        original_packet_car_damage_data.header.packet_format = 2021u16;
-        original_packet_car_damage_data.header.game_year = 21u8;
-        original_packet_car_damage_data.header.game_major_version = 1u8;
-        original_packet_car_damage_data.header.game_minor_version = 3u8;
-        original_packet_car_damage_data.header.packet_version = 1u8;
-        original_packet_car_damage_data.header.packet_id = 0u8;
-        original_packet_car_damage_data.header.session_uid = 123456789u64;
-        original_packet_car_damage_data.header.session_time = 123.456f32;
-        original_packet_car_damage_data.header.frame_identifier = 1000u32;
-        original_packet_car_damage_data
-            .header
-            .overall_frame_identifier = 5000u32;
-        original_packet_car_damage_data.header.player_car_index = 1u8;
-        original_packet_car_damage_data
-            .header
-            .secondary_player_car_index = 255u8;
-
-        // Populate car damage data array with some sample data
-        for car_data in original_packet_car_damage_data.car_damage_data.iter_mut() {
-            car_data.tyres_wear = [0.1f32, 0.2f32, 0.3f32, 0.4f32];
-            car_data.tyres_damage = [10u8, 20u8, 30u8, 40u8];
-            car_data.brakes_damage = [5u8, 10u8, 15u8, 20u8];
-            car_data.front_left_wing_damage = 25u8;
-            car_data.front_right_wing_damage = 30u8;
-            car_data.rear_wing_damage = 35u8;
-            car_data.floor_damage = 5u8;
-            car_data.diffuser_damage = 8u8;
-            car_data.sidepod_damage = 12u8;
-            car_data.drs_fault = 0u8;
-            car_data.ers_fault = 0u8;
-            car_data.gearbox_damage = 15u8;
-            car_data.engine_damage = 20u8;
-            car_data.engine_mguh_wear = 25u8;
-            car_data.engine_es_wear = 30u8;
-            car_data.engine_ce_wear = 35u8;
-            car_data.engine_ice_wear = 40u8;
-            car_data.engine_mguk_wear = 45u8;
-            car_data.engine_tc_wear = 50u8;
-            car_data.engine_blown = 0u8;
-            car_data.engine_seized = 0u8;
+        let mut original_packet: PacketCarDamageData = PacketCarDamageData::default();
+        original_packet.header.packet_format = 2021u16;
+        original_packet.header.game_year = 21u8;
+        original_packet.header.game_major_version = 1u8;
+        original_packet.header.game_minor_version = 3u8;
+        original_packet.header.packet_version = 1u8;
+        original_packet.header.packet_id = 0u8;
+        original_packet.header.session_uid = 123456789u64;
+        original_packet.header.session_time = 123.456f32;
+        original_packet.header.frame_identifier = 1000u32;
+        original_packet.header.overall_frame_identifier = 5000u32;
+        original_packet.header.player_car_index = 1u8;
+        original_packet.header.secondary_player_car_index = 255u8;
+        for data in original_packet.car_damage_data.iter_mut() {
+            data.tyres_wear = [0.1f32, 0.2f32, 0.3f32, 0.4f32];
+            data.tyres_damage = [10u8, 20u8, 30u8, 40u8];
+            data.brakes_damage = [5u8, 10u8, 15u8, 20u8];
+            data.front_left_wing_damage = 25u8;
+            data.front_right_wing_damage = 30u8;
+            data.rear_wing_damage = 35u8;
+            data.floor_damage = 5u8;
+            data.diffuser_damage = 8u8;
+            data.sidepod_damage = 12u8;
+            data.drs_fault = 0u8;
+            data.ers_fault = 0u8;
+            data.gearbox_damage = 15u8;
+            data.engine_damage = 20u8;
+            data.engine_mguh_wear = 25u8;
+            data.engine_es_wear = 30u8;
+            data.engine_ce_wear = 35u8;
+            data.engine_ice_wear = 40u8;
+            data.engine_mguk_wear = 45u8;
+            data.engine_tc_wear = 50u8;
+            data.engine_blown = 0u8;
+            data.engine_seized = 0u8;
         }
 
-        // Serialize the data
-        let serialized_data: Vec<u8> = original_packet_car_damage_data.serialize().unwrap();
+        let serialized_packet: Vec<u8> = original_packet.serialize().unwrap();
+        let deserialized_packet: PacketCarDamageData =
+            PacketCarDamageData::unserialize(&serialized_packet).unwrap();
 
-        // Deserialize the serialized data
-        let deserialized_packet_car_damage_data: PacketCarDamageData =
-            PacketCarDamageData::unserialize(&serialized_data).unwrap();
-
-        // Check if the deserialized data matches the original data
-        assert_eq!(
-            original_packet_car_damage_data,
-            deserialized_packet_car_damage_data
-        );
+        assert_eq!(original_packet, deserialized_packet);
     }
 }

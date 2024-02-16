@@ -193,27 +193,24 @@ mod tests {
         original_packet.header.player_car_index = 1u8;
         original_packet.header.secondary_player_car_index = 255u8;
         original_packet.num_cars = 22u8;
-        for i in 0..22 {
-            original_packet.classification_data[i].position = (i + 1) as u8;
-            original_packet.classification_data[i].num_laps = (i + 1) as u8;
-            original_packet.classification_data[i].grid_position = (i + 1) as u8;
-            original_packet.classification_data[i].points = (i + 1) as u8;
-            original_packet.classification_data[i].num_pit_stops = (i + 1) as u8;
-            original_packet.classification_data[i].result_status = (i + 1) as u8;
-            original_packet.classification_data[i].best_lap_time_in_ms = (i + 1) as u32;
-            original_packet.classification_data[i].total_race_time = (i + 1) as f64;
-            original_packet.classification_data[i].penalties_time = (i + 1) as u8;
-            original_packet.classification_data[i].num_penalties = (i + 1) as u8;
-            original_packet.classification_data[i].num_tyre_stints = (i + 1) as u8;
-            for j in 0..8 {
-                original_packet.classification_data[i].tyre_stints_actual[j] = (i + 1) as u8;
-                original_packet.classification_data[i].tyre_stints_visual[j] = (i + 1) as u8;
-                original_packet.classification_data[i].tyre_stints_end_laps[j] = (i + 1) as u8;
-            }
+        for data in original_packet.classification_data.iter_mut() {
+            data.position = 1u8;
+            data.num_laps = 2u8;
+            data.grid_position = 3u8;
+            data.points = 4u8;
+            data.num_pit_stops = 5u8;
+            data.result_status = 6u8;
+            data.best_lap_time_in_ms = 100u32;
+            data.total_race_time = 123.456f64;
+            data.penalties_time = 7u8;
+            data.num_penalties = 8u8;
+            data.num_tyre_stints = 9u8;
+            data.tyre_stints_actual = [1u8, 1u8, 1u8, 1u8, 1u8, 1u8, 1u8, 1u8];
+            data.tyre_stints_visual = [2u8, 2u8, 2u8, 2u8, 2u8, 2u8, 2u8, 2u8];
+            data.tyre_stints_end_laps = [3u8, 3u8, 3u8, 3u8, 3u8, 3u8, 3u8, 3u8];
         }
 
         let serialized_packet: Vec<u8> = original_packet.serialize().unwrap();
-
         let deserialized_packet: PacketFinalClassificationData =
             PacketFinalClassificationData::unserialize(&serialized_packet).unwrap();
 

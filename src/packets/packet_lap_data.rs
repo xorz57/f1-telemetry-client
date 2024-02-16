@@ -212,12 +212,36 @@ mod tests {
     #[test]
     fn test_packet_lap_data_serialization_deserialization() {
         let mut original_packet: PacketLapData = PacketLapData::default();
-        for i in 0..22 {
-            original_packet.lap_data[i].last_lap_time_in_ms = (i * 100) as u32;
-            original_packet.lap_data[i].current_lap_time_in_ms = (i * 120) as u32;
-            original_packet.lap_data[i].car_position = (i + 1) as u8;
-            original_packet.lap_data[i].current_lap_num = (i + 2) as u8;
-            original_packet.lap_data[i].grid_position = (i + 3) as u8;
+        for data in original_packet.lap_data.iter_mut() {
+            data.last_lap_time_in_ms = 100u32;
+            data.current_lap_time_in_ms = 120u32;
+            data.sector1_time_in_ms = 30u16;
+            data.sector1_time_minutes = 1u8;
+            data.sector2_time_in_ms = 40u16;
+            data.sector2_time_minutes = 1u8;
+            data.delta_to_car_in_front_in_ms = 5u16;
+            data.delta_to_race_leader_in_ms = 10u16;
+            data.lap_distance = 100.5f32;
+            data.total_distance = 1000.0f32;
+            data.safety_car_delta = 3.5f32;
+            data.car_position = 2u8;
+            data.current_lap_num = 3u8;
+            data.pit_status = 1u8;
+            data.num_pit_stops = 0u8;
+            data.sector = 1u8;
+            data.current_lap_invalid = 0u8;
+            data.penalties = 0u8;
+            data.total_warnings = 0u8;
+            data.corner_cutting_warnings = 0u8;
+            data.num_unserved_drive_through_pens = 0u8;
+            data.num_unserved_stop_go_pens = 0u8;
+            data.grid_position = 4u8;
+            data.driver_status = 1u8;
+            data.result_status = 0u8;
+            data.pit_lane_timer_active = 1u8;
+            data.pit_lane_time_in_lane_in_ms = 20u16;
+            data.pit_stop_timer_in_ms = 0u16;
+            data.pit_stop_should_serve_pen = 0u8;
         }
         original_packet.time_trial_pb_car_idx = 1u8;
         original_packet.time_trial_rival_car_idx = 2u8;

@@ -159,14 +159,14 @@ mod tests {
     fn test_packet_lobby_info_data_serialization_deserialization() {
         let mut original_packet: PacketLobbyInfoData = PacketLobbyInfoData::default();
         original_packet.num_players = 5u8;
-        for i in 0..22 {
-            original_packet.lobby_players[i].ai_controlled = i as u8;
-            original_packet.lobby_players[i].team_id = (i + 1) as u8;
-            original_packet.lobby_players[i].nationality = (i + 2) as u8;
-            original_packet.lobby_players[i].platform = (i + 3) as u8;
-            original_packet.lobby_players[i].name = [65u8; 48]; // 'A'
-            original_packet.lobby_players[i].car_number = (i + 4) as u8;
-            original_packet.lobby_players[i].ready_status = (i + 5) as u8;
+        for data in original_packet.lobby_players.iter_mut() {
+            data.ai_controlled = 1u8;
+            data.team_id = 2u8;
+            data.nationality = 3u8;
+            data.platform = 4u8;
+            data.name = [65u8; 48]; // 65 is ASCII 'A'
+            data.car_number = 6u8;
+            data.ready_status = 7u8;
         }
 
         let serialized_packet: Vec<u8> = original_packet.serialize().unwrap();

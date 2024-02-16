@@ -212,27 +212,23 @@ mod tests {
         original_packet.header.overall_frame_identifier = 5000u32;
         original_packet.header.player_car_index = 1u8;
         original_packet.header.secondary_player_car_index = 255u8;
-        for i in 0..22 {
-            original_packet.car_telemetry_data[i].speed = (i * 10) as u16;
-            original_packet.car_telemetry_data[i].throttle = (i as f32) * 0.1;
-            original_packet.car_telemetry_data[i].steer = (i as f32) * 0.01;
-            original_packet.car_telemetry_data[i].brake = (i as f32) * 0.02;
-            original_packet.car_telemetry_data[i].clutch = i as u8;
-            original_packet.car_telemetry_data[i].gear = i as i8 - 10;
-            original_packet.car_telemetry_data[i].engine_rpm = (i * 1000) as u16;
-            original_packet.car_telemetry_data[i].drs = i as u8 % 2;
-            original_packet.car_telemetry_data[i].rev_lights_percent = (i * 5) as u8;
-            original_packet.car_telemetry_data[i].rev_lights_bit_value = (i * 100) as u16;
-            for j in 0..4 {
-                original_packet.car_telemetry_data[i].brakes_temperature[j] =
-                    (i * 100 + j * 10) as u16;
-                original_packet.car_telemetry_data[i].tyres_surface_temperature[j] =
-                    (i * 10 + j) as u8;
-                original_packet.car_telemetry_data[i].tyres_inner_temperature[j] =
-                    (i * 5 + j) as u8;
-                original_packet.car_telemetry_data[i].tyres_pressure[j] = (i * 1 + j) as f32;
-                original_packet.car_telemetry_data[i].surface_type[j] = (i * 10 + j) as u8;
-            }
+        for data in original_packet.car_telemetry_data.iter_mut() {
+            data.speed = 200u16;
+            data.throttle = 0.8f32;
+            data.steer = 0.2f32;
+            data.brake = 0.0f32;
+            data.clutch = 0u8;
+            data.gear = 3i8;
+            data.engine_rpm = 8000u16;
+            data.drs = 1u8;
+            data.rev_lights_percent = 50u8;
+            data.rev_lights_bit_value = 1000u16;
+            data.brakes_temperature = [500u16, 550u16, 600u16, 625u16];
+            data.tyres_surface_temperature = [90u8, 91u8, 92u8, 93u8];
+            data.tyres_inner_temperature = [85u8, 86u8, 87u8, 88u8];
+            data.engine_temperature = 95u16;
+            data.tyres_pressure = [1.9f32, 1.8f32, 1.9f32, 2.0f32];
+            data.surface_type = [1u8, 2u8, 3u8, 4u8];
         }
         original_packet.mfd_panel_index = 3u8;
         original_packet.mfd_panel_index_secondary_player = 2u8;

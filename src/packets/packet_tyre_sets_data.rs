@@ -166,18 +166,18 @@ mod tests {
             .header
             .secondary_player_car_index = 255u8;
         original_packet_tyre_sets_data.car_idx = 1u8;
-        for i in 0..20 {
-            original_packet_tyre_sets_data.tyre_set_data[i].actual_tyre_compound = (i + 1) as u8;
-            original_packet_tyre_sets_data.tyre_set_data[i].visual_tyre_compound = (i + 2) as u8;
-            original_packet_tyre_sets_data.tyre_set_data[i].wear = (i + 3) as u8;
-            original_packet_tyre_sets_data.tyre_set_data[i].available = (i + 4) as u8;
-            original_packet_tyre_sets_data.tyre_set_data[i].recommended_session = (i + 5) as u8;
-            original_packet_tyre_sets_data.tyre_set_data[i].life_span = (i + 6) as u8;
-            original_packet_tyre_sets_data.tyre_set_data[i].usable_life = (i + 7) as u8;
-            original_packet_tyre_sets_data.tyre_set_data[i].lap_delta_time = (i + 8) as i16;
-            original_packet_tyre_sets_data.tyre_set_data[i].fitted = (i + 9) as u8;
+        for tyre_set_data in original_packet_tyre_sets_data.tyre_set_data.iter_mut() {
+            tyre_set_data.actual_tyre_compound = 1u8;
+            tyre_set_data.visual_tyre_compound = 2u8;
+            tyre_set_data.wear = 50u8;
+            tyre_set_data.available = 1u8;
+            tyre_set_data.recommended_session = 0u8;
+            tyre_set_data.life_span = 80u8;
+            tyre_set_data.usable_life = 60u8;
+            tyre_set_data.lap_delta_time = 500i16;
+            tyre_set_data.fitted = 1u8;
         }
-        original_packet_tyre_sets_data.fitted_idx = 2;
+        original_packet_tyre_sets_data.fitted_idx = 2u8;
 
         // Serialize the data
         let serialized_data: Vec<u8> = original_packet_tyre_sets_data.serialize().unwrap();

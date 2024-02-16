@@ -168,4 +168,51 @@ mod tests {
 
         assert_eq!(original_data, deserialized_data);
     }
+
+    #[test]
+    fn test_packet_car_setup_data_serialization_deserialization() {
+        let mut original_packet: PacketCarSetupData = PacketCarSetupData::default();
+        original_packet.header.packet_format = 2021u16;
+        original_packet.header.game_year = 21u8;
+        original_packet.header.game_major_version = 1u8;
+        original_packet.header.game_minor_version = 3u8;
+        original_packet.header.packet_version = 1u8;
+        original_packet.header.packet_id = 0u8;
+        original_packet.header.session_uid = 123456789u64;
+        original_packet.header.session_time = 123.456f32;
+        original_packet.header.frame_identifier = 1000u32;
+        original_packet.header.overall_frame_identifier = 5000u32;
+        original_packet.header.player_car_index = 1u8;
+        original_packet.header.secondary_player_car_index = 255u8;
+        for data in original_packet.car_setups.iter_mut() {
+            data.front_wing = 1u8;
+            data.rear_wing = 2u8;
+            data.on_throttle = 3u8;
+            data.off_throttle = 4u8;
+            data.front_camber = 0.1f32;
+            data.rear_camber = 0.2f32;
+            data.front_toe = 0.3f32;
+            data.rear_toe = 0.4f32;
+            data.front_suspension = 5u8;
+            data.rear_suspension = 6u8;
+            data.front_anti_roll_bar = 7u8;
+            data.rear_anti_roll_bar = 8u8;
+            data.front_suspension_height = 9u8;
+            data.rear_suspension_height = 10u8;
+            data.brake_pressure = 11u8;
+            data.brake_bias = 12u8;
+            data.rear_left_tyre_pressure = 0.5f32;
+            data.rear_right_tyre_pressure = 0.6f32;
+            data.front_left_tyre_pressure = 0.7f32;
+            data.front_right_tyre_pressure = 0.8f32;
+            data.ballast = 13u8;
+            data.fuel_load = 0.9f32;
+        }
+
+        let serialized_packet: Vec<u8> = original_packet.serialize().unwrap();
+        let deserialized_packet: PacketCarSetupData =
+            PacketCarSetupData::unserialize(&serialized_packet).unwrap();
+
+        assert_eq!(original_packet, deserialized_packet);
+    }
 }

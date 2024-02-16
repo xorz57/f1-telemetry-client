@@ -164,8 +164,7 @@ mod tests {
         };
 
         let serialized_data: Vec<u8> = original_data.serialize().unwrap();
-        let deserialized_data: CarSetupData =
-            CarSetupData::unserialize(&serialized_data).unwrap();
+        let deserialized_data: CarSetupData = CarSetupData::unserialize(&serialized_data).unwrap();
 
         assert_eq!(original_data, deserialized_data);
     }

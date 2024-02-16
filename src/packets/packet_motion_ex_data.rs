@@ -163,49 +163,35 @@ mod tests {
 
     #[test]
     fn test_packet_motion_ex_data_serialization_deserialization() {
-        // Create some sample packet motion ex data
-        let mut original_packet_motion_ex_data: PacketMotionExData = PacketMotionExData::default();
-        original_packet_motion_ex_data.header.packet_format = 2021u16;
-        original_packet_motion_ex_data.header.game_year = 21u8;
-        original_packet_motion_ex_data.header.game_major_version = 1u8;
-        original_packet_motion_ex_data.header.game_minor_version = 3u8;
-        original_packet_motion_ex_data.header.packet_version = 1u8;
-        original_packet_motion_ex_data.header.packet_id = 0u8;
-        original_packet_motion_ex_data.header.session_uid = 123456789u64;
-        original_packet_motion_ex_data.header.session_time = 123.456f32;
-        original_packet_motion_ex_data.header.frame_identifier = 1000u32;
-        original_packet_motion_ex_data
-            .header
-            .overall_frame_identifier = 5000u32;
-        original_packet_motion_ex_data.header.player_car_index = 1u8;
-        original_packet_motion_ex_data
-            .header
-            .secondary_player_car_index = 255u8;
-
-        // Populate arrays with some sample values
+        let mut original_packet: PacketMotionExData = PacketMotionExData::default();
+        original_packet.header.packet_format = 2021u16;
+        original_packet.header.game_year = 21u8;
+        original_packet.header.game_major_version = 1u8;
+        original_packet.header.game_minor_version = 3u8;
+        original_packet.header.packet_version = 1u8;
+        original_packet.header.packet_id = 0u8;
+        original_packet.header.session_uid = 123456789u64;
+        original_packet.header.session_time = 123.456f32;
+        original_packet.header.frame_identifier = 1000u32;
+        original_packet.header.overall_frame_identifier = 5000u32;
+        original_packet.header.player_car_index = 1u8;
+        original_packet.header.secondary_player_car_index = 255u8;
         for i in 0..4 {
-            original_packet_motion_ex_data.suspension_position[i] = (i + 1) as f32 * 10.0;
-            original_packet_motion_ex_data.suspension_velocity[i] = (i + 1) as f32 * 20.0;
-            original_packet_motion_ex_data.suspension_acceleration[i] = (i + 1) as f32 * 30.0;
-            original_packet_motion_ex_data.wheel_speed[i] = (i + 1) as f32 * 40.0;
-            original_packet_motion_ex_data.wheel_slip_ratio[i] = (i + 1) as f32 * 50.0;
-            original_packet_motion_ex_data.wheel_slip_angle[i] = (i + 1) as f32 * 60.0;
-            original_packet_motion_ex_data.wheel_lat_force[i] = (i + 1) as f32 * 70.0;
-            original_packet_motion_ex_data.wheel_long_force[i] = (i + 1) as f32 * 80.0;
-            original_packet_motion_ex_data.wheel_vert_force[i] = (i + 1) as f32 * 90.0;
+            original_packet.suspension_position[i] = (i + 1) as f32 * 10.0;
+            original_packet.suspension_velocity[i] = (i + 1) as f32 * 20.0;
+            original_packet.suspension_acceleration[i] = (i + 1) as f32 * 30.0;
+            original_packet.wheel_speed[i] = (i + 1) as f32 * 40.0;
+            original_packet.wheel_slip_ratio[i] = (i + 1) as f32 * 50.0;
+            original_packet.wheel_slip_angle[i] = (i + 1) as f32 * 60.0;
+            original_packet.wheel_lat_force[i] = (i + 1) as f32 * 70.0;
+            original_packet.wheel_long_force[i] = (i + 1) as f32 * 80.0;
+            original_packet.wheel_vert_force[i] = (i + 1) as f32 * 90.0;
         }
 
-        // Serialize the data
-        let serialized_data: Vec<u8> = original_packet_motion_ex_data.serialize().unwrap();
+        let serialized_packet: Vec<u8> = original_packet.serialize().unwrap();
+        let deserialized_packet: PacketMotionExData =
+            PacketMotionExData::unserialize(&serialized_packet).unwrap();
 
-        // Deserialize the serialized data
-        let deserialized_packet_motion_ex_data: PacketMotionExData =
-            PacketMotionExData::unserialize(&serialized_data).unwrap();
-
-        // Check if the deserialized data matches the original data
-        assert_eq!(
-            original_packet_motion_ex_data,
-            deserialized_packet_motion_ex_data
-        );
+        assert_eq!(original_packet, deserialized_packet);
     }
 }

@@ -225,9 +225,9 @@ mod tests {
             data.network_paused = 0u8;
         }
 
-        let serialized_data: Vec<u8> = original_packet.serialize().unwrap();
+        let serialized_packet: Vec<u8> = original_packet.serialize().unwrap();
         let deserialized_packet: PacketCarStatusData =
-            PacketCarStatusData::unserialize(&serialized_data).unwrap();
+            PacketCarStatusData::unserialize(&serialized_packet).unwrap();
 
         assert_eq!(original_packet, deserialized_packet);
     }

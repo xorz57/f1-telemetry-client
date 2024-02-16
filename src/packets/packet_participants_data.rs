@@ -150,8 +150,7 @@ mod tests {
 
     #[test]
     fn test_participant_data_serialization_deserialization() {
-        // Create some sample participant data
-        let original_participant_data: ParticipantData = ParticipantData {
+        let original_data: ParticipantData = ParticipantData {
             ai_controlled: 1u8,
             driver_id: 2u8,
             network_id: 3u8,
@@ -165,51 +164,34 @@ mod tests {
             platform: 10u8,
         };
 
-        // Serialize the data
-        let serialized_data: Vec<u8> = original_participant_data.serialize().unwrap();
-
-        // Deserialize the serialized data
-        let deserialized_participant_data: ParticipantData =
+        let serialized_data: Vec<u8> = original_data.serialize().unwrap();
+        let deserialized_data: ParticipantData =
             ParticipantData::unserialize(&serialized_data).unwrap();
 
-        // Check if the deserialized data matches the original data
-        assert_eq!(original_participant_data, deserialized_participant_data);
+        assert_eq!(original_data, deserialized_data);
     }
 
     #[test]
     fn test_packet_participants_data_serialization_deserialization() {
-        // Create some sample packet participants data
-        let mut original_packet_participants_data: PacketParticipantsData =
-            PacketParticipantsData::default();
-        original_packet_participants_data.header.packet_format = 2021u16;
-        original_packet_participants_data.header.game_year = 21u8;
-        original_packet_participants_data.header.game_major_version = 1u8;
-        original_packet_participants_data.header.game_minor_version = 3u8;
-        original_packet_participants_data.header.packet_version = 1u8;
-        original_packet_participants_data.header.packet_id = 0u8;
-        original_packet_participants_data.header.session_uid = 123456789u64;
-        original_packet_participants_data.header.session_time = 123.456f32;
-        original_packet_participants_data.header.frame_identifier = 1000u32;
-        original_packet_participants_data
-            .header
-            .overall_frame_identifier = 5000u32;
-        original_packet_participants_data.header.player_car_index = 1u8;
-        original_packet_participants_data
-            .header
-            .secondary_player_car_index = 255u8;
-        original_packet_participants_data.num_active_cars = 20u8; // Just for testing
+        let mut original_packet: PacketParticipantsData = PacketParticipantsData::default();
+        original_packet.header.packet_format = 2021u16;
+        original_packet.header.game_year = 21u8;
+        original_packet.header.game_major_version = 1u8;
+        original_packet.header.game_minor_version = 3u8;
+        original_packet.header.packet_version = 1u8;
+        original_packet.header.packet_id = 0u8;
+        original_packet.header.session_uid = 123456789u64;
+        original_packet.header.session_time = 123.456f32;
+        original_packet.header.frame_identifier = 1000u32;
+        original_packet.header.overall_frame_identifier = 5000u32;
+        original_packet.header.player_car_index = 1u8;
+        original_packet.header.secondary_player_car_index = 255u8;
+        original_packet.num_active_cars = 20u8; // Just for testing
 
-        // Serialize the data
-        let serialized_data: Vec<u8> = original_packet_participants_data.serialize().unwrap();
+        let serialized_packet: Vec<u8> = original_packet.serialize().unwrap();
+        let deserialized_packet: PacketParticipantsData =
+            PacketParticipantsData::unserialize(&serialized_packet).unwrap();
 
-        // Deserialize the serialized data
-        let deserialized_packet_participants_data: PacketParticipantsData =
-            PacketParticipantsData::unserialize(&serialized_data).unwrap();
-
-        // Check if the deserialized data matches the original data
-        assert_eq!(
-            original_packet_participants_data,
-            deserialized_packet_participants_data
-        );
+        assert_eq!(original_packet, deserialized_packet);
     }
 }

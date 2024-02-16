@@ -194,8 +194,7 @@ mod tests {
 
     #[test]
     fn test_lap_history_data_serialization_deserialization() {
-        // Create some sample lap history data
-        let original_lap_history_data: LapHistoryData = LapHistoryData {
+        let original_data: LapHistoryData = LapHistoryData {
             lap_time_in_ms: 120_000u32,
             sector1_time_in_ms: 30_000u16,
             sector1_time_minutes: 1u8,
@@ -206,43 +205,30 @@ mod tests {
             lap_valid_bit_flags: 1u8,
         };
 
-        // Serialize the data
-        let serialized_data: Vec<u8> = original_lap_history_data.serialize().unwrap();
-
-        // Deserialize the serialized data
-        let deserialized_lap_history_data: LapHistoryData =
+        let serialized_data: Vec<u8> = original_data.serialize().unwrap();
+        let deserialized_data: LapHistoryData =
             LapHistoryData::unserialize(&serialized_data).unwrap();
 
-        // Check if the deserialized data matches the original data
-        assert_eq!(original_lap_history_data, deserialized_lap_history_data);
+        assert_eq!(original_data, deserialized_data);
     }
 
     #[test]
     fn test_tyre_stint_history_data_serialization_deserialization() {
-        // Create some sample tyre stint history data
-        let original_tyre_stint_history_data: TyreStintHistoryData = TyreStintHistoryData {
+        let original_data: TyreStintHistoryData = TyreStintHistoryData {
             end_lap: 20u8,
             tyre_actual_compound: 1u8,
             tyre_visual_compound: 2u8,
         };
 
-        // Serialize the data
-        let serialized_data: Vec<u8> = original_tyre_stint_history_data.serialize().unwrap();
-
-        // Deserialize the serialized data
-        let deserialized_tyre_stint_history_data: TyreStintHistoryData =
+        let serialized_data: Vec<u8> = original_data.serialize().unwrap();
+        let deserialized_data: TyreStintHistoryData =
             TyreStintHistoryData::unserialize(&serialized_data).unwrap();
 
-        // Check if the deserialized data matches the original data
-        assert_eq!(
-            original_tyre_stint_history_data,
-            deserialized_tyre_stint_history_data
-        );
+        assert_eq!(original_data, deserialized_data);
     }
 
     #[test]
     fn test_packet_session_history_data_serialization_deserialization() {
-        // Create some sample lap history data
         let original_lap_history_data: LapHistoryData = LapHistoryData {
             lap_time_in_ms: 120_000u32,
             sector1_time_in_ms: 30_000u16,
@@ -254,38 +240,27 @@ mod tests {
             lap_valid_bit_flags: 1u8,
         };
 
-        // Create some sample tyre stint history data
         let original_tyre_stint_history_data: TyreStintHistoryData = TyreStintHistoryData {
             end_lap: 20u8,
             tyre_actual_compound: 1u8,
             tyre_visual_compound: 2u8,
         };
 
-        // Create a sample packet session history data
-        let mut original_packet_session_history_data: PacketSessionHistoryData =
-            PacketSessionHistoryData::default();
-        original_packet_session_history_data.car_idx = 1u8;
-        original_packet_session_history_data.num_laps = 20u8;
-        original_packet_session_history_data.num_tyre_stints = 3u8;
-        original_packet_session_history_data.best_lap_time_lap_num = 10u8;
-        original_packet_session_history_data.best_sector1_lap_num = 5u8;
-        original_packet_session_history_data.best_sector2_lap_num = 8u8;
-        original_packet_session_history_data.best_sector3_lap_num = 15u8;
-        original_packet_session_history_data.lap_history_data[0] = original_lap_history_data;
-        original_packet_session_history_data.tyre_stints_history_data[0] =
-            original_tyre_stint_history_data;
+        let mut original_packet: PacketSessionHistoryData = PacketSessionHistoryData::default();
+        original_packet.car_idx = 1u8;
+        original_packet.num_laps = 20u8;
+        original_packet.num_tyre_stints = 3u8;
+        original_packet.best_lap_time_lap_num = 10u8;
+        original_packet.best_sector1_lap_num = 5u8;
+        original_packet.best_sector2_lap_num = 8u8;
+        original_packet.best_sector3_lap_num = 15u8;
+        original_packet.lap_history_data[0] = original_lap_history_data;
+        original_packet.tyre_stints_history_data[0] = original_tyre_stint_history_data;
 
-        // Serialize the data
-        let serialized_data: Vec<u8> = original_packet_session_history_data.serialize().unwrap();
+        let serialized_packet: Vec<u8> = original_packet.serialize().unwrap();
+        let deserialized_packet: PacketSessionHistoryData =
+            PacketSessionHistoryData::unserialize(&serialized_packet).unwrap();
 
-        // Deserialize the serialized data
-        let deserialized_packet_session_history_data: PacketSessionHistoryData =
-            PacketSessionHistoryData::unserialize(&serialized_data).unwrap();
-
-        // Check if the deserialized data matches the original data
-        assert_eq!(
-            original_packet_session_history_data,
-            deserialized_packet_session_history_data
-        );
+        assert_eq!(original_packet, deserialized_packet);
     }
 }

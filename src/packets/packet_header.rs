@@ -68,7 +68,6 @@ mod tests {
 
     #[test]
     fn test_packet_header_serialization_deserialization() {
-        // Create some sample packet header data
         let original_packet_header: PacketHeader = PacketHeader {
             packet_format: 2021u16,
             game_year: 21u8,
@@ -84,14 +83,10 @@ mod tests {
             secondary_player_car_index: 255u8,
         };
 
-        // Serialize the data
-        let serialized_data: Vec<u8> = original_packet_header.serialize().unwrap();
-
-        // Deserialize the serialized data
+        let serialized_packet_header: Vec<u8> = original_packet_header.serialize().unwrap();
         let deserialized_packet_header: PacketHeader =
-            PacketHeader::unserialize(&serialized_data).unwrap();
+            PacketHeader::unserialize(&serialized_packet_header).unwrap();
 
-        // Check if the deserialized data matches the original data
         assert_eq!(original_packet_header, deserialized_packet_header);
     }
 }

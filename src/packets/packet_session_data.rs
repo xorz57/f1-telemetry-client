@@ -381,27 +381,20 @@ mod tests {
 
     #[test]
     fn test_marshal_zone_serialization_deserialization() {
-        // Create a sample marshal zone
-        let original_marshal_zone: MarshalZone = MarshalZone {
+        let original_data: MarshalZone = MarshalZone {
             zone_start: 10.0f32,
             zone_flag: 1i8,
         };
 
-        // Serialize the data
-        let serialized_data: Vec<u8> = original_marshal_zone.serialize().unwrap();
+        let serialized_data: Vec<u8> = original_data.serialize().unwrap();
+        let deserialized_data: MarshalZone = MarshalZone::unserialize(&serialized_data).unwrap();
 
-        // Deserialize the serialized data
-        let deserialized_marshal_zone: MarshalZone =
-            MarshalZone::unserialize(&serialized_data).unwrap();
-
-        // Check if the deserialized data matches the original data
-        assert_eq!(original_marshal_zone, deserialized_marshal_zone);
+        assert_eq!(original_data, deserialized_data);
     }
 
     #[test]
     fn test_weather_forecast_sample_serialization_deserialization() {
-        // Create a sample weather forecast sample
-        let original_weather_forecast_sample: WeatherForecastSample = WeatherForecastSample {
+        let original_data: WeatherForecastSample = WeatherForecastSample {
             session_type: 1u8,
             time_offset: 2u8,
             weather: 3u8,
@@ -412,29 +405,20 @@ mod tests {
             rain_percentage: 10u8,
         };
 
-        // Serialize the data
-        let serialized_data: Vec<u8> = original_weather_forecast_sample.serialize().unwrap();
-
-        // Deserialize the serialized data
-        let deserialized_weather_forecast_sample: WeatherForecastSample =
+        let serialized_data: Vec<u8> = original_data.serialize().unwrap();
+        let deserialized_data: WeatherForecastSample =
             WeatherForecastSample::unserialize(&serialized_data).unwrap();
 
-        // Check if the deserialized data matches the original data
-        assert_eq!(
-            original_weather_forecast_sample,
-            deserialized_weather_forecast_sample
-        );
+        assert_eq!(original_data, deserialized_data);
     }
 
     #[test]
     fn test_packet_session_data_serialization_deserialization() {
-        // Create some sample marshal zones
         let original_marshal_zones: [MarshalZone; 21] = [MarshalZone {
             zone_start: 10.0f32,
             zone_flag: 1i8,
         }; 21];
 
-        // Create some sample weather forecast samples
         let original_weather_forecast_samples: [WeatherForecastSample; 56] =
             [WeatherForecastSample {
                 session_type: 1u8,
@@ -447,22 +431,14 @@ mod tests {
                 rain_percentage: 10u8,
             }; 56];
 
-        // Create a sample packet session data
-        let mut original_packet_session_data: PacketSessionData = PacketSessionData::default();
-        original_packet_session_data.marshal_zones = original_marshal_zones;
-        original_packet_session_data.weather_forecast_samples = original_weather_forecast_samples;
+        let mut original_packet: PacketSessionData = PacketSessionData::default();
+        original_packet.marshal_zones = original_marshal_zones;
+        original_packet.weather_forecast_samples = original_weather_forecast_samples;
 
-        // Serialize the data
-        let serialized_data: Vec<u8> = original_packet_session_data.serialize().unwrap();
+        let serialized_packet: Vec<u8> = original_packet.serialize().unwrap();
+        let deserialized_packet: PacketSessionData =
+            PacketSessionData::unserialize(&serialized_packet).unwrap();
 
-        // Deserialize the serialized data
-        let deserialized_packet_session_data: PacketSessionData =
-            PacketSessionData::unserialize(&serialized_data).unwrap();
-
-        // Check if the deserialized data matches the original data
-        assert_eq!(
-            original_packet_session_data,
-            deserialized_packet_session_data
-        );
+        assert_eq!(original_packet, deserialized_packet);
     }
 }

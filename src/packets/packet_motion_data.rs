@@ -126,8 +126,7 @@ mod tests {
 
     #[test]
     fn test_car_motion_data_serialization_deserialization() {
-        // Create some sample data
-        let original_car_motion_data: CarMotionData = CarMotionData {
+        let original_data: CarMotionData = CarMotionData {
             world_position_x: 1.0f32,
             world_position_y: 2.0f32,
             world_position_z: 3.0f32,
@@ -148,33 +147,24 @@ mod tests {
             roll: 18.0f32,
         };
 
-        // Serialize the data
-        let serialized_data: Vec<u8> = original_car_motion_data.serialize().unwrap();
-
-        // Deserialize the serialized data
-        let deserialized_car_motion_data: CarMotionData =
+        let serialized_data: Vec<u8> = original_data.serialize().unwrap();
+        let deserialized_data: CarMotionData =
             CarMotionData::unserialize(&serialized_data).unwrap();
 
-        // Check if the deserialized data matches the original data
-        assert_eq!(original_car_motion_data, deserialized_car_motion_data);
+        assert_eq!(original_data, deserialized_data);
     }
 
     #[test]
     fn test_packet_motion_data_serialization_deserialization() {
-        // Create some sample data
-        let original_packet_motion_data: PacketMotionData = PacketMotionData {
+        let original_packet: PacketMotionData = PacketMotionData {
             header: PacketHeader::default(),
             car_motion_data: [CarMotionData::default(); 22],
         };
 
-        // Serialize the data
-        let serialized_data: Vec<u8> = original_packet_motion_data.serialize().unwrap();
+        let serialized_packet: Vec<u8> = original_packet.serialize().unwrap();
+        let deserialized_packet: PacketMotionData =
+            PacketMotionData::unserialize(&serialized_packet).unwrap();
 
-        // Deserialize the serialized data
-        let deserialized_packet_motion_data: PacketMotionData =
-            PacketMotionData::unserialize(&serialized_data).unwrap();
-
-        // Check if the deserialized data matches the original data
-        assert_eq!(original_packet_motion_data, deserialized_packet_motion_data);
+        assert_eq!(original_packet, deserialized_packet);
     }
 }

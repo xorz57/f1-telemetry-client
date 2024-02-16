@@ -152,8 +152,7 @@ mod tests {
 
     #[test]
     fn test_final_classification_data_serialization_deserialization() {
-        // Create some sample data
-        let original_final_classification_data: FinalClassificationData = FinalClassificationData {
+        let original_data: FinalClassificationData = FinalClassificationData {
             position: 1u8,
             num_laps: 2u8,
             grid_position: 3u8,
@@ -170,101 +169,54 @@ mod tests {
             tyre_stints_end_laps: [3u8, 3u8, 3u8, 3u8, 3u8, 3u8, 3u8, 3u8],
         };
 
-        // Serialize the data
-        let serialized_data: Vec<u8> = original_final_classification_data.serialize().unwrap();
-
-        // Deserialize the serialized data
-        let deserialized_final_classification_data: FinalClassificationData =
+        let serialized_data: Vec<u8> = original_data.serialize().unwrap();
+        let deserialized_data: FinalClassificationData =
             FinalClassificationData::unserialize(&serialized_data).unwrap();
 
-        // Check if the deserialized data matches the original data
-        assert_eq!(
-            original_final_classification_data,
-            deserialized_final_classification_data
-        );
+        assert_eq!(original_data, deserialized_data);
     }
 
     #[test]
     fn test_packet_final_classification_data_serialization_deserialization() {
-        // Create some sample packet final classification data
-        let mut original_packet_final_classification_data: PacketFinalClassificationData =
+        let mut original_packet: PacketFinalClassificationData =
             PacketFinalClassificationData::default();
-        original_packet_final_classification_data
-            .header
-            .packet_format = 2021u16;
-        original_packet_final_classification_data.header.game_year = 21u8;
-        original_packet_final_classification_data
-            .header
-            .game_major_version = 1u8;
-        original_packet_final_classification_data
-            .header
-            .game_minor_version = 3u8;
-        original_packet_final_classification_data
-            .header
-            .packet_version = 1u8;
-        original_packet_final_classification_data.header.packet_id = 0u8;
-        original_packet_final_classification_data.header.session_uid = 123456789u64;
-        original_packet_final_classification_data
-            .header
-            .session_time = 123.456f32;
-        original_packet_final_classification_data
-            .header
-            .frame_identifier = 1000u32;
-        original_packet_final_classification_data
-            .header
-            .overall_frame_identifier = 5000u32;
-        original_packet_final_classification_data
-            .header
-            .player_car_index = 1u8;
-        original_packet_final_classification_data
-            .header
-            .secondary_player_car_index = 255u8;
-        original_packet_final_classification_data.num_cars = 22u8;
+        original_packet.header.packet_format = 2021u16;
+        original_packet.header.game_year = 21u8;
+        original_packet.header.game_major_version = 1u8;
+        original_packet.header.game_minor_version = 3u8;
+        original_packet.header.packet_version = 1u8;
+        original_packet.header.packet_id = 0u8;
+        original_packet.header.session_uid = 123456789u64;
+        original_packet.header.session_time = 123.456f32;
+        original_packet.header.frame_identifier = 1000u32;
+        original_packet.header.overall_frame_identifier = 5000u32;
+        original_packet.header.player_car_index = 1u8;
+        original_packet.header.secondary_player_car_index = 255u8;
+        original_packet.num_cars = 22u8;
         for i in 0..22 {
-            original_packet_final_classification_data.classification_data[i].position =
-                (i + 1) as u8;
-            original_packet_final_classification_data.classification_data[i].num_laps =
-                (i + 1) as u8;
-            original_packet_final_classification_data.classification_data[i].grid_position =
-                (i + 1) as u8;
-            original_packet_final_classification_data.classification_data[i].points = (i + 1) as u8;
-            original_packet_final_classification_data.classification_data[i].num_pit_stops =
-                (i + 1) as u8;
-            original_packet_final_classification_data.classification_data[i].result_status =
-                (i + 1) as u8;
-            original_packet_final_classification_data.classification_data[i].best_lap_time_in_ms =
-                (i + 1) as u32;
-            original_packet_final_classification_data.classification_data[i].total_race_time =
-                (i + 1) as f64;
-            original_packet_final_classification_data.classification_data[i].penalties_time =
-                (i + 1) as u8;
-            original_packet_final_classification_data.classification_data[i].num_penalties =
-                (i + 1) as u8;
-            original_packet_final_classification_data.classification_data[i].num_tyre_stints =
-                (i + 1) as u8;
+            original_packet.classification_data[i].position = (i + 1) as u8;
+            original_packet.classification_data[i].num_laps = (i + 1) as u8;
+            original_packet.classification_data[i].grid_position = (i + 1) as u8;
+            original_packet.classification_data[i].points = (i + 1) as u8;
+            original_packet.classification_data[i].num_pit_stops = (i + 1) as u8;
+            original_packet.classification_data[i].result_status = (i + 1) as u8;
+            original_packet.classification_data[i].best_lap_time_in_ms = (i + 1) as u32;
+            original_packet.classification_data[i].total_race_time = (i + 1) as f64;
+            original_packet.classification_data[i].penalties_time = (i + 1) as u8;
+            original_packet.classification_data[i].num_penalties = (i + 1) as u8;
+            original_packet.classification_data[i].num_tyre_stints = (i + 1) as u8;
             for j in 0..8 {
-                original_packet_final_classification_data.classification_data[i]
-                    .tyre_stints_actual[j] = (i + 1) as u8;
-                original_packet_final_classification_data.classification_data[i]
-                    .tyre_stints_visual[j] = (i + 1) as u8;
-                original_packet_final_classification_data.classification_data[i]
-                    .tyre_stints_end_laps[j] = (i + 1) as u8;
+                original_packet.classification_data[i].tyre_stints_actual[j] = (i + 1) as u8;
+                original_packet.classification_data[i].tyre_stints_visual[j] = (i + 1) as u8;
+                original_packet.classification_data[i].tyre_stints_end_laps[j] = (i + 1) as u8;
             }
         }
 
-        // Serialize the data
-        let serialized_data: Vec<u8> = original_packet_final_classification_data
-            .serialize()
-            .unwrap();
+        let serialized_packet: Vec<u8> = original_packet.serialize().unwrap();
 
-        // Deserialize the serialized data
-        let deserialized_packet_final_classification_data: PacketFinalClassificationData =
-            PacketFinalClassificationData::unserialize(&serialized_data).unwrap();
+        let deserialized_packet: PacketFinalClassificationData =
+            PacketFinalClassificationData::unserialize(&serialized_packet).unwrap();
 
-        // Check if the deserialized data matches the original data
-        assert_eq!(
-            original_packet_final_classification_data,
-            deserialized_packet_final_classification_data
-        );
+        assert_eq!(original_packet, deserialized_packet);
     }
 }

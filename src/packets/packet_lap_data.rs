@@ -171,8 +171,7 @@ mod tests {
 
     #[test]
     fn test_lap_data_serialization_deserialization() {
-        // Create some sample data
-        let original_lap_data: LapData = LapData {
+        let original_data: LapData = LapData {
             last_lap_time_in_ms: 100u32,
             current_lap_time_in_ms: 120u32,
             sector1_time_in_ms: 30u16,
@@ -204,38 +203,29 @@ mod tests {
             pit_stop_should_serve_pen: 0u8,
         };
 
-        // Serialize the data
-        let serialized_data: Vec<u8> = original_lap_data.serialize().unwrap();
+        let serialized_data: Vec<u8> = original_data.serialize().unwrap();
+        let deserialized_data: LapData = LapData::unserialize(&serialized_data).unwrap();
 
-        // Deserialize the serialized data
-        let deserialized_lap_data: LapData = LapData::unserialize(&serialized_data).unwrap();
-
-        // Check if the deserialized data matches the original data
-        assert_eq!(original_lap_data, deserialized_lap_data);
+        assert_eq!(original_data, deserialized_data);
     }
 
     #[test]
     fn test_packet_lap_data_serialization_deserialization() {
-        // Create some sample data
-        let mut original_packet_lap_data: PacketLapData = PacketLapData::default();
+        let mut original_packet: PacketLapData = PacketLapData::default();
         for i in 0..22 {
-            original_packet_lap_data.lap_data[i].last_lap_time_in_ms = (i * 100) as u32;
-            original_packet_lap_data.lap_data[i].current_lap_time_in_ms = (i * 120) as u32;
-            original_packet_lap_data.lap_data[i].car_position = (i + 1) as u8;
-            original_packet_lap_data.lap_data[i].current_lap_num = (i + 2) as u8;
-            original_packet_lap_data.lap_data[i].grid_position = (i + 3) as u8;
+            original_packet.lap_data[i].last_lap_time_in_ms = (i * 100) as u32;
+            original_packet.lap_data[i].current_lap_time_in_ms = (i * 120) as u32;
+            original_packet.lap_data[i].car_position = (i + 1) as u8;
+            original_packet.lap_data[i].current_lap_num = (i + 2) as u8;
+            original_packet.lap_data[i].grid_position = (i + 3) as u8;
         }
-        original_packet_lap_data.time_trial_pb_car_idx = 1u8;
-        original_packet_lap_data.time_trial_rival_car_idx = 2u8;
+        original_packet.time_trial_pb_car_idx = 1u8;
+        original_packet.time_trial_rival_car_idx = 2u8;
 
-        // Serialize the data
-        let serialized_data: Vec<u8> = original_packet_lap_data.serialize().unwrap();
+        let serialized_packet: Vec<u8> = original_packet.serialize().unwrap();
+        let deserialized_packet: PacketLapData =
+            PacketLapData::unserialize(&serialized_packet).unwrap();
 
-        // Deserialize the serialized data
-        let deserialized_packet_lap_data: PacketLapData =
-            PacketLapData::unserialize(&serialized_data).unwrap();
-
-        // Check if the deserialized data matches the original data
-        assert_eq!(original_packet_lap_data, deserialized_packet_lap_data);
+        assert_eq!(original_packet, deserialized_packet);
     }
 }

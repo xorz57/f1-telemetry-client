@@ -138,8 +138,7 @@ mod tests {
 
     #[test]
     fn test_lobby_info_data_serialization_deserialization() {
-        // Create some sample data
-        let original_lobby_info_data: LobbyInfoData = LobbyInfoData {
+        let original_data: LobbyInfoData = LobbyInfoData {
             ai_controlled: 1u8,
             team_id: 2u8,
             nationality: 3u8,
@@ -149,44 +148,31 @@ mod tests {
             ready_status: 7u8,
         };
 
-        // Serialize the data
-        let serialized_data: Vec<u8> = original_lobby_info_data.serialize().unwrap();
-
-        // Deserialize the serialized data
-        let deserialized_lobby_info_data: LobbyInfoData =
+        let serialized_data: Vec<u8> = original_data.serialize().unwrap();
+        let deserialized_data: LobbyInfoData =
             LobbyInfoData::unserialize(&serialized_data).unwrap();
 
-        // Check if the deserialized data matches the original data
-        assert_eq!(original_lobby_info_data, deserialized_lobby_info_data);
+        assert_eq!(original_data, deserialized_data);
     }
 
     #[test]
     fn test_packet_lobby_info_data_serialization_deserialization() {
-        // Create some sample data
-        let mut original_packet_lobby_info_data: PacketLobbyInfoData =
-            PacketLobbyInfoData::default();
-        original_packet_lobby_info_data.num_players = 5u8;
+        let mut original_packet: PacketLobbyInfoData = PacketLobbyInfoData::default();
+        original_packet.num_players = 5u8;
         for i in 0..22 {
-            original_packet_lobby_info_data.lobby_players[i].ai_controlled = i as u8;
-            original_packet_lobby_info_data.lobby_players[i].team_id = (i + 1) as u8;
-            original_packet_lobby_info_data.lobby_players[i].nationality = (i + 2) as u8;
-            original_packet_lobby_info_data.lobby_players[i].platform = (i + 3) as u8;
-            original_packet_lobby_info_data.lobby_players[i].name = [65u8; 48]; // 'A'
-            original_packet_lobby_info_data.lobby_players[i].car_number = (i + 4) as u8;
-            original_packet_lobby_info_data.lobby_players[i].ready_status = (i + 5) as u8;
+            original_packet.lobby_players[i].ai_controlled = i as u8;
+            original_packet.lobby_players[i].team_id = (i + 1) as u8;
+            original_packet.lobby_players[i].nationality = (i + 2) as u8;
+            original_packet.lobby_players[i].platform = (i + 3) as u8;
+            original_packet.lobby_players[i].name = [65u8; 48]; // 'A'
+            original_packet.lobby_players[i].car_number = (i + 4) as u8;
+            original_packet.lobby_players[i].ready_status = (i + 5) as u8;
         }
 
-        // Serialize the data
-        let serialized_data: Vec<u8> = original_packet_lobby_info_data.serialize().unwrap();
+        let serialized_packet: Vec<u8> = original_packet.serialize().unwrap();
+        let deserialized_packet: PacketLobbyInfoData =
+            PacketLobbyInfoData::unserialize(&serialized_packet).unwrap();
 
-        // Deserialize the serialized data
-        let deserialized_packet_lobby_info_data: PacketLobbyInfoData =
-            PacketLobbyInfoData::unserialize(&serialized_data).unwrap();
-
-        // Check if the deserialized data matches the original data
-        assert_eq!(
-            original_packet_lobby_info_data,
-            deserialized_packet_lobby_info_data
-        );
+        assert_eq!(original_packet, deserialized_packet);
     }
 }

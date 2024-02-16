@@ -186,7 +186,20 @@ mod tests {
         original_packet.header.overall_frame_identifier = 5000u32;
         original_packet.header.player_car_index = 1u8;
         original_packet.header.secondary_player_car_index = 255u8;
-        original_packet.num_active_cars = 20u8; // Just for testing
+        original_packet.num_active_cars = 22u8;
+        for data in original_packet.participants.iter_mut() {
+            data.ai_controlled = 1u8;
+            data.driver_id = 2u8;
+            data.network_id = 3u8;
+            data.team_id = 4u8;
+            data.my_team = 5u8;
+            data.race_number = 6u8;
+            data.nationality = 7u8;
+            data.name = [65u8; 48]; // 65 is ASCII for 'A'
+            data.your_telemetry = 8u8;
+            data.show_online_names = 9u8;
+            data.platform = 10u8;
+        }
 
         let serialized_packet: Vec<u8> = original_packet.serialize().unwrap();
         let deserialized_packet: PacketParticipantsData =

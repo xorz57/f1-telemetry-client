@@ -138,8 +138,7 @@ mod tests {
 
     #[test]
     fn test_car_setup_data_serialization_deserialization() {
-        // Create some sample car setup data
-        let original_car_setup_data: CarSetupData = CarSetupData {
+        let original_data: CarSetupData = CarSetupData {
             front_wing: 1u8,
             rear_wing: 2u8,
             on_throttle: 3u8,
@@ -164,14 +163,10 @@ mod tests {
             fuel_load: 0.9f32,
         };
 
-        // Serialize the data
-        let serialized_data: Vec<u8> = original_car_setup_data.serialize().unwrap();
-
-        // Deserialize the serialized data
-        let deserialized_car_setup_data: CarSetupData =
+        let serialized_data: Vec<u8> = original_data.serialize().unwrap();
+        let deserialized_data: CarSetupData =
             CarSetupData::unserialize(&serialized_data).unwrap();
 
-        // Check if the deserialized data matches the original data
-        assert_eq!(original_car_setup_data, deserialized_car_setup_data);
+        assert_eq!(original_data, deserialized_data);
     }
 }

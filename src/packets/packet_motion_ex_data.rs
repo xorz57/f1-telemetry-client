@@ -160,9 +160,12 @@ impl PacketMotionExData {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use rand::Rng;
 
     #[test]
     fn test_packet_motion_ex_data_serialization_deserialization() {
+        let mut rng = rand::thread_rng();
+
         let original_packet: PacketMotionExData = PacketMotionExData {
             header: PacketHeader {
                 packet_format: 2021u16,
@@ -178,26 +181,26 @@ mod tests {
                 player_car_index: 1u8,
                 secondary_player_car_index: 255u8,
             },
-            suspension_position: [0.1f32, 0.2f32, 0.3f32, 0.4f32],
-            suspension_velocity: [0.1f32, 0.2f32, 0.3f32, 0.4f32],
-            suspension_acceleration: [0.1f32, 0.2f32, 0.3f32, 0.4f32],
-            wheel_speed: [0.1f32, 0.2f32, 0.3f32, 0.4f32],
-            wheel_slip_ratio: [0.1f32, 0.2f32, 0.3f32, 0.4f32],
-            wheel_slip_angle: [0.1f32, 0.2f32, 0.3f32, 0.4f32],
-            wheel_lat_force: [0.1f32, 0.2f32, 0.3f32, 0.4f32],
-            wheel_long_force: [0.1f32, 0.2f32, 0.3f32, 0.4f32],
-            height_of_cog_above_ground: 0.1f32,
-            local_velocity_x: 0.2f32,
-            local_velocity_y: 0.3f32,
-            local_velocity_z: 0.4f32,
-            angular_velocity_x: 0.5f32,
-            angular_velocity_y: 0.6f32,
-            angular_velocity_z: 0.7f32,
-            angular_acceleration_x: 0.8f32,
-            angular_acceleration_y: 0.9f32,
-            angular_acceleration_z: 1.0f32,
-            front_wheels_angle: 1.1f32,
-            wheel_vert_force: [0.1f32, 0.2f32, 0.3f32, 0.4f32],
+            suspension_position: [rng.gen(), rng.gen(), rng.gen(), rng.gen()],
+            suspension_velocity: [rng.gen(), rng.gen(), rng.gen(), rng.gen()],
+            suspension_acceleration: [rng.gen(), rng.gen(), rng.gen(), rng.gen()],
+            wheel_speed: [rng.gen(), rng.gen(), rng.gen(), rng.gen()],
+            wheel_slip_ratio: [rng.gen(), rng.gen(), rng.gen(), rng.gen()],
+            wheel_slip_angle: [rng.gen(), rng.gen(), rng.gen(), rng.gen()],
+            wheel_lat_force: [rng.gen(), rng.gen(), rng.gen(), rng.gen()],
+            wheel_long_force: [rng.gen(), rng.gen(), rng.gen(), rng.gen()],
+            height_of_cog_above_ground: rng.gen(),
+            local_velocity_x: rng.gen(),
+            local_velocity_y: rng.gen(),
+            local_velocity_z: rng.gen(),
+            angular_velocity_x: rng.gen(),
+            angular_velocity_y: rng.gen(),
+            angular_velocity_z: rng.gen(),
+            angular_acceleration_x: rng.gen(),
+            angular_acceleration_y: rng.gen(),
+            angular_acceleration_z: rng.gen(),
+            front_wheels_angle: rng.gen(),
+            wheel_vert_force: [rng.gen(), rng.gen(), rng.gen(), rng.gen()],
         };
 
         let serialized_packet: Vec<u8> = original_packet.serialize().unwrap();

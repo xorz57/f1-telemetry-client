@@ -65,22 +65,25 @@ impl PacketHeader {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use rand::Rng;
 
     #[test]
     fn test_packet_header_serialization_deserialization() {
+        let mut rng = rand::thread_rng();
+
         let original_packet_header: PacketHeader = PacketHeader {
-            packet_format: 2021u16,
-            game_year: 21u8,
-            game_major_version: 1u8,
-            game_minor_version: 3u8,
-            packet_version: 1u8,
-            packet_id: 0u8,
-            session_uid: 123456789u64,
-            session_time: 123.456f32,
-            frame_identifier: 1000u32,
-            overall_frame_identifier: 5000u32,
-            player_car_index: 1u8,
-            secondary_player_car_index: 255u8,
+            packet_format: rng.gen(),
+            game_year: rng.gen(),
+            game_major_version: rng.gen(),
+            game_minor_version: rng.gen(),
+            packet_version: rng.gen(),
+            packet_id: rng.gen(),
+            session_uid: rng.gen(),
+            session_time: rng.gen(),
+            frame_identifier: rng.gen(),
+            overall_frame_identifier: rng.gen(),
+            player_car_index: rng.gen(),
+            secondary_player_car_index: rng.gen(),
         };
 
         let serialized_packet_header: Vec<u8> = original_packet_header.serialize().unwrap();

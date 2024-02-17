@@ -118,19 +118,22 @@ impl PacketTyreSetsData {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use rand::Rng;
 
     #[test]
     fn test_tyre_set_data_serialization_deserialization() {
+        let mut rng = rand::thread_rng();
+
         let original_data: TyreSetData = TyreSetData {
-            actual_tyre_compound: 1u8,
-            visual_tyre_compound: 2u8,
-            wear: 50u8,
-            available: 1u8,
-            recommended_session: 0u8,
-            life_span: 80u8,
-            usable_life: 60u8,
-            lap_delta_time: 500i16,
-            fitted: 1u8,
+            actual_tyre_compound: rng.gen(),
+            visual_tyre_compound: rng.gen(),
+            wear: rng.gen(),
+            available: rng.gen(),
+            recommended_session: rng.gen(),
+            life_span: rng.gen(),
+            usable_life: rng.gen(),
+            lap_delta_time: rng.gen(),
+            fitted: rng.gen(),
         };
 
         let serialized_data: Vec<u8> = original_data.serialize().unwrap();
@@ -141,6 +144,8 @@ mod tests {
 
     #[test]
     fn test_packet_tyre_sets_data_serialization_deserialization() {
+        let mut rng = rand::thread_rng();
+
         let original_packet: PacketTyreSetsData = PacketTyreSetsData {
             header: PacketHeader {
                 packet_format: 2021u16,
@@ -156,19 +161,19 @@ mod tests {
                 player_car_index: 1u8,
                 secondary_player_car_index: 255u8,
             },
-            car_idx: 0u8,
+            car_idx: rng.gen(),
             tyre_set_data: [TyreSetData {
-                actual_tyre_compound: 1u8,
-                visual_tyre_compound: 2u8,
-                wear: 50u8,
-                available: 1u8,
-                recommended_session: 0u8,
-                life_span: 80u8,
-                usable_life: 60u8,
-                lap_delta_time: 500i16,
-                fitted: 1u8,
+                actual_tyre_compound: rng.gen(),
+                visual_tyre_compound: rng.gen(),
+                wear: rng.gen(),
+                available: rng.gen(),
+                recommended_session: rng.gen(),
+                life_span: rng.gen(),
+                usable_life: rng.gen(),
+                lap_delta_time: rng.gen(),
+                fitted: rng.gen(),
             }; 20],
-            fitted_idx: 2u8,
+            fitted_idx: rng.gen(),
         };
 
         let serialized_packet: Vec<u8> = original_packet.serialize().unwrap();

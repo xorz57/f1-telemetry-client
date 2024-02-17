@@ -147,21 +147,24 @@ impl PacketParticipantsData {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use rand::{distributions::Alphanumeric, Rng};
 
     #[test]
     fn test_participant_data_serialization_deserialization() {
+        let mut rng = rand::thread_rng();
+
         let original_data: ParticipantData = ParticipantData {
-            ai_controlled: 1u8,
-            driver_id: 2u8,
-            network_id: 3u8,
-            team_id: 4u8,
-            my_team: 5u8,
-            race_number: 6u8,
-            nationality: 7u8,
-            name: [65u8; 48], // 65 is ASCII for 'A'
-            your_telemetry: 8u8,
-            show_online_names: 9u8,
-            platform: 10u8,
+            ai_controlled: rng.gen(),
+            driver_id: rng.gen(),
+            network_id: rng.gen(),
+            team_id: rng.gen(),
+            my_team: rng.gen(),
+            race_number: rng.gen(),
+            nationality: rng.gen(),
+            name: [rng.sample(Alphanumeric); 48],
+            your_telemetry: rng.gen(),
+            show_online_names: rng.gen(),
+            platform: rng.gen(),
         };
 
         let serialized_data: Vec<u8> = original_data.serialize().unwrap();
@@ -173,6 +176,8 @@ mod tests {
 
     #[test]
     fn test_packet_participants_data_serialization_deserialization() {
+        let mut rng = rand::thread_rng();
+
         let original_packet: PacketParticipantsData = PacketParticipantsData {
             header: PacketHeader {
                 packet_format: 2021u16,
@@ -188,19 +193,19 @@ mod tests {
                 player_car_index: 1u8,
                 secondary_player_car_index: 255u8,
             },
-            num_active_cars: 22u8,
+            num_active_cars: rng.gen(),
             participants: [ParticipantData {
-                ai_controlled: 1u8,
-                driver_id: 2u8,
-                network_id: 3u8,
-                team_id: 4u8,
-                my_team: 5u8,
-                race_number: 6u8,
-                nationality: 7u8,
-                name: [65u8; 48], // 65 is ASCII for 'A'
-                your_telemetry: 8u8,
-                show_online_names: 9u8,
-                platform: 10u8,
+                ai_controlled: rng.gen(),
+                driver_id: rng.gen(),
+                network_id: rng.gen(),
+                team_id: rng.gen(),
+                my_team: rng.gen(),
+                race_number: rng.gen(),
+                nationality: rng.gen(),
+                name: [rng.sample(Alphanumeric); 48],
+                your_telemetry: rng.gen(),
+                show_online_names: rng.gen(),
+                platform: rng.gen(),
             }; 22],
         };
 

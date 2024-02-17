@@ -378,12 +378,15 @@ impl PacketSessionData {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use rand::Rng;
 
     #[test]
     fn test_marshal_zone_serialization_deserialization() {
+        let mut rng = rand::thread_rng();
+
         let original_data: MarshalZone = MarshalZone {
-            zone_start: 10.0f32,
-            zone_flag: 1i8,
+            zone_start: rng.gen(),
+            zone_flag: rng.gen(),
         };
 
         let serialized_data: Vec<u8> = original_data.serialize().unwrap();
@@ -394,15 +397,17 @@ mod tests {
 
     #[test]
     fn test_weather_forecast_sample_serialization_deserialization() {
+        let mut rng = rand::thread_rng();
+
         let original_data: WeatherForecastSample = WeatherForecastSample {
-            session_type: 1u8,
-            time_offset: 2u8,
-            weather: 3u8,
-            track_temperature: 20i8,
-            track_temperature_change: 1i8,
-            air_temperature: 25i8,
-            air_temperature_change: -2i8,
-            rain_percentage: 10u8,
+            session_type: rng.gen(),
+            time_offset: rng.gen(),
+            weather: rng.gen(),
+            track_temperature: rng.gen(),
+            track_temperature_change: rng.gen(),
+            air_temperature: rng.gen(),
+            air_temperature_change: rng.gen(),
+            rain_percentage: rng.gen(),
         };
 
         let serialized_data: Vec<u8> = original_data.serialize().unwrap();
@@ -414,6 +419,8 @@ mod tests {
 
     #[test]
     fn test_packet_session_data_serialization_deserialization() {
+        let mut rng = rand::thread_rng();
+
         let original_packet: PacketSessionData = PacketSessionData {
             header: PacketHeader {
                 packet_format: 2021u16,
@@ -429,67 +436,67 @@ mod tests {
                 player_car_index: 1u8,
                 secondary_player_car_index: 255u8,
             },
-            weather: 0u8,
-            track_temperature: 0i8,
-            air_temperature: 0i8,
-            total_laps: 0u8,
-            track_length: 0u16,
-            session_type: 0u8,
-            track_id: 0i8,
-            formula: 0u8,
-            session_time_left: 0u16,
-            session_duration: 0u16,
-            pit_speed_limit: 0u8,
-            game_paused: 0u8,
-            is_spectating: 0u8,
-            spectator_car_index: 0u8,
-            sli_pro_native_support: 0u8,
-            num_marshal_zones: 0u8,
+            weather: rng.gen(),
+            track_temperature: rng.gen(),
+            air_temperature: rng.gen(),
+            total_laps: rng.gen(),
+            track_length: rng.gen(),
+            session_type: rng.gen(),
+            track_id: rng.gen(),
+            formula: rng.gen(),
+            session_time_left: rng.gen(),
+            session_duration: rng.gen(),
+            pit_speed_limit: rng.gen(),
+            game_paused: rng.gen(),
+            is_spectating: rng.gen(),
+            spectator_car_index: rng.gen(),
+            sli_pro_native_support: rng.gen(),
+            num_marshal_zones: rng.gen(),
             marshal_zones: [MarshalZone {
-                zone_start: 10.0f32,
-                zone_flag: 1i8,
+                zone_start: rng.gen(),
+                zone_flag: rng.gen(),
             }; 21],
-            safety_car_status: 0u8,
-            network_game: 0u8,
-            num_weather_forecast_samples: 0u8,
+            safety_car_status: rng.gen(),
+            network_game: rng.gen(),
+            num_weather_forecast_samples: rng.gen(),
             weather_forecast_samples: [WeatherForecastSample {
-                session_type: 1u8,
-                time_offset: 2u8,
-                weather: 3u8,
-                track_temperature: 20i8,
-                track_temperature_change: 1i8,
-                air_temperature: 25i8,
-                air_temperature_change: -2i8,
-                rain_percentage: 10u8,
+                session_type: rng.gen(),
+                time_offset: rng.gen(),
+                weather: rng.gen(),
+                track_temperature: rng.gen(),
+                track_temperature_change: rng.gen(),
+                air_temperature: rng.gen(),
+                air_temperature_change: rng.gen(),
+                rain_percentage: rng.gen(),
             }; 56],
-            forecast_accuracy: 0u8,
-            ai_difficulty: 0u8,
-            season_link_identifier: 0u32,
-            weekend_link_identifier: 0u32,
-            session_link_identifier: 0u32,
-            pit_stop_window_ideal_lap: 0u8,
-            pit_stop_window_latest_lap: 0u8,
-            pit_stop_rejoin_position: 0u8,
-            steering_assist: 0u8,
-            braking_assist: 0u8,
-            gearbox_assist: 0u8,
-            pit_assist: 0u8,
-            pit_release_assist: 0u8,
-            ers_assist: 0u8,
-            drs_assist: 0u8,
-            dynamic_racing_line: 0u8,
-            dynamic_racing_line_type: 0u8,
-            game_mode: 0u8,
-            rule_set: 0u8,
-            time_of_day: 0u32,
-            session_length: 0u8,
-            speed_units_lead_player: 0u8,
-            temperature_units_lead_player: 0u8,
-            speed_units_secondary_player: 0u8,
-            temperature_units_secondary_player: 0u8,
-            num_safety_car_periods: 0u8,
-            num_virtual_safety_car_periods: 0u8,
-            num_red_flag_periods: 0u8,
+            forecast_accuracy: rng.gen(),
+            ai_difficulty: rng.gen(),
+            season_link_identifier: rng.gen(),
+            weekend_link_identifier: rng.gen(),
+            session_link_identifier: rng.gen(),
+            pit_stop_window_ideal_lap: rng.gen(),
+            pit_stop_window_latest_lap: rng.gen(),
+            pit_stop_rejoin_position: rng.gen(),
+            steering_assist: rng.gen(),
+            braking_assist: rng.gen(),
+            gearbox_assist: rng.gen(),
+            pit_assist: rng.gen(),
+            pit_release_assist: rng.gen(),
+            ers_assist: rng.gen(),
+            drs_assist: rng.gen(),
+            dynamic_racing_line: rng.gen(),
+            dynamic_racing_line_type: rng.gen(),
+            game_mode: rng.gen(),
+            rule_set: rng.gen(),
+            time_of_day: rng.gen(),
+            session_length: rng.gen(),
+            speed_units_lead_player: rng.gen(),
+            temperature_units_lead_player: rng.gen(),
+            speed_units_secondary_player: rng.gen(),
+            temperature_units_secondary_player: rng.gen(),
+            num_safety_car_periods: rng.gen(),
+            num_virtual_safety_car_periods: rng.gen(),
+            num_red_flag_periods: rng.gen(),
         };
 
         let serialized_packet: Vec<u8> = original_packet.serialize().unwrap();

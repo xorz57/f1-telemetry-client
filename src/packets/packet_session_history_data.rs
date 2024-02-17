@@ -191,18 +191,21 @@ impl PacketSessionHistoryData {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use rand::Rng;
 
     #[test]
     fn test_lap_history_data_serialization_deserialization() {
+        let mut rng = rand::thread_rng();
+
         let original_data: LapHistoryData = LapHistoryData {
-            lap_time_in_ms: 120_000u32,
-            sector1_time_in_ms: 30_000u16,
-            sector1_time_minutes: 1u8,
-            sector2_time_in_ms: 40_000u16,
-            sector2_time_minutes: 1u8,
-            sector3_time_in_ms: 50_000u16,
-            sector3_time_minutes: 1u8,
-            lap_valid_bit_flags: 1u8,
+            lap_time_in_ms: rng.gen(),
+            sector1_time_in_ms: rng.gen(),
+            sector1_time_minutes: rng.gen(),
+            sector2_time_in_ms: rng.gen(),
+            sector2_time_minutes: rng.gen(),
+            sector3_time_in_ms: rng.gen(),
+            sector3_time_minutes: rng.gen(),
+            lap_valid_bit_flags: rng.gen(),
         };
 
         let serialized_data: Vec<u8> = original_data.serialize().unwrap();
@@ -214,10 +217,12 @@ mod tests {
 
     #[test]
     fn test_tyre_stint_history_data_serialization_deserialization() {
+        let mut rng = rand::thread_rng();
+
         let original_data: TyreStintHistoryData = TyreStintHistoryData {
-            end_lap: 20u8,
-            tyre_actual_compound: 1u8,
-            tyre_visual_compound: 2u8,
+            end_lap: rng.gen(),
+            tyre_actual_compound: rng.gen(),
+            tyre_visual_compound: rng.gen(),
         };
 
         let serialized_data: Vec<u8> = original_data.serialize().unwrap();

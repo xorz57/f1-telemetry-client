@@ -199,40 +199,43 @@ mod tests {
 
     #[test]
     fn test_packet_car_telemetry_data_serialization_deserialization() {
-        let mut original_packet: PacketCarTelemetryData = PacketCarTelemetryData::default();
-        original_packet.header.packet_format = 2021u16;
-        original_packet.header.game_year = 21u8;
-        original_packet.header.game_major_version = 1u8;
-        original_packet.header.game_minor_version = 3u8;
-        original_packet.header.packet_version = 1u8;
-        original_packet.header.packet_id = 0u8;
-        original_packet.header.session_uid = 123456789u64;
-        original_packet.header.session_time = 123.456f32;
-        original_packet.header.frame_identifier = 1000u32;
-        original_packet.header.overall_frame_identifier = 5000u32;
-        original_packet.header.player_car_index = 1u8;
-        original_packet.header.secondary_player_car_index = 255u8;
-        for data in original_packet.car_telemetry_data.iter_mut() {
-            data.speed = 200u16;
-            data.throttle = 0.8f32;
-            data.steer = 0.2f32;
-            data.brake = 0.0f32;
-            data.clutch = 0u8;
-            data.gear = 3i8;
-            data.engine_rpm = 8000u16;
-            data.drs = 1u8;
-            data.rev_lights_percent = 50u8;
-            data.rev_lights_bit_value = 1000u16;
-            data.brakes_temperature = [500u16, 550u16, 600u16, 625u16];
-            data.tyres_surface_temperature = [90u8, 91u8, 92u8, 93u8];
-            data.tyres_inner_temperature = [85u8, 86u8, 87u8, 88u8];
-            data.engine_temperature = 95u16;
-            data.tyres_pressure = [1.9f32, 1.8f32, 1.9f32, 2.0f32];
-            data.surface_type = [1u8, 2u8, 3u8, 4u8];
-        }
-        original_packet.mfd_panel_index = 3u8;
-        original_packet.mfd_panel_index_secondary_player = 2u8;
-        original_packet.suggested_gear = -1i8;
+        let original_packet: PacketCarTelemetryData = PacketCarTelemetryData {
+            header: PacketHeader {
+                packet_format: 2021u16,
+                game_year: 21u8,
+                game_major_version: 1u8,
+                game_minor_version: 3u8,
+                packet_version: 1u8,
+                packet_id: 0u8,
+                session_uid: 123456789u64,
+                session_time: 123.456f32,
+                frame_identifier: 1000u32,
+                overall_frame_identifier: 5000u32,
+                player_car_index: 1u8,
+                secondary_player_car_index: 255u8,
+            },
+            car_telemetry_data: [CarTelemetryData {
+                speed: 200u16,
+                throttle: 0.8f32,
+                steer: 0.2f32,
+                brake: 0.0f32,
+                clutch: 0u8,
+                gear: 3i8,
+                engine_rpm: 8000u16,
+                drs: 1u8,
+                rev_lights_percent: 50u8,
+                rev_lights_bit_value: 1000u16,
+                brakes_temperature: [500u16, 550u16, 600u16, 625u16],
+                tyres_surface_temperature: [90u8, 91u8, 92u8, 93u8],
+                tyres_inner_temperature: [85u8, 86u8, 87u8, 88u8],
+                engine_temperature: 95u16,
+                tyres_pressure: [1.9f32, 1.8f32, 1.9f32, 2.0f32],
+                surface_type: [1u8, 2u8, 3u8, 4u8],
+            }; 22],
+            mfd_panel_index: 3u8,
+            mfd_panel_index_secondary_player: 2u8,
+            suggested_gear: -1i8,
+        };
 
         let serialized_packet: Vec<u8> = original_packet.serialize().unwrap();
         let deserialized_packet: PacketCarTelemetryData =

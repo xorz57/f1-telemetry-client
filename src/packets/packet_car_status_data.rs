@@ -184,46 +184,49 @@ mod tests {
 
     #[test]
     fn test_packet_car_status_data_serialization_deserialization() {
-        let mut original_packet: PacketCarStatusData = PacketCarStatusData::default();
-        original_packet.header.packet_format = 2021u16;
-        original_packet.header.game_year = 21u8;
-        original_packet.header.game_major_version = 1u8;
-        original_packet.header.game_minor_version = 3u8;
-        original_packet.header.packet_version = 1u8;
-        original_packet.header.packet_id = 0u8;
-        original_packet.header.session_uid = 123456789u64;
-        original_packet.header.session_time = 123.456f32;
-        original_packet.header.frame_identifier = 1000u32;
-        original_packet.header.overall_frame_identifier = 5000u32;
-        original_packet.header.player_car_index = 1u8;
-        original_packet.header.secondary_player_car_index = 255u8;
-        for data in original_packet.car_status_data.iter_mut() {
-            data.traction_control = 1u8;
-            data.anti_lock_brakes = 2u8;
-            data.fuel_mix = 3u8;
-            data.front_brake_bias = 4u8;
-            data.pit_limiter_status = 5u8;
-            data.fuel_in_tank = 0.1f32;
-            data.fuel_capacity = 0.2f32;
-            data.fuel_remaining_laps = 0.3f32;
-            data.max_rpm = 1000u16;
-            data.idle_rpm = 500u16;
-            data.max_gears = 7u8;
-            data.drs_allowed = 1u8;
-            data.drs_activation_distance = 50u16;
-            data.actual_tyre_compound = 1u8;
-            data.visual_tyre_compound = 2u8;
-            data.tyres_age_laps = 10u8;
-            data.vehicle_fia_flags = -1i8;
-            data.engine_power_ice = 300.0f32;
-            data.engine_power_mguk = 200.0f32;
-            data.ers_store_energy = 150.0f32;
-            data.ers_deploy_mode = 1u8;
-            data.ers_harvested_this_lap_mguk = 100.0f32;
-            data.ers_harvested_this_lap_mguh = 50.0f32;
-            data.ers_deployed_this_lap = 75.0f32;
-            data.network_paused = 0u8;
-        }
+        let original_packet: PacketCarStatusData = PacketCarStatusData {
+            header: PacketHeader {
+                packet_format: 2021u16,
+                game_year: 21u8,
+                game_major_version: 1u8,
+                game_minor_version: 3u8,
+                packet_version: 1u8,
+                packet_id: 0u8,
+                session_uid: 123456789u64,
+                session_time: 123.456f32,
+                frame_identifier: 1000u32,
+                overall_frame_identifier: 5000u32,
+                player_car_index: 1u8,
+                secondary_player_car_index: 255u8,
+            },
+            car_status_data: [CarStatusData {
+                traction_control: 1u8,
+                anti_lock_brakes: 2u8,
+                fuel_mix: 3u8,
+                front_brake_bias: 4u8,
+                pit_limiter_status: 5u8,
+                fuel_in_tank: 0.1f32,
+                fuel_capacity: 0.2f32,
+                fuel_remaining_laps: 0.3f32,
+                max_rpm: 1000u16,
+                idle_rpm: 500u16,
+                max_gears: 7u8,
+                drs_allowed: 1u8,
+                drs_activation_distance: 50u16,
+                actual_tyre_compound: 1u8,
+                visual_tyre_compound: 2u8,
+                tyres_age_laps: 10u8,
+                vehicle_fia_flags: -1i8,
+                engine_power_ice: 300.0f32,
+                engine_power_mguk: 200.0f32,
+                ers_store_energy: 150.0f32,
+                ers_deploy_mode: 1u8,
+                ers_harvested_this_lap_mguk: 100.0f32,
+                ers_harvested_this_lap_mguh: 50.0f32,
+                ers_deployed_this_lap: 75.0f32,
+                network_paused: 0u8,
+            }; 22],
+        };
 
         let serialized_packet: Vec<u8> = original_packet.serialize().unwrap();
         let deserialized_packet: PacketCarStatusData =

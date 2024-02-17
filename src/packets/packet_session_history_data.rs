@@ -229,33 +229,44 @@ mod tests {
 
     #[test]
     fn test_packet_session_history_data_serialization_deserialization() {
-        let original_lap_history_data: LapHistoryData = LapHistoryData {
-            lap_time_in_ms: 120_000u32,
-            sector1_time_in_ms: 30_000u16,
-            sector1_time_minutes: 1u8,
-            sector2_time_in_ms: 40_000u16,
-            sector2_time_minutes: 1u8,
-            sector3_time_in_ms: 50_000u16,
-            sector3_time_minutes: 1u8,
-            lap_valid_bit_flags: 1u8,
+        let original_packet: PacketSessionHistoryData = PacketSessionHistoryData {
+            header: PacketHeader {
+                packet_format: 2021u16,
+                game_year: 21u8,
+                game_major_version: 1u8,
+                game_minor_version: 3u8,
+                packet_version: 1u8,
+                packet_id: 0u8,
+                session_uid: 123456789u64,
+                session_time: 123.456f32,
+                frame_identifier: 1000u32,
+                overall_frame_identifier: 5000u32,
+                player_car_index: 1u8,
+                secondary_player_car_index: 255u8,
+            },
+            lap_history_data: [LapHistoryData {
+                lap_time_in_ms: 120_000u32,
+                sector1_time_in_ms: 30_000u16,
+                sector1_time_minutes: 1u8,
+                sector2_time_in_ms: 40_000u16,
+                sector2_time_minutes: 1u8,
+                sector3_time_in_ms: 50_000u16,
+                sector3_time_minutes: 1u8,
+                lap_valid_bit_flags: 1u8,
+            }; 100],
+            car_idx: 0u8,
+            num_laps: 0u8,
+            num_tyre_stints: 0u8,
+            best_lap_time_lap_num: 0u8,
+            best_sector1_lap_num: 0u8,
+            best_sector2_lap_num: 0u8,
+            best_sector3_lap_num: 0u8,
+            tyre_stints_history_data: [TyreStintHistoryData {
+                end_lap: 20u8,
+                tyre_actual_compound: 1u8,
+                tyre_visual_compound: 2u8,
+            }; 8],
         };
-
-        let original_tyre_stint_history_data: TyreStintHistoryData = TyreStintHistoryData {
-            end_lap: 20u8,
-            tyre_actual_compound: 1u8,
-            tyre_visual_compound: 2u8,
-        };
-
-        let mut original_packet: PacketSessionHistoryData = PacketSessionHistoryData::default();
-        original_packet.car_idx = 1u8;
-        original_packet.num_laps = 20u8;
-        original_packet.num_tyre_stints = 3u8;
-        original_packet.best_lap_time_lap_num = 10u8;
-        original_packet.best_sector1_lap_num = 5u8;
-        original_packet.best_sector2_lap_num = 8u8;
-        original_packet.best_sector3_lap_num = 15u8;
-        original_packet.lap_history_data[0] = original_lap_history_data;
-        original_packet.tyre_stints_history_data[0] = original_tyre_stint_history_data;
 
         let serialized_packet: Vec<u8> = original_packet.serialize().unwrap();
         let deserialized_packet: PacketSessionHistoryData =

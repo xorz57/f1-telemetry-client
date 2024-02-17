@@ -414,13 +414,45 @@ mod tests {
 
     #[test]
     fn test_packet_session_data_serialization_deserialization() {
-        let original_marshal_zones: [MarshalZone; 21] = [MarshalZone {
-            zone_start: 10.0f32,
-            zone_flag: 1i8,
-        }; 21];
-
-        let original_weather_forecast_samples: [WeatherForecastSample; 56] =
-            [WeatherForecastSample {
+        let original_packet: PacketSessionData = PacketSessionData {
+            header: PacketHeader {
+                packet_format: 2021u16,
+                game_year: 21u8,
+                game_major_version: 1u8,
+                game_minor_version: 3u8,
+                packet_version: 1u8,
+                packet_id: 0u8,
+                session_uid: 123456789u64,
+                session_time: 123.456f32,
+                frame_identifier: 1000u32,
+                overall_frame_identifier: 5000u32,
+                player_car_index: 1u8,
+                secondary_player_car_index: 255u8,
+            },
+            weather: 0u8,
+            track_temperature: 0i8,
+            air_temperature: 0i8,
+            total_laps: 0u8,
+            track_length: 0u16,
+            session_type: 0u8,
+            track_id: 0i8,
+            formula: 0u8,
+            session_time_left: 0u16,
+            session_duration: 0u16,
+            pit_speed_limit: 0u8,
+            game_paused: 0u8,
+            is_spectating: 0u8,
+            spectator_car_index: 0u8,
+            sli_pro_native_support: 0u8,
+            num_marshal_zones: 0u8,
+            marshal_zones: [MarshalZone {
+                zone_start: 10.0f32,
+                zone_flag: 1i8,
+            }; 21],
+            safety_car_status: 0u8,
+            network_game: 0u8,
+            num_weather_forecast_samples: 0u8,
+            weather_forecast_samples: [WeatherForecastSample {
                 session_type: 1u8,
                 time_offset: 2u8,
                 weather: 3u8,
@@ -429,11 +461,36 @@ mod tests {
                 air_temperature: 25i8,
                 air_temperature_change: -2i8,
                 rain_percentage: 10u8,
-            }; 56];
-
-        let mut original_packet: PacketSessionData = PacketSessionData::default();
-        original_packet.marshal_zones = original_marshal_zones;
-        original_packet.weather_forecast_samples = original_weather_forecast_samples;
+            }; 56],
+            forecast_accuracy: 0u8,
+            ai_difficulty: 0u8,
+            season_link_identifier: 0u32,
+            weekend_link_identifier: 0u32,
+            session_link_identifier: 0u32,
+            pit_stop_window_ideal_lap: 0u8,
+            pit_stop_window_latest_lap: 0u8,
+            pit_stop_rejoin_position: 0u8,
+            steering_assist: 0u8,
+            braking_assist: 0u8,
+            gearbox_assist: 0u8,
+            pit_assist: 0u8,
+            pit_release_assist: 0u8,
+            ers_assist: 0u8,
+            drs_assist: 0u8,
+            dynamic_racing_line: 0u8,
+            dynamic_racing_line_type: 0u8,
+            game_mode: 0u8,
+            rule_set: 0u8,
+            time_of_day: 0u32,
+            session_length: 0u8,
+            speed_units_lead_player: 0u8,
+            temperature_units_lead_player: 0u8,
+            speed_units_secondary_player: 0u8,
+            temperature_units_secondary_player: 0u8,
+            num_safety_car_periods: 0u8,
+            num_virtual_safety_car_periods: 0u8,
+            num_red_flag_periods: 0u8,
+        };
 
         let serialized_packet: Vec<u8> = original_packet.serialize().unwrap();
         let deserialized_packet: PacketSessionData =

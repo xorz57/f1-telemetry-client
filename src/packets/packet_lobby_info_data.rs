@@ -135,17 +135,20 @@ impl PacketLobbyInfoData {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use rand::{distributions::Alphanumeric, Rng};
 
     #[test]
     fn test_lobby_info_data_serialization_deserialization() {
+        let mut rng = rand::thread_rng();
+
         let original_data: LobbyInfoData = LobbyInfoData {
-            ai_controlled: 1u8,
-            team_id: 2u8,
-            nationality: 3u8,
-            platform: 4u8,
-            name: [65u8; 48], // 65 is ASCII 'A'
-            car_number: 6u8,
-            ready_status: 7u8,
+            ai_controlled: rng.gen(),
+            team_id: rng.gen(),
+            nationality: rng.gen(),
+            platform: rng.gen(),
+            name: [rng.sample(Alphanumeric); 48],
+            car_number: rng.gen(),
+            ready_status: rng.gen(),
         };
 
         let serialized_data: Vec<u8> = original_data.serialize().unwrap();
@@ -157,6 +160,8 @@ mod tests {
 
     #[test]
     fn test_packet_lobby_info_data_serialization_deserialization() {
+        let mut rng = rand::thread_rng();
+
         let original_packet: PacketLobbyInfoData = PacketLobbyInfoData {
             header: PacketHeader {
                 packet_format: 2021u16,
@@ -174,13 +179,13 @@ mod tests {
             },
             num_players: 22u8,
             lobby_players: [LobbyInfoData {
-                ai_controlled: 1u8,
-                team_id: 2u8,
-                nationality: 3u8,
-                platform: 4u8,
-                name: [65u8; 48], // 65 is ASCII 'A'
-                car_number: 6u8,
-                ready_status: 7u8,
+                ai_controlled: rng.gen(),
+                team_id: rng.gen(),
+                nationality: rng.gen(),
+                platform: rng.gen(),
+                name: [rng.sample(Alphanumeric); 48],
+                car_number: rng.gen(),
+                ready_status: rng.gen(),
             }; 22],
         };
 

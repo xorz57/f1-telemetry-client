@@ -123,28 +123,31 @@ impl PacketMotionData {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use rand::Rng;
 
     #[test]
     fn test_car_motion_data_serialization_deserialization() {
+        let mut rng = rand::thread_rng();
+
         let original_data: CarMotionData = CarMotionData {
-            world_position_x: 1.0f32,
-            world_position_y: 2.0f32,
-            world_position_z: 3.0f32,
-            world_velocity_x: 4.0f32,
-            world_velocity_y: 5.0f32,
-            world_velocity_z: 6.0f32,
-            world_forward_dir_x: 7i16,
-            world_forward_dir_y: 8i16,
-            world_forward_dir_z: 9i16,
-            world_right_dir_x: 10i16,
-            world_right_dir_y: 11i16,
-            world_right_dir_z: 12i16,
-            g_force_lateral: 13.0f32,
-            g_force_longitudinal: 14.0f32,
-            g_force_vertical: 15.0f32,
-            yaw: 16.0f32,
-            pitch: 17.0f32,
-            roll: 18.0f32,
+            world_position_x: rng.gen(),
+            world_position_y: rng.gen(),
+            world_position_z: rng.gen(),
+            world_velocity_x: rng.gen(),
+            world_velocity_y: rng.gen(),
+            world_velocity_z: rng.gen(),
+            world_forward_dir_x: rng.gen(),
+            world_forward_dir_y: rng.gen(),
+            world_forward_dir_z: rng.gen(),
+            world_right_dir_x: rng.gen(),
+            world_right_dir_y: rng.gen(),
+            world_right_dir_z: rng.gen(),
+            g_force_lateral: rng.gen(),
+            g_force_longitudinal: rng.gen(),
+            g_force_vertical: rng.gen(),
+            yaw: rng.gen(),
+            pitch: rng.gen(),
+            roll: rng.gen(),
         };
 
         let serialized_data: Vec<u8> = original_data.serialize().unwrap();
@@ -156,6 +159,8 @@ mod tests {
 
     #[test]
     fn test_packet_motion_data_serialization_deserialization() {
+        let mut rng = rand::thread_rng();
+
         let original_packet: PacketMotionData = PacketMotionData {
             header: PacketHeader {
                 packet_format: 2021u16,
@@ -172,24 +177,24 @@ mod tests {
                 secondary_player_car_index: 255u8,
             },
             car_motion_data: [CarMotionData {
-                world_position_x: 1.0f32,
-                world_position_y: 2.0f32,
-                world_position_z: 3.0f32,
-                world_velocity_x: 4.0f32,
-                world_velocity_y: 5.0f32,
-                world_velocity_z: 6.0f32,
-                world_forward_dir_x: 7i16,
-                world_forward_dir_y: 8i16,
-                world_forward_dir_z: 9i16,
-                world_right_dir_x: 10i16,
-                world_right_dir_y: 11i16,
-                world_right_dir_z: 12i16,
-                g_force_lateral: 13.0f32,
-                g_force_longitudinal: 14.0f32,
-                g_force_vertical: 15.0f32,
-                yaw: 16.0f32,
-                pitch: 17.0f32,
-                roll: 18.0f32,
+                world_position_x: rng.gen(),
+                world_position_y: rng.gen(),
+                world_position_z: rng.gen(),
+                world_velocity_x: rng.gen(),
+                world_velocity_y: rng.gen(),
+                world_velocity_z: rng.gen(),
+                world_forward_dir_x: rng.gen(),
+                world_forward_dir_y: rng.gen(),
+                world_forward_dir_z: rng.gen(),
+                world_right_dir_x: rng.gen(),
+                world_right_dir_y: rng.gen(),
+                world_right_dir_z: rng.gen(),
+                g_force_lateral: rng.gen(),
+                g_force_longitudinal: rng.gen(),
+                g_force_vertical: rng.gen(),
+                yaw: rng.gen(),
+                pitch: rng.gen(),
+                roll: rng.gen(),
             }; 22],
         };
 

@@ -157,8 +157,40 @@ mod tests {
     #[test]
     fn test_packet_motion_data_serialization_deserialization() {
         let original_packet: PacketMotionData = PacketMotionData {
-            header: PacketHeader::default(),
-            car_motion_data: [CarMotionData::default(); 22],
+            header: PacketHeader {
+                packet_format: 2021u16,
+                game_year: 21u8,
+                game_major_version: 1u8,
+                game_minor_version: 3u8,
+                packet_version: 1u8,
+                packet_id: 0u8,
+                session_uid: 123456789u64,
+                session_time: 123.456f32,
+                frame_identifier: 1000u32,
+                overall_frame_identifier: 5000u32,
+                player_car_index: 1u8,
+                secondary_player_car_index: 255u8,
+            },
+            car_motion_data: [CarMotionData {
+                world_position_x: 1.0f32,
+                world_position_y: 2.0f32,
+                world_position_z: 3.0f32,
+                world_velocity_x: 4.0f32,
+                world_velocity_y: 5.0f32,
+                world_velocity_z: 6.0f32,
+                world_forward_dir_x: 7i16,
+                world_forward_dir_y: 8i16,
+                world_forward_dir_z: 9i16,
+                world_right_dir_x: 10i16,
+                world_right_dir_y: 11i16,
+                world_right_dir_z: 12i16,
+                g_force_lateral: 13.0f32,
+                g_force_longitudinal: 14.0f32,
+                g_force_vertical: 15.0f32,
+                yaw: 16.0f32,
+                pitch: 17.0f32,
+                roll: 18.0f32,
+            }; 22],
         };
 
         let serialized_packet: Vec<u8> = original_packet.serialize().unwrap();

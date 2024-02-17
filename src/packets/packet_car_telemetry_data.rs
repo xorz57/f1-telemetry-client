@@ -168,26 +168,29 @@ impl PacketCarTelemetryData {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use rand::Rng;
 
     #[test]
     fn test_car_telemetry_data_serialization_deserialization() {
+        let mut rng = rand::thread_rng();
+
         let original_data: CarTelemetryData = CarTelemetryData {
-            speed: 200u16,
-            throttle: 0.8f32,
-            steer: 0.2f32,
-            brake: 0.0f32,
-            clutch: 0u8,
-            gear: 3i8,
-            engine_rpm: 8000u16,
-            drs: 1u8,
-            rev_lights_percent: 50u8,
-            rev_lights_bit_value: 1000u16,
-            brakes_temperature: [500u16, 550u16, 600u16, 625u16],
-            tyres_surface_temperature: [90u8, 91u8, 92u8, 93u8],
-            tyres_inner_temperature: [85u8, 86u8, 87u8, 88u8],
+            speed: rng.gen(),
+            throttle: rng.gen(),
+            steer: rng.gen(),
+            brake: rng.gen(),
+            clutch: rng.gen(),
+            gear: rng.gen(),
+            engine_rpm: rng.gen(),
+            drs: rng.gen(),
+            rev_lights_percent: rng.gen(),
+            rev_lights_bit_value: rng.gen(),
+            brakes_temperature: [rng.gen(), rng.gen(), rng.gen(), rng.gen()],
+            tyres_surface_temperature: [rng.gen(), rng.gen(), rng.gen(), rng.gen()],
+            tyres_inner_temperature: [rng.gen(), rng.gen(), rng.gen(), rng.gen()],
             engine_temperature: 95u16,
-            tyres_pressure: [1.9f32, 1.8f32, 1.9f32, 2.0f32],
-            surface_type: [1u8, 2u8, 3u8, 4u8],
+            tyres_pressure: [rng.gen(), rng.gen(), rng.gen(), rng.gen()],
+            surface_type: [rng.gen(), rng.gen(), rng.gen(), rng.gen()],
         };
 
         let serialized_data: Vec<u8> = original_data.serialize().unwrap();
@@ -199,6 +202,8 @@ mod tests {
 
     #[test]
     fn test_packet_car_telemetry_data_serialization_deserialization() {
+        let mut rng = rand::thread_rng();
+
         let original_packet: PacketCarTelemetryData = PacketCarTelemetryData {
             header: PacketHeader {
                 packet_format: 2021u16,
@@ -215,26 +220,26 @@ mod tests {
                 secondary_player_car_index: 255u8,
             },
             car_telemetry_data: [CarTelemetryData {
-                speed: 200u16,
-                throttle: 0.8f32,
-                steer: 0.2f32,
-                brake: 0.0f32,
-                clutch: 0u8,
-                gear: 3i8,
-                engine_rpm: 8000u16,
-                drs: 1u8,
-                rev_lights_percent: 50u8,
-                rev_lights_bit_value: 1000u16,
-                brakes_temperature: [500u16, 550u16, 600u16, 625u16],
-                tyres_surface_temperature: [90u8, 91u8, 92u8, 93u8],
-                tyres_inner_temperature: [85u8, 86u8, 87u8, 88u8],
+                speed: rng.gen(),
+                throttle: rng.gen(),
+                steer: rng.gen(),
+                brake: rng.gen(),
+                clutch: rng.gen(),
+                gear: rng.gen(),
+                engine_rpm: rng.gen(),
+                drs: rng.gen(),
+                rev_lights_percent: rng.gen(),
+                rev_lights_bit_value: rng.gen(),
+                brakes_temperature: [rng.gen(), rng.gen(), rng.gen(), rng.gen()],
+                tyres_surface_temperature: [rng.gen(), rng.gen(), rng.gen(), rng.gen()],
+                tyres_inner_temperature: [rng.gen(), rng.gen(), rng.gen(), rng.gen()],
                 engine_temperature: 95u16,
-                tyres_pressure: [1.9f32, 1.8f32, 1.9f32, 2.0f32],
-                surface_type: [1u8, 2u8, 3u8, 4u8],
+                tyres_pressure: [rng.gen(), rng.gen(), rng.gen(), rng.gen()],
+                surface_type: [rng.gen(), rng.gen(), rng.gen(), rng.gen()],
             }; 22],
-            mfd_panel_index: 3u8,
-            mfd_panel_index_secondary_player: 2u8,
-            suggested_gear: -1i8,
+            mfd_panel_index: rng.gen(),
+            mfd_panel_index_secondary_player: rng.gen(),
+            suggested_gear: rng.gen(),
         };
 
         let serialized_packet: Vec<u8> = original_packet.serialize().unwrap();

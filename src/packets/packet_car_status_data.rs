@@ -144,35 +144,38 @@ impl PacketCarStatusData {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use rand::Rng;
 
     #[test]
     fn test_car_status_data_serialization_deserialization() {
+        let mut rng = rand::thread_rng();
+
         let original_data: CarStatusData = CarStatusData {
-            traction_control: 1u8,
-            anti_lock_brakes: 2u8,
-            fuel_mix: 3u8,
-            front_brake_bias: 4u8,
-            pit_limiter_status: 5u8,
-            fuel_in_tank: 0.1f32,
-            fuel_capacity: 0.2f32,
-            fuel_remaining_laps: 0.3f32,
-            max_rpm: 1000u16,
-            idle_rpm: 500u16,
-            max_gears: 7u8,
-            drs_allowed: 1u8,
-            drs_activation_distance: 50u16,
-            actual_tyre_compound: 1u8,
-            visual_tyre_compound: 2u8,
-            tyres_age_laps: 10u8,
-            vehicle_fia_flags: -1i8,
-            engine_power_ice: 300.0f32,
-            engine_power_mguk: 200.0f32,
-            ers_store_energy: 150.0f32,
-            ers_deploy_mode: 1u8,
-            ers_harvested_this_lap_mguk: 100.0f32,
-            ers_harvested_this_lap_mguh: 50.0f32,
-            ers_deployed_this_lap: 75.0f32,
-            network_paused: 0u8,
+            traction_control: rng.gen(),
+            anti_lock_brakes: rng.gen(),
+            fuel_mix: rng.gen(),
+            front_brake_bias: rng.gen(),
+            pit_limiter_status: rng.gen(),
+            fuel_in_tank: rng.gen(),
+            fuel_capacity: rng.gen(),
+            fuel_remaining_laps: rng.gen(),
+            max_rpm: rng.gen(),
+            idle_rpm: rng.gen(),
+            max_gears: rng.gen(),
+            drs_allowed: rng.gen(),
+            drs_activation_distance: rng.gen(),
+            actual_tyre_compound: rng.gen(),
+            visual_tyre_compound: rng.gen(),
+            tyres_age_laps: rng.gen(),
+            vehicle_fia_flags: rng.gen(),
+            engine_power_ice: rng.gen(),
+            engine_power_mguk: rng.gen(),
+            ers_store_energy: rng.gen(),
+            ers_deploy_mode: rng.gen(),
+            ers_harvested_this_lap_mguk: rng.gen(),
+            ers_harvested_this_lap_mguh: rng.gen(),
+            ers_deployed_this_lap: rng.gen(),
+            network_paused: rng.gen(),
         };
 
         let serialized_data: Vec<u8> = original_data.serialize().unwrap();
@@ -184,6 +187,8 @@ mod tests {
 
     #[test]
     fn test_packet_car_status_data_serialization_deserialization() {
+        let mut rng = rand::thread_rng();
+
         let original_packet: PacketCarStatusData = PacketCarStatusData {
             header: PacketHeader {
                 packet_format: 2021u16,
@@ -200,31 +205,31 @@ mod tests {
                 secondary_player_car_index: 255u8,
             },
             car_status_data: [CarStatusData {
-                traction_control: 1u8,
-                anti_lock_brakes: 2u8,
-                fuel_mix: 3u8,
-                front_brake_bias: 4u8,
-                pit_limiter_status: 5u8,
-                fuel_in_tank: 0.1f32,
-                fuel_capacity: 0.2f32,
-                fuel_remaining_laps: 0.3f32,
-                max_rpm: 1000u16,
-                idle_rpm: 500u16,
-                max_gears: 7u8,
-                drs_allowed: 1u8,
-                drs_activation_distance: 50u16,
-                actual_tyre_compound: 1u8,
-                visual_tyre_compound: 2u8,
-                tyres_age_laps: 10u8,
-                vehicle_fia_flags: -1i8,
-                engine_power_ice: 300.0f32,
-                engine_power_mguk: 200.0f32,
-                ers_store_energy: 150.0f32,
-                ers_deploy_mode: 1u8,
-                ers_harvested_this_lap_mguk: 100.0f32,
-                ers_harvested_this_lap_mguh: 50.0f32,
-                ers_deployed_this_lap: 75.0f32,
-                network_paused: 0u8,
+                traction_control: rng.gen(),
+                anti_lock_brakes: rng.gen(),
+                fuel_mix: rng.gen(),
+                front_brake_bias: rng.gen(),
+                pit_limiter_status: rng.gen(),
+                fuel_in_tank: rng.gen(),
+                fuel_capacity: rng.gen(),
+                fuel_remaining_laps: rng.gen(),
+                max_rpm: rng.gen(),
+                idle_rpm: rng.gen(),
+                max_gears: rng.gen(),
+                drs_allowed: rng.gen(),
+                drs_activation_distance: rng.gen(),
+                actual_tyre_compound: rng.gen(),
+                visual_tyre_compound: rng.gen(),
+                tyres_age_laps: rng.gen(),
+                vehicle_fia_flags: rng.gen(),
+                engine_power_ice: rng.gen(),
+                engine_power_mguk: rng.gen(),
+                ers_store_energy: rng.gen(),
+                ers_deploy_mode: rng.gen(),
+                ers_harvested_this_lap_mguk: rng.gen(),
+                ers_harvested_this_lap_mguh: rng.gen(),
+                ers_deployed_this_lap: rng.gen(),
+                network_paused: rng.gen(),
             }; 22],
         };
 

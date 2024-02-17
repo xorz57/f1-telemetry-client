@@ -153,31 +153,34 @@ impl PacketCarDamageData {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use rand::Rng;
 
     #[test]
     fn test_car_damage_data_serialization_deserialization() {
+        let mut rng = rand::thread_rng();
+
         let original_data: CarDamageData = CarDamageData {
-            tyres_wear: [0.1f32, 0.2f32, 0.3f32, 0.4f32],
-            tyres_damage: [10u8, 20u8, 30u8, 40u8],
-            brakes_damage: [5u8, 10u8, 15u8, 20u8],
-            front_left_wing_damage: 25u8,
-            front_right_wing_damage: 30u8,
-            rear_wing_damage: 35u8,
-            floor_damage: 5u8,
-            diffuser_damage: 8u8,
-            sidepod_damage: 12u8,
-            drs_fault: 0u8,
-            ers_fault: 0u8,
-            gearbox_damage: 15u8,
-            engine_damage: 20u8,
-            engine_mguh_wear: 25u8,
-            engine_es_wear: 30u8,
-            engine_ce_wear: 35u8,
-            engine_ice_wear: 40u8,
-            engine_mguk_wear: 45u8,
-            engine_tc_wear: 50u8,
-            engine_blown: 0u8,
-            engine_seized: 0u8,
+            tyres_wear: [rng.gen(), rng.gen(), rng.gen(), rng.gen()],
+            tyres_damage: [rng.gen(), rng.gen(), rng.gen(), rng.gen()],
+            brakes_damage: [rng.gen(), rng.gen(), rng.gen(), rng.gen()],
+            front_left_wing_damage: rng.gen(),
+            front_right_wing_damage: rng.gen(),
+            rear_wing_damage: rng.gen(),
+            floor_damage: rng.gen(),
+            diffuser_damage: rng.gen(),
+            sidepod_damage: rng.gen(),
+            drs_fault: rng.gen(),
+            ers_fault: rng.gen(),
+            gearbox_damage: rng.gen(),
+            engine_damage: rng.gen(),
+            engine_mguh_wear: rng.gen(),
+            engine_es_wear: rng.gen(),
+            engine_ce_wear: rng.gen(),
+            engine_ice_wear: rng.gen(),
+            engine_mguk_wear: rng.gen(),
+            engine_tc_wear: rng.gen(),
+            engine_blown: rng.gen(),
+            engine_seized: rng.gen(),
         };
 
         let serialized_data: Vec<u8> = original_data.serialize().unwrap();
@@ -189,6 +192,8 @@ mod tests {
 
     #[test]
     fn test_packet_car_damage_data_serialization_deserialization() {
+        let mut rng = rand::thread_rng();
+
         let original_packet: PacketCarDamageData = PacketCarDamageData {
             header: PacketHeader {
                 packet_format: 2021u16,
@@ -205,27 +210,27 @@ mod tests {
                 secondary_player_car_index: 255u8,
             },
             car_damage_data: [CarDamageData {
-                tyres_wear: [0.1f32, 0.2f32, 0.3f32, 0.4f32],
-                tyres_damage: [10u8, 20u8, 30u8, 40u8],
-                brakes_damage: [5u8, 10u8, 15u8, 20u8],
-                front_left_wing_damage: 25u8,
-                front_right_wing_damage: 30u8,
-                rear_wing_damage: 35u8,
-                floor_damage: 5u8,
-                diffuser_damage: 8u8,
-                sidepod_damage: 12u8,
-                drs_fault: 0u8,
-                ers_fault: 0u8,
-                gearbox_damage: 15u8,
-                engine_damage: 20u8,
-                engine_mguh_wear: 25u8,
-                engine_es_wear: 30u8,
-                engine_ce_wear: 35u8,
-                engine_ice_wear: 40u8,
-                engine_mguk_wear: 45u8,
-                engine_tc_wear: 50u8,
-                engine_blown: 0u8,
-                engine_seized: 0u8,
+                tyres_wear: [rng.gen(), rng.gen(), rng.gen(), rng.gen()],
+                tyres_damage: [rng.gen(), rng.gen(), rng.gen(), rng.gen()],
+                brakes_damage: [rng.gen(), rng.gen(), rng.gen(), rng.gen()],
+                front_left_wing_damage: rng.gen(),
+                front_right_wing_damage: rng.gen(),
+                rear_wing_damage: rng.gen(),
+                floor_damage: rng.gen(),
+                diffuser_damage: rng.gen(),
+                sidepod_damage: rng.gen(),
+                drs_fault: rng.gen(),
+                ers_fault: rng.gen(),
+                gearbox_damage: rng.gen(),
+                engine_damage: rng.gen(),
+                engine_mguh_wear: rng.gen(),
+                engine_es_wear: rng.gen(),
+                engine_ce_wear: rng.gen(),
+                engine_ice_wear: rng.gen(),
+                engine_mguk_wear: rng.gen(),
+                engine_tc_wear: rng.gen(),
+                engine_blown: rng.gen(),
+                engine_seized: rng.gen(),
             }; 22],
         };
 

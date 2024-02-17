@@ -149,24 +149,54 @@ impl PacketFinalClassificationData {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use rand::Rng;
 
     #[test]
     fn test_final_classification_data_serialization_deserialization() {
+        let mut rng = rand::thread_rng();
+
         let original_data: FinalClassificationData = FinalClassificationData {
-            position: 1u8,
-            num_laps: 2u8,
-            grid_position: 3u8,
-            points: 4u8,
-            num_pit_stops: 5u8,
-            result_status: 6u8,
-            best_lap_time_in_ms: 100u32,
-            total_race_time: 123.456f64,
-            penalties_time: 7u8,
-            num_penalties: 8u8,
-            num_tyre_stints: 9u8,
-            tyre_stints_actual: [1u8, 1u8, 1u8, 1u8, 1u8, 1u8, 1u8, 1u8],
-            tyre_stints_visual: [2u8, 2u8, 2u8, 2u8, 2u8, 2u8, 2u8, 2u8],
-            tyre_stints_end_laps: [3u8, 3u8, 3u8, 3u8, 3u8, 3u8, 3u8, 3u8],
+            position: rng.gen(),
+            num_laps: rng.gen(),
+            grid_position: rng.gen(),
+            points: rng.gen(),
+            num_pit_stops: rng.gen(),
+            result_status: rng.gen(),
+            best_lap_time_in_ms: rng.gen(),
+            total_race_time: rng.gen(),
+            penalties_time: rng.gen(),
+            num_penalties: rng.gen(),
+            num_tyre_stints: rng.gen(),
+            tyre_stints_actual: [
+                rng.gen(),
+                rng.gen(),
+                rng.gen(),
+                rng.gen(),
+                rng.gen(),
+                rng.gen(),
+                rng.gen(),
+                rng.gen(),
+            ],
+            tyre_stints_visual: [
+                rng.gen(),
+                rng.gen(),
+                rng.gen(),
+                rng.gen(),
+                rng.gen(),
+                rng.gen(),
+                rng.gen(),
+                rng.gen(),
+            ],
+            tyre_stints_end_laps: [
+                rng.gen(),
+                rng.gen(),
+                rng.gen(),
+                rng.gen(),
+                rng.gen(),
+                rng.gen(),
+                rng.gen(),
+                rng.gen(),
+            ],
         };
 
         let serialized_data: Vec<u8> = original_data.serialize().unwrap();
@@ -178,6 +208,8 @@ mod tests {
 
     #[test]
     fn test_packet_final_classification_data_serialization_deserialization() {
+        let mut rng = rand::thread_rng();
+
         let original_packet: PacketFinalClassificationData = PacketFinalClassificationData {
             header: PacketHeader {
                 packet_format: 2021u16,
@@ -195,20 +227,47 @@ mod tests {
             },
             num_cars: 22u8,
             classification_data: [FinalClassificationData {
-                position: 1u8,
-                num_laps: 2u8,
-                grid_position: 3u8,
-                points: 4u8,
-                num_pit_stops: 5u8,
-                result_status: 6u8,
-                best_lap_time_in_ms: 100u32,
-                total_race_time: 123.456f64,
-                penalties_time: 7u8,
-                num_penalties: 8u8,
-                num_tyre_stints: 9u8,
-                tyre_stints_actual: [1u8, 1u8, 1u8, 1u8, 1u8, 1u8, 1u8, 1u8],
-                tyre_stints_visual: [2u8, 2u8, 2u8, 2u8, 2u8, 2u8, 2u8, 2u8],
-                tyre_stints_end_laps: [3u8, 3u8, 3u8, 3u8, 3u8, 3u8, 3u8, 3u8],
+                position: rng.gen(),
+                num_laps: rng.gen(),
+                grid_position: rng.gen(),
+                points: rng.gen(),
+                num_pit_stops: rng.gen(),
+                result_status: rng.gen(),
+                best_lap_time_in_ms: rng.gen(),
+                total_race_time: rng.gen(),
+                penalties_time: rng.gen(),
+                num_penalties: rng.gen(),
+                num_tyre_stints: rng.gen(),
+                tyre_stints_actual: [
+                    rng.gen(),
+                    rng.gen(),
+                    rng.gen(),
+                    rng.gen(),
+                    rng.gen(),
+                    rng.gen(),
+                    rng.gen(),
+                    rng.gen(),
+                ],
+                tyre_stints_visual: [
+                    rng.gen(),
+                    rng.gen(),
+                    rng.gen(),
+                    rng.gen(),
+                    rng.gen(),
+                    rng.gen(),
+                    rng.gen(),
+                    rng.gen(),
+                ],
+                tyre_stints_end_laps: [
+                    rng.gen(),
+                    rng.gen(),
+                    rng.gen(),
+                    rng.gen(),
+                    rng.gen(),
+                    rng.gen(),
+                    rng.gen(),
+                    rng.gen(),
+                ],
             }; 22],
         };
 

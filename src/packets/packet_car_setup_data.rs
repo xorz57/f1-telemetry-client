@@ -135,32 +135,35 @@ impl PacketCarSetupData {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use rand::Rng;
 
     #[test]
     fn test_car_setup_data_serialization_deserialization() {
+        let mut rng = rand::thread_rng();
+
         let original_data: CarSetupData = CarSetupData {
-            front_wing: 1u8,
-            rear_wing: 2u8,
-            on_throttle: 3u8,
-            off_throttle: 4u8,
-            front_camber: 0.1f32,
-            rear_camber: 0.2f32,
-            front_toe: 0.3f32,
-            rear_toe: 0.4f32,
-            front_suspension: 5u8,
-            rear_suspension: 6u8,
-            front_anti_roll_bar: 7u8,
-            rear_anti_roll_bar: 8u8,
-            front_suspension_height: 9u8,
-            rear_suspension_height: 10u8,
-            brake_pressure: 11u8,
-            brake_bias: 12u8,
-            rear_left_tyre_pressure: 0.5f32,
-            rear_right_tyre_pressure: 0.6f32,
-            front_left_tyre_pressure: 0.7f32,
-            front_right_tyre_pressure: 0.8f32,
-            ballast: 13u8,
-            fuel_load: 0.9f32,
+            front_wing: rng.gen(),
+            rear_wing: rng.gen(),
+            on_throttle: rng.gen(),
+            off_throttle: rng.gen(),
+            front_camber: rng.gen(),
+            rear_camber: rng.gen(),
+            front_toe: rng.gen(),
+            rear_toe: rng.gen(),
+            front_suspension: rng.gen(),
+            rear_suspension: rng.gen(),
+            front_anti_roll_bar: rng.gen(),
+            rear_anti_roll_bar: rng.gen(),
+            front_suspension_height: rng.gen(),
+            rear_suspension_height: rng.gen(),
+            brake_pressure: rng.gen(),
+            brake_bias: rng.gen(),
+            rear_left_tyre_pressure: rng.gen(),
+            rear_right_tyre_pressure: rng.gen(),
+            front_left_tyre_pressure: rng.gen(),
+            front_right_tyre_pressure: rng.gen(),
+            ballast: rng.gen(),
+            fuel_load: rng.gen(),
         };
 
         let serialized_data: Vec<u8> = original_data.serialize().unwrap();
@@ -171,6 +174,8 @@ mod tests {
 
     #[test]
     fn test_packet_car_setup_data_serialization_deserialization() {
+        let mut rng = rand::thread_rng();
+
         let original_packet: PacketCarSetupData = PacketCarSetupData {
             header: PacketHeader {
                 packet_format: 2021u16,
@@ -187,28 +192,28 @@ mod tests {
                 secondary_player_car_index: 255u8,
             },
             car_setups: [CarSetupData {
-                front_wing: 1u8,
-                rear_wing: 2u8,
-                on_throttle: 3u8,
-                off_throttle: 4u8,
-                front_camber: 0.1f32,
-                rear_camber: 0.2f32,
-                front_toe: 0.3f32,
-                rear_toe: 0.4f32,
-                front_suspension: 5u8,
-                rear_suspension: 6u8,
-                front_anti_roll_bar: 7u8,
-                rear_anti_roll_bar: 8u8,
-                front_suspension_height: 9u8,
-                rear_suspension_height: 10u8,
-                brake_pressure: 11u8,
-                brake_bias: 12u8,
-                rear_left_tyre_pressure: 0.5f32,
-                rear_right_tyre_pressure: 0.6f32,
-                front_left_tyre_pressure: 0.7f32,
-                front_right_tyre_pressure: 0.8f32,
-                ballast: 13u8,
-                fuel_load: 0.9f32,
+                front_wing: rng.gen(),
+                rear_wing: rng.gen(),
+                on_throttle: rng.gen(),
+                off_throttle: rng.gen(),
+                front_camber: rng.gen(),
+                rear_camber: rng.gen(),
+                front_toe: rng.gen(),
+                rear_toe: rng.gen(),
+                front_suspension: rng.gen(),
+                rear_suspension: rng.gen(),
+                front_anti_roll_bar: rng.gen(),
+                rear_anti_roll_bar: rng.gen(),
+                front_suspension_height: rng.gen(),
+                rear_suspension_height: rng.gen(),
+                brake_pressure: rng.gen(),
+                brake_bias: rng.gen(),
+                rear_left_tyre_pressure: rng.gen(),
+                rear_right_tyre_pressure: rng.gen(),
+                front_left_tyre_pressure: rng.gen(),
+                front_right_tyre_pressure: rng.gen(),
+                ballast: rng.gen(),
+                fuel_load: rng.gen(),
             }; 22],
         };
 

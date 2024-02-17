@@ -141,32 +141,35 @@ mod tests {
 
     #[test]
     fn test_packet_tyre_sets_data_serialization_deserialization() {
-        let mut original_packet: PacketTyreSetsData = PacketTyreSetsData::default();
-        original_packet.header.packet_format = 2021u16;
-        original_packet.header.game_year = 21u8;
-        original_packet.header.game_major_version = 1u8;
-        original_packet.header.game_minor_version = 3u8;
-        original_packet.header.packet_version = 1u8;
-        original_packet.header.packet_id = 0u8;
-        original_packet.header.session_uid = 123456789u64;
-        original_packet.header.session_time = 123.456f32;
-        original_packet.header.frame_identifier = 1000u32;
-        original_packet.header.overall_frame_identifier = 5000u32;
-        original_packet.header.player_car_index = 1u8;
-        original_packet.header.secondary_player_car_index = 255u8;
-        original_packet.car_idx = 1u8;
-        for tyre_set_data in original_packet.tyre_set_data.iter_mut() {
-            tyre_set_data.actual_tyre_compound = 1u8;
-            tyre_set_data.visual_tyre_compound = 2u8;
-            tyre_set_data.wear = 50u8;
-            tyre_set_data.available = 1u8;
-            tyre_set_data.recommended_session = 0u8;
-            tyre_set_data.life_span = 80u8;
-            tyre_set_data.usable_life = 60u8;
-            tyre_set_data.lap_delta_time = 500i16;
-            tyre_set_data.fitted = 1u8;
-        }
-        original_packet.fitted_idx = 2u8;
+        let original_packet: PacketTyreSetsData = PacketTyreSetsData {
+            header: PacketHeader {
+                packet_format: 2021u16,
+                game_year: 21u8,
+                game_major_version: 1u8,
+                game_minor_version: 3u8,
+                packet_version: 1u8,
+                packet_id: 0u8,
+                session_uid: 123456789u64,
+                session_time: 123.456f32,
+                frame_identifier: 1000u32,
+                overall_frame_identifier: 5000u32,
+                player_car_index: 1u8,
+                secondary_player_car_index: 255u8,
+            },
+            car_idx: 0u8,
+            tyre_set_data: [TyreSetData {
+                actual_tyre_compound: 1u8,
+                visual_tyre_compound: 2u8,
+                wear: 50u8,
+                available: 1u8,
+                recommended_session: 0u8,
+                life_span: 80u8,
+                usable_life: 60u8,
+                lap_delta_time: 500i16,
+                fitted: 1u8,
+            }; 20],
+            fitted_idx: 2u8,
+        };
 
         let serialized_packet: Vec<u8> = original_packet.serialize().unwrap();
         let deserialized_packet: PacketTyreSetsData =

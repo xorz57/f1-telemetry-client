@@ -171,43 +171,46 @@ mod tests {
 
     #[test]
     fn test_packet_car_setup_data_serialization_deserialization() {
-        let mut original_packet: PacketCarSetupData = PacketCarSetupData::default();
-        original_packet.header.packet_format = 2021u16;
-        original_packet.header.game_year = 21u8;
-        original_packet.header.game_major_version = 1u8;
-        original_packet.header.game_minor_version = 3u8;
-        original_packet.header.packet_version = 1u8;
-        original_packet.header.packet_id = 0u8;
-        original_packet.header.session_uid = 123456789u64;
-        original_packet.header.session_time = 123.456f32;
-        original_packet.header.frame_identifier = 1000u32;
-        original_packet.header.overall_frame_identifier = 5000u32;
-        original_packet.header.player_car_index = 1u8;
-        original_packet.header.secondary_player_car_index = 255u8;
-        for data in original_packet.car_setups.iter_mut() {
-            data.front_wing = 1u8;
-            data.rear_wing = 2u8;
-            data.on_throttle = 3u8;
-            data.off_throttle = 4u8;
-            data.front_camber = 0.1f32;
-            data.rear_camber = 0.2f32;
-            data.front_toe = 0.3f32;
-            data.rear_toe = 0.4f32;
-            data.front_suspension = 5u8;
-            data.rear_suspension = 6u8;
-            data.front_anti_roll_bar = 7u8;
-            data.rear_anti_roll_bar = 8u8;
-            data.front_suspension_height = 9u8;
-            data.rear_suspension_height = 10u8;
-            data.brake_pressure = 11u8;
-            data.brake_bias = 12u8;
-            data.rear_left_tyre_pressure = 0.5f32;
-            data.rear_right_tyre_pressure = 0.6f32;
-            data.front_left_tyre_pressure = 0.7f32;
-            data.front_right_tyre_pressure = 0.8f32;
-            data.ballast = 13u8;
-            data.fuel_load = 0.9f32;
-        }
+        let original_packet: PacketCarSetupData = PacketCarSetupData {
+            header: PacketHeader {
+                packet_format: 2021u16,
+                game_year: 21u8,
+                game_major_version: 1u8,
+                game_minor_version: 3u8,
+                packet_version: 1u8,
+                packet_id: 0u8,
+                session_uid: 123456789u64,
+                session_time: 123.456f32,
+                frame_identifier: 1000u32,
+                overall_frame_identifier: 5000u32,
+                player_car_index: 1u8,
+                secondary_player_car_index: 255u8,
+            },
+            car_setups: [CarSetupData {
+                front_wing: 1u8,
+                rear_wing: 2u8,
+                on_throttle: 3u8,
+                off_throttle: 4u8,
+                front_camber: 0.1f32,
+                rear_camber: 0.2f32,
+                front_toe: 0.3f32,
+                rear_toe: 0.4f32,
+                front_suspension: 5u8,
+                rear_suspension: 6u8,
+                front_anti_roll_bar: 7u8,
+                rear_anti_roll_bar: 8u8,
+                front_suspension_height: 9u8,
+                rear_suspension_height: 10u8,
+                brake_pressure: 11u8,
+                brake_bias: 12u8,
+                rear_left_tyre_pressure: 0.5f32,
+                rear_right_tyre_pressure: 0.6f32,
+                front_left_tyre_pressure: 0.7f32,
+                front_right_tyre_pressure: 0.8f32,
+                ballast: 13u8,
+                fuel_load: 0.9f32,
+            }; 22],
+        };
 
         let serialized_packet: Vec<u8> = original_packet.serialize().unwrap();
         let deserialized_packet: PacketCarSetupData =

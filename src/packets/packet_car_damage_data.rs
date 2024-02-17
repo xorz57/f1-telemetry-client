@@ -189,42 +189,45 @@ mod tests {
 
     #[test]
     fn test_packet_car_damage_data_serialization_deserialization() {
-        let mut original_packet: PacketCarDamageData = PacketCarDamageData::default();
-        original_packet.header.packet_format = 2021u16;
-        original_packet.header.game_year = 21u8;
-        original_packet.header.game_major_version = 1u8;
-        original_packet.header.game_minor_version = 3u8;
-        original_packet.header.packet_version = 1u8;
-        original_packet.header.packet_id = 0u8;
-        original_packet.header.session_uid = 123456789u64;
-        original_packet.header.session_time = 123.456f32;
-        original_packet.header.frame_identifier = 1000u32;
-        original_packet.header.overall_frame_identifier = 5000u32;
-        original_packet.header.player_car_index = 1u8;
-        original_packet.header.secondary_player_car_index = 255u8;
-        for data in original_packet.car_damage_data.iter_mut() {
-            data.tyres_wear = [0.1f32, 0.2f32, 0.3f32, 0.4f32];
-            data.tyres_damage = [10u8, 20u8, 30u8, 40u8];
-            data.brakes_damage = [5u8, 10u8, 15u8, 20u8];
-            data.front_left_wing_damage = 25u8;
-            data.front_right_wing_damage = 30u8;
-            data.rear_wing_damage = 35u8;
-            data.floor_damage = 5u8;
-            data.diffuser_damage = 8u8;
-            data.sidepod_damage = 12u8;
-            data.drs_fault = 0u8;
-            data.ers_fault = 0u8;
-            data.gearbox_damage = 15u8;
-            data.engine_damage = 20u8;
-            data.engine_mguh_wear = 25u8;
-            data.engine_es_wear = 30u8;
-            data.engine_ce_wear = 35u8;
-            data.engine_ice_wear = 40u8;
-            data.engine_mguk_wear = 45u8;
-            data.engine_tc_wear = 50u8;
-            data.engine_blown = 0u8;
-            data.engine_seized = 0u8;
-        }
+        let original_packet: PacketCarDamageData = PacketCarDamageData {
+            header: PacketHeader {
+                packet_format: 2021u16,
+                game_year: 21u8,
+                game_major_version: 1u8,
+                game_minor_version: 3u8,
+                packet_version: 1u8,
+                packet_id: 0u8,
+                session_uid: 123456789u64,
+                session_time: 123.456f32,
+                frame_identifier: 1000u32,
+                overall_frame_identifier: 5000u32,
+                player_car_index: 1u8,
+                secondary_player_car_index: 255u8,
+            },
+            car_damage_data: [CarDamageData {
+                tyres_wear: [0.1f32, 0.2f32, 0.3f32, 0.4f32],
+                tyres_damage: [10u8, 20u8, 30u8, 40u8],
+                brakes_damage: [5u8, 10u8, 15u8, 20u8],
+                front_left_wing_damage: 25u8,
+                front_right_wing_damage: 30u8,
+                rear_wing_damage: 35u8,
+                floor_damage: 5u8,
+                diffuser_damage: 8u8,
+                sidepod_damage: 12u8,
+                drs_fault: 0u8,
+                ers_fault: 0u8,
+                gearbox_damage: 15u8,
+                engine_damage: 20u8,
+                engine_mguh_wear: 25u8,
+                engine_es_wear: 30u8,
+                engine_ce_wear: 35u8,
+                engine_ice_wear: 40u8,
+                engine_mguk_wear: 45u8,
+                engine_tc_wear: 50u8,
+                engine_blown: 0u8,
+                engine_seized: 0u8,
+            }; 22],
+        };
 
         let serialized_packet: Vec<u8> = original_packet.serialize().unwrap();
         let deserialized_packet: PacketCarDamageData =

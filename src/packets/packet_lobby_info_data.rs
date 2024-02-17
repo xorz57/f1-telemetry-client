@@ -157,17 +157,32 @@ mod tests {
 
     #[test]
     fn test_packet_lobby_info_data_serialization_deserialization() {
-        let mut original_packet: PacketLobbyInfoData = PacketLobbyInfoData::default();
-        original_packet.num_players = 5u8;
-        for data in original_packet.lobby_players.iter_mut() {
-            data.ai_controlled = 1u8;
-            data.team_id = 2u8;
-            data.nationality = 3u8;
-            data.platform = 4u8;
-            data.name = [65u8; 48]; // 65 is ASCII 'A'
-            data.car_number = 6u8;
-            data.ready_status = 7u8;
-        }
+        let original_packet: PacketLobbyInfoData = PacketLobbyInfoData {
+            header: PacketHeader {
+                packet_format: 2021u16,
+                game_year: 21u8,
+                game_major_version: 1u8,
+                game_minor_version: 3u8,
+                packet_version: 1u8,
+                packet_id: 0u8,
+                session_uid: 123456789u64,
+                session_time: 123.456f32,
+                frame_identifier: 1000u32,
+                overall_frame_identifier: 5000u32,
+                player_car_index: 1u8,
+                secondary_player_car_index: 255u8,
+            },
+            num_players: 22u8,
+            lobby_players: [LobbyInfoData {
+                ai_controlled: 1u8,
+                team_id: 2u8,
+                nationality: 3u8,
+                platform: 4u8,
+                name: [65u8; 48], // 65 is ASCII 'A'
+                car_number: 6u8,
+                ready_status: 7u8,
+            }; 22],
+        };
 
         let serialized_packet: Vec<u8> = original_packet.serialize().unwrap();
         let deserialized_packet: PacketLobbyInfoData =

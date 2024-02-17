@@ -173,33 +173,36 @@ mod tests {
 
     #[test]
     fn test_packet_participants_data_serialization_deserialization() {
-        let mut original_packet: PacketParticipantsData = PacketParticipantsData::default();
-        original_packet.header.packet_format = 2021u16;
-        original_packet.header.game_year = 21u8;
-        original_packet.header.game_major_version = 1u8;
-        original_packet.header.game_minor_version = 3u8;
-        original_packet.header.packet_version = 1u8;
-        original_packet.header.packet_id = 0u8;
-        original_packet.header.session_uid = 123456789u64;
-        original_packet.header.session_time = 123.456f32;
-        original_packet.header.frame_identifier = 1000u32;
-        original_packet.header.overall_frame_identifier = 5000u32;
-        original_packet.header.player_car_index = 1u8;
-        original_packet.header.secondary_player_car_index = 255u8;
-        original_packet.num_active_cars = 22u8;
-        for data in original_packet.participants.iter_mut() {
-            data.ai_controlled = 1u8;
-            data.driver_id = 2u8;
-            data.network_id = 3u8;
-            data.team_id = 4u8;
-            data.my_team = 5u8;
-            data.race_number = 6u8;
-            data.nationality = 7u8;
-            data.name = [65u8; 48]; // 65 is ASCII for 'A'
-            data.your_telemetry = 8u8;
-            data.show_online_names = 9u8;
-            data.platform = 10u8;
-        }
+        let original_packet: PacketParticipantsData = PacketParticipantsData {
+            header: PacketHeader {
+                packet_format: 2021u16,
+                game_year: 21u8,
+                game_major_version: 1u8,
+                game_minor_version: 3u8,
+                packet_version: 1u8,
+                packet_id: 0u8,
+                session_uid: 123456789u64,
+                session_time: 123.456f32,
+                frame_identifier: 1000u32,
+                overall_frame_identifier: 5000u32,
+                player_car_index: 1u8,
+                secondary_player_car_index: 255u8,
+            },
+            num_active_cars: 22u8,
+            participants: [ParticipantData {
+                ai_controlled: 1u8,
+                driver_id: 2u8,
+                network_id: 3u8,
+                team_id: 4u8,
+                my_team: 5u8,
+                race_number: 6u8,
+                nationality: 7u8,
+                name: [65u8; 48], // 65 is ASCII for 'A'
+                your_telemetry: 8u8,
+                show_online_names: 9u8,
+                platform: 10u8,
+            }; 22],
+        };
 
         let serialized_packet: Vec<u8> = original_packet.serialize().unwrap();
         let deserialized_packet: PacketParticipantsData =

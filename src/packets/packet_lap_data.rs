@@ -211,40 +211,55 @@ mod tests {
 
     #[test]
     fn test_packet_lap_data_serialization_deserialization() {
-        let mut original_packet: PacketLapData = PacketLapData::default();
-        for data in original_packet.lap_data.iter_mut() {
-            data.last_lap_time_in_ms = 100u32;
-            data.current_lap_time_in_ms = 120u32;
-            data.sector1_time_in_ms = 30u16;
-            data.sector1_time_minutes = 1u8;
-            data.sector2_time_in_ms = 40u16;
-            data.sector2_time_minutes = 1u8;
-            data.delta_to_car_in_front_in_ms = 5u16;
-            data.delta_to_race_leader_in_ms = 10u16;
-            data.lap_distance = 100.5f32;
-            data.total_distance = 1000.0f32;
-            data.safety_car_delta = 3.5f32;
-            data.car_position = 2u8;
-            data.current_lap_num = 3u8;
-            data.pit_status = 1u8;
-            data.num_pit_stops = 0u8;
-            data.sector = 1u8;
-            data.current_lap_invalid = 0u8;
-            data.penalties = 0u8;
-            data.total_warnings = 0u8;
-            data.corner_cutting_warnings = 0u8;
-            data.num_unserved_drive_through_pens = 0u8;
-            data.num_unserved_stop_go_pens = 0u8;
-            data.grid_position = 4u8;
-            data.driver_status = 1u8;
-            data.result_status = 0u8;
-            data.pit_lane_timer_active = 1u8;
-            data.pit_lane_time_in_lane_in_ms = 20u16;
-            data.pit_stop_timer_in_ms = 0u16;
-            data.pit_stop_should_serve_pen = 0u8;
-        }
-        original_packet.time_trial_pb_car_idx = 1u8;
-        original_packet.time_trial_rival_car_idx = 2u8;
+        let original_packet: PacketLapData = PacketLapData {
+            header: PacketHeader {
+                packet_format: 2021u16,
+                game_year: 21u8,
+                game_major_version: 1u8,
+                game_minor_version: 3u8,
+                packet_version: 1u8,
+                packet_id: 0u8,
+                session_uid: 123456789u64,
+                session_time: 123.456f32,
+                frame_identifier: 1000u32,
+                overall_frame_identifier: 5000u32,
+                player_car_index: 1u8,
+                secondary_player_car_index: 255u8,
+            },
+            lap_data: [LapData {
+                last_lap_time_in_ms: 100u32,
+                current_lap_time_in_ms: 120u32,
+                sector1_time_in_ms: 30u16,
+                sector1_time_minutes: 1u8,
+                sector2_time_in_ms: 40u16,
+                sector2_time_minutes: 1u8,
+                delta_to_car_in_front_in_ms: 5u16,
+                delta_to_race_leader_in_ms: 10u16,
+                lap_distance: 100.5f32,
+                total_distance: 1000.0f32,
+                safety_car_delta: 3.5f32,
+                car_position: 2u8,
+                current_lap_num: 3u8,
+                pit_status: 1u8,
+                num_pit_stops: 0u8,
+                sector: 1u8,
+                current_lap_invalid: 0u8,
+                penalties: 0u8,
+                total_warnings: 0u8,
+                corner_cutting_warnings: 0u8,
+                num_unserved_drive_through_pens: 0u8,
+                num_unserved_stop_go_pens: 0u8,
+                grid_position: 4u8,
+                driver_status: 1u8,
+                result_status: 0u8,
+                pit_lane_timer_active: 1u8,
+                pit_lane_time_in_lane_in_ms: 20u16,
+                pit_stop_timer_in_ms: 0u16,
+                pit_stop_should_serve_pen: 0u8,
+            }; 22],
+            time_trial_pb_car_idx: 1u8,
+            time_trial_rival_car_idx: 2u8,
+        };
 
         let serialized_packet: Vec<u8> = original_packet.serialize().unwrap();
         let deserialized_packet: PacketLapData =

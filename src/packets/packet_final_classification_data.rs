@@ -178,37 +178,39 @@ mod tests {
 
     #[test]
     fn test_packet_final_classification_data_serialization_deserialization() {
-        let mut original_packet: PacketFinalClassificationData =
-            PacketFinalClassificationData::default();
-        original_packet.header.packet_format = 2021u16;
-        original_packet.header.game_year = 21u8;
-        original_packet.header.game_major_version = 1u8;
-        original_packet.header.game_minor_version = 3u8;
-        original_packet.header.packet_version = 1u8;
-        original_packet.header.packet_id = 0u8;
-        original_packet.header.session_uid = 123456789u64;
-        original_packet.header.session_time = 123.456f32;
-        original_packet.header.frame_identifier = 1000u32;
-        original_packet.header.overall_frame_identifier = 5000u32;
-        original_packet.header.player_car_index = 1u8;
-        original_packet.header.secondary_player_car_index = 255u8;
-        original_packet.num_cars = 22u8;
-        for data in original_packet.classification_data.iter_mut() {
-            data.position = 1u8;
-            data.num_laps = 2u8;
-            data.grid_position = 3u8;
-            data.points = 4u8;
-            data.num_pit_stops = 5u8;
-            data.result_status = 6u8;
-            data.best_lap_time_in_ms = 100u32;
-            data.total_race_time = 123.456f64;
-            data.penalties_time = 7u8;
-            data.num_penalties = 8u8;
-            data.num_tyre_stints = 9u8;
-            data.tyre_stints_actual = [1u8, 1u8, 1u8, 1u8, 1u8, 1u8, 1u8, 1u8];
-            data.tyre_stints_visual = [2u8, 2u8, 2u8, 2u8, 2u8, 2u8, 2u8, 2u8];
-            data.tyre_stints_end_laps = [3u8, 3u8, 3u8, 3u8, 3u8, 3u8, 3u8, 3u8];
-        }
+        let original_packet: PacketFinalClassificationData = PacketFinalClassificationData {
+            header: PacketHeader {
+                packet_format: 2021u16,
+                game_year: 21u8,
+                game_major_version: 1u8,
+                game_minor_version: 3u8,
+                packet_version: 1u8,
+                packet_id: 0u8,
+                session_uid: 123456789u64,
+                session_time: 123.456f32,
+                frame_identifier: 1000u32,
+                overall_frame_identifier: 5000u32,
+                player_car_index: 1u8,
+                secondary_player_car_index: 255u8,
+            },
+            num_cars: 22u8,
+            classification_data: [FinalClassificationData {
+                position: 1u8,
+                num_laps: 2u8,
+                grid_position: 3u8,
+                points: 4u8,
+                num_pit_stops: 5u8,
+                result_status: 6u8,
+                best_lap_time_in_ms: 100u32,
+                total_race_time: 123.456f64,
+                penalties_time: 7u8,
+                num_penalties: 8u8,
+                num_tyre_stints: 9u8,
+                tyre_stints_actual: [1u8, 1u8, 1u8, 1u8, 1u8, 1u8, 1u8, 1u8],
+                tyre_stints_visual: [2u8, 2u8, 2u8, 2u8, 2u8, 2u8, 2u8, 2u8],
+                tyre_stints_end_laps: [3u8, 3u8, 3u8, 3u8, 3u8, 3u8, 3u8, 3u8],
+            }; 22],
+        };
 
         let serialized_packet: Vec<u8> = original_packet.serialize().unwrap();
         let deserialized_packet: PacketFinalClassificationData =

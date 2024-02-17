@@ -163,30 +163,42 @@ mod tests {
 
     #[test]
     fn test_packet_motion_ex_data_serialization_deserialization() {
-        let mut original_packet: PacketMotionExData = PacketMotionExData::default();
-        original_packet.header.packet_format = 2021u16;
-        original_packet.header.game_year = 21u8;
-        original_packet.header.game_major_version = 1u8;
-        original_packet.header.game_minor_version = 3u8;
-        original_packet.header.packet_version = 1u8;
-        original_packet.header.packet_id = 0u8;
-        original_packet.header.session_uid = 123456789u64;
-        original_packet.header.session_time = 123.456f32;
-        original_packet.header.frame_identifier = 1000u32;
-        original_packet.header.overall_frame_identifier = 5000u32;
-        original_packet.header.player_car_index = 1u8;
-        original_packet.header.secondary_player_car_index = 255u8;
-        for i in 0..4 {
-            original_packet.suspension_position[i] = (i + 1) as f32 * 10.0;
-            original_packet.suspension_velocity[i] = (i + 1) as f32 * 20.0;
-            original_packet.suspension_acceleration[i] = (i + 1) as f32 * 30.0;
-            original_packet.wheel_speed[i] = (i + 1) as f32 * 40.0;
-            original_packet.wheel_slip_ratio[i] = (i + 1) as f32 * 50.0;
-            original_packet.wheel_slip_angle[i] = (i + 1) as f32 * 60.0;
-            original_packet.wheel_lat_force[i] = (i + 1) as f32 * 70.0;
-            original_packet.wheel_long_force[i] = (i + 1) as f32 * 80.0;
-            original_packet.wheel_vert_force[i] = (i + 1) as f32 * 90.0;
-        }
+        let original_packet: PacketMotionExData = PacketMotionExData {
+            header: PacketHeader {
+                packet_format: 2021u16,
+                game_year: 21u8,
+                game_major_version: 1u8,
+                game_minor_version: 3u8,
+                packet_version: 1u8,
+                packet_id: 0u8,
+                session_uid: 123456789u64,
+                session_time: 123.456f32,
+                frame_identifier: 1000u32,
+                overall_frame_identifier: 5000u32,
+                player_car_index: 1u8,
+                secondary_player_car_index: 255u8,
+            },
+            suspension_position: [0.1f32, 0.2f32, 0.3f32, 0.4f32],
+            suspension_velocity: [0.1f32, 0.2f32, 0.3f32, 0.4f32],
+            suspension_acceleration: [0.1f32, 0.2f32, 0.3f32, 0.4f32],
+            wheel_speed: [0.1f32, 0.2f32, 0.3f32, 0.4f32],
+            wheel_slip_ratio: [0.1f32, 0.2f32, 0.3f32, 0.4f32],
+            wheel_slip_angle: [0.1f32, 0.2f32, 0.3f32, 0.4f32],
+            wheel_lat_force: [0.1f32, 0.2f32, 0.3f32, 0.4f32],
+            wheel_long_force: [0.1f32, 0.2f32, 0.3f32, 0.4f32],
+            height_of_cog_above_ground: 0.1f32,
+            local_velocity_x: 0.2f32,
+            local_velocity_y: 0.3f32,
+            local_velocity_z: 0.4f32,
+            angular_velocity_x: 0.5f32,
+            angular_velocity_y: 0.6f32,
+            angular_velocity_z: 0.7f32,
+            angular_acceleration_x: 0.8f32,
+            angular_acceleration_y: 0.9f32,
+            angular_acceleration_z: 1.0f32,
+            front_wheels_angle: 1.1f32,
+            wheel_vert_force: [0.1f32, 0.2f32, 0.3f32, 0.4f32],
+        };
 
         let serialized_packet: Vec<u8> = original_packet.serialize().unwrap();
         let deserialized_packet: PacketMotionExData =

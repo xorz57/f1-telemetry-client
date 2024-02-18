@@ -1,5 +1,6 @@
 use super::packet_header::PacketHeader;
 use byteorder::{LittleEndian, ReadBytesExt, WriteBytesExt};
+use std::fmt;
 use std::io::Cursor;
 use std::mem::size_of;
 
@@ -21,32 +22,32 @@ pub union EventDataDetails {
 } // 12 Bytes
 
 #[repr(C, packed)]
-#[derive(Debug, Default, Clone, Copy)]
+#[derive(Debug, Default, Clone, Copy, PartialEq)]
 pub struct FastestLap {
     pub vehicle_idx: u8, // 1 Byte
     pub lap_time: f32,   // 4 Bytes
 } // 5 Bytes
 
 #[repr(C, packed)]
-#[derive(Debug, Default, Clone, Copy)]
+#[derive(Debug, Default, Clone, Copy, PartialEq)]
 pub struct Retirement {
     pub vehicle_idx: u8, // 1 Byte
 } // 1 Byte
 
 #[repr(C, packed)]
-#[derive(Debug, Default, Clone, Copy)]
+#[derive(Debug, Default, Clone, Copy, PartialEq)]
 pub struct TeamMateInPits {
     pub vehicle_idx: u8, // 1 Byte
 } // 1 Byte
 
 #[repr(C, packed)]
-#[derive(Debug, Default, Clone, Copy)]
+#[derive(Debug, Default, Clone, Copy, PartialEq)]
 pub struct RaceWinner {
     pub vehicle_idx: u8, // 1 Byte
 } // 1 Byte
 
 #[repr(C, packed)]
-#[derive(Debug, Default, Clone, Copy)]
+#[derive(Debug, Default, Clone, Copy, PartialEq)]
 pub struct Penalty {
     pub penalty_type: u8,      // 1 Byte
     pub infringement_type: u8, // 1 Byte
@@ -58,7 +59,7 @@ pub struct Penalty {
 } // 7 Bytes
 
 #[repr(C, packed)]
-#[derive(Debug, Default, Clone, Copy)]
+#[derive(Debug, Default, Clone, Copy, PartialEq)]
 pub struct SpeedTrap {
     pub vehicle_idx: u8,                    // 1 Byte
     pub speed: f32,                         // 4 Bytes
@@ -69,38 +70,38 @@ pub struct SpeedTrap {
 } // 12 Bytes
 
 #[repr(C, packed)]
-#[derive(Debug, Default, Clone, Copy)]
+#[derive(Debug, Default, Clone, Copy, PartialEq)]
 pub struct StartLights {
     pub num_lights: u8, // 1 Byte
 } // 1 Byte
 
 #[repr(C, packed)]
-#[derive(Debug, Default, Clone, Copy)]
+#[derive(Debug, Default, Clone, Copy, PartialEq)]
 pub struct DriveThroughPenaltyServed {
     pub vehicle_idx: u8, // 1 Byte
 } // 1 Byte
 
 #[repr(C, packed)]
-#[derive(Debug, Default, Clone, Copy)]
+#[derive(Debug, Default, Clone, Copy, PartialEq)]
 pub struct StopGoPenaltyServed {
     pub vehicle_idx: u8, // 1 Byte
 } // 1 Byte
 
 #[repr(C, packed)]
-#[derive(Debug, Default, Clone, Copy)]
+#[derive(Debug, Default, Clone, Copy, PartialEq)]
 pub struct Flashback {
     pub flashback_frame_identifier: u32, // 4 Bytes
     pub flashback_session_time: f32,     // 4 Bytes
 } // 8 Bytes
 
 #[repr(C, packed)]
-#[derive(Debug, Default, Clone, Copy)]
+#[derive(Debug, Default, Clone, Copy, PartialEq)]
 pub struct Buttons {
     pub button_status: u32, // 4 Bytes
 } // 4 Bytes
 
 #[repr(C, packed)]
-#[derive(Debug, Default, Clone, Copy)]
+#[derive(Debug, Default, Clone, Copy, PartialEq)]
 pub struct Overtake {
     pub overtaking_vehicle_idx: u8,      // 1 Byte
     pub being_overtaken_vehicle_idx: u8, // 1 Byte
@@ -514,84 +515,163 @@ impl PacketEventData {
         bytes.extend_from_slice(&self.header.serialize()?);
         bytes.extend_from_slice(&self.event_string_code);
 
-        match &self.event_string_code {
-            b"FTLP" => unsafe {
-                bytes.extend_from_slice(&self.event_details.fastest_lap.serialize()?);
-            },
-            b"RTMT" => unsafe {
-                bytes.extend_from_slice(&self.event_details.retirement.serialize()?);
-            },
-            b"TMPT" => unsafe {
-                bytes.extend_from_slice(&self.event_details.team_mate_in_pits.serialize()?);
-            },
-            b"RCWN" => unsafe {
-                bytes.extend_from_slice(&self.event_details.race_winner.serialize()?);
-            },
-            b"PENA" => unsafe {
-                bytes.extend_from_slice(&self.event_details.penalty.serialize()?);
-            },
-            b"SPTP" => unsafe {
-                bytes.extend_from_slice(&self.event_details.speed_trap.serialize()?);
-            },
-            b"STLG" => unsafe {
-                bytes.extend_from_slice(&self.event_details.start_lights.serialize()?);
-            },
-            b"DTSV" => unsafe {
-                bytes.extend_from_slice(
+        unsafe {
+            match &self.event_string_code {
+                b"FTLP" => bytes.extend_from_slice(&self.event_details.fastest_lap.serialize()?),
+                b"RTMT" => bytes.extend_from_slice(&self.event_details.retirement.serialize()?),
+                b"TMPT" => {
+                    bytes.extend_from_slice(&self.event_details.team_mate_in_pits.serialize()?)
+                }
+                b"RCWN" => bytes.extend_from_slice(&self.event_details.race_winner.serialize()?),
+                b"PENA" => bytes.extend_from_slice(&self.event_details.penalty.serialize()?),
+                b"SPTP" => bytes.extend_from_slice(&self.event_details.speed_trap.serialize()?),
+                b"STLG" => bytes.extend_from_slice(&self.event_details.start_lights.serialize()?),
+                b"DTSV" => bytes.extend_from_slice(
                     &self
                         .event_details
                         .drive_through_penalty_served
                         .serialize()?,
-                );
-            },
-            b"SGSV" => unsafe {
-                bytes.extend_from_slice(&self.event_details.stop_go_penalty_served.serialize()?);
-            },
-            b"FLBK" => unsafe {
-                bytes.extend_from_slice(&self.event_details.flashback.serialize()?);
-            },
-            b"BUTN" => unsafe {
-                bytes.extend_from_slice(&self.event_details.buttons.serialize()?);
-            },
-            b"OVTK" => unsafe {
-                bytes.extend_from_slice(&self.event_details.overtake.serialize()?);
-            },
-            b"SSTA" => unsafe {
-                // Unused Event Details
-                bytes.extend_from_slice(&self.event_details.fastest_lap.serialize()?)
-            },
-            b"SEND" => unsafe {
-                // Unused Event Details
-                bytes.extend_from_slice(&self.event_details.fastest_lap.serialize()?)
-            },
-            b"DRSE" => unsafe {
-                // Unused Event Details
-                bytes.extend_from_slice(&self.event_details.fastest_lap.serialize()?)
-            },
-            b"DRSD" => unsafe {
-                // Unused Event Details
-                bytes.extend_from_slice(&self.event_details.fastest_lap.serialize()?)
-            },
-            b"CHQF" => unsafe {
-                // Unused Event Details
-                bytes.extend_from_slice(&self.event_details.fastest_lap.serialize()?)
-            },
-            b"LGOT" => unsafe {
-                // Unused Event Details
-                bytes.extend_from_slice(&self.event_details.fastest_lap.serialize()?)
-            },
-            b"RDFL" => unsafe {
-                // Unused Event Details
-                bytes.extend_from_slice(&self.event_details.fastest_lap.serialize()?)
-            },
-            _ => {
-                return Err(std::io::Error::new(
-                    std::io::ErrorKind::InvalidData,
-                    "Invalid event string code",
-                ))
+                ),
+                b"SGSV" => {
+                    bytes.extend_from_slice(&self.event_details.stop_go_penalty_served.serialize()?)
+                }
+                b"FLBK" => bytes.extend_from_slice(&self.event_details.flashback.serialize()?),
+                b"BUTN" => bytes.extend_from_slice(&self.event_details.buttons.serialize()?),
+                b"OVTK" => bytes.extend_from_slice(&self.event_details.overtake.serialize()?),
+                b"SSTA" => bytes.extend_from_slice(&self.event_details.fastest_lap.serialize()?), // Unused Event Details
+                b"SEND" => bytes.extend_from_slice(&self.event_details.fastest_lap.serialize()?), // Unused Event Details
+                b"DRSE" => bytes.extend_from_slice(&self.event_details.fastest_lap.serialize()?), // Unused Event Details
+                b"DRSD" => bytes.extend_from_slice(&self.event_details.fastest_lap.serialize()?), // Unused Event Details
+                b"CHQF" => bytes.extend_from_slice(&self.event_details.fastest_lap.serialize()?), // Unused Event Details
+                b"LGOT" => bytes.extend_from_slice(&self.event_details.fastest_lap.serialize()?), // Unused Event Details
+                b"RDFL" => bytes.extend_from_slice(&self.event_details.fastest_lap.serialize()?), // Unused Event Details
+                _ => {
+                    return Err(std::io::Error::new(
+                        std::io::ErrorKind::InvalidData,
+                        "Invalid event string code",
+                    ))
+                }
             }
         };
 
         Ok(bytes)
+    }
+}
+
+impl fmt::Debug for PacketEventData {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        f.debug_struct("PacketEventData")
+            .field("header", &self.header)
+            .field("event_string_code", &self.event_string_code)
+            .field("event_details", unsafe {
+                match &self.event_string_code {
+                    b"FTLP" => &self.event_details.fastest_lap,
+                    b"RTMT" => &self.event_details.retirement,
+                    b"TMPT" => &self.event_details.team_mate_in_pits,
+                    b"RCWN" => &self.event_details.race_winner,
+                    b"PENA" => &self.event_details.penalty,
+                    b"SPTP" => &self.event_details.speed_trap,
+                    b"STLG" => &self.event_details.start_lights,
+                    b"DTSV" => &self.event_details.drive_through_penalty_served,
+                    b"SGSV" => &self.event_details.stop_go_penalty_served,
+                    b"FLBK" => &self.event_details.flashback,
+                    b"BUTN" => &self.event_details.buttons,
+                    b"OVTK" => &self.event_details.overtake,
+                    b"SSTA" => &self.event_details.fastest_lap,
+                    b"SEND" => &self.event_details.fastest_lap,
+                    b"DRSE" => &self.event_details.fastest_lap,
+                    b"DRSD" => &self.event_details.fastest_lap,
+                    b"CHQF" => &self.event_details.fastest_lap,
+                    b"LGOT" => &self.event_details.fastest_lap,
+                    b"RDFL" => &self.event_details.fastest_lap,
+                    _ => &self.event_details.fastest_lap,
+                }
+            })
+            .finish()
+    }
+}
+
+impl PartialEq for PacketEventData {
+    fn eq(&self, other: &Self) -> bool {
+        self.header == other.header
+            && self.event_string_code == other.event_string_code
+            && unsafe {
+                match &self.event_string_code {
+                    b"FTLP" => self.event_details.fastest_lap == other.event_details.fastest_lap,
+                    b"RTMT" => self.event_details.retirement == other.event_details.retirement,
+                    b"TMPT" => {
+                        self.event_details.team_mate_in_pits
+                            == other.event_details.team_mate_in_pits
+                    }
+                    b"RCWN" => self.event_details.race_winner == other.event_details.race_winner,
+                    b"PENA" => self.event_details.penalty == other.event_details.penalty,
+                    b"SPTP" => self.event_details.speed_trap == other.event_details.speed_trap,
+                    b"STLG" => self.event_details.start_lights == other.event_details.start_lights,
+                    b"DTSV" => {
+                        self.event_details.drive_through_penalty_served
+                            == other.event_details.drive_through_penalty_served
+                    }
+                    b"SGSV" => {
+                        self.event_details.stop_go_penalty_served
+                            == other.event_details.stop_go_penalty_served
+                    }
+                    b"FLBK" => self.event_details.flashback == other.event_details.flashback,
+                    b"BUTN" => self.event_details.buttons == other.event_details.buttons,
+                    b"OVTK" => self.event_details.overtake == other.event_details.overtake,
+                    b"SSTA" => true,
+                    b"SEND" => true,
+                    b"DRSE" => true,
+                    b"DRSD" => true,
+                    b"CHQF" => true,
+                    b"LGOT" => true,
+                    b"RDFL" => true,
+                    _ => true,
+                }
+            }
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use rand::Rng;
+
+    #[test]
+    fn test_packet_event_data_serialization_deserialization() {
+        let mut rng = rand::thread_rng();
+
+        let original_event_string_code: [u8; 4] = *b"FTLP";
+
+        let original_event_details: EventDataDetails = EventDataDetails {
+            fastest_lap: FastestLap {
+                vehicle_idx: rng.gen(),
+                lap_time: rng.gen(),
+            },
+        };
+
+        let original_packet: PacketEventData = PacketEventData {
+            header: PacketHeader {
+                packet_format: rng.gen(),
+                game_year: rng.gen(),
+                game_major_version: rng.gen(),
+                game_minor_version: rng.gen(),
+                packet_version: rng.gen(),
+                packet_id: rng.gen(),
+                session_uid: rng.gen(),
+                session_time: rng.gen(),
+                frame_identifier: rng.gen(),
+                overall_frame_identifier: rng.gen(),
+                player_car_index: rng.gen(),
+                secondary_player_car_index: rng.gen(),
+            },
+            event_string_code: original_event_string_code,
+            event_details: original_event_details,
+        };
+
+        let serialized_packet: Vec<u8> = original_packet.serialize().unwrap();
+        let deserialized_packet: PacketEventData =
+            PacketEventData::unserialize(&serialized_packet).unwrap();
+
+        assert_eq!(original_packet, deserialized_packet);
     }
 }

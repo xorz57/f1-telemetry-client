@@ -393,3 +393,222 @@ impl Overtake {
         Ok(bytes)
     }
 }
+
+impl PacketEventData {
+    pub fn unserialize(bytes: &[u8]) -> Result<Self, std::io::Error> {
+        let header: PacketHeader = PacketHeader::unserialize(&bytes[..size_of::<PacketHeader>()])?;
+        let event_string_code: [u8; 4] = {
+            let mut event_string_code: [u8; 4] = [0; 4];
+            event_string_code.copy_from_slice(
+                &bytes[size_of::<PacketHeader>()..size_of::<PacketHeader>() + 4 * size_of::<u8>()],
+            );
+            event_string_code
+        };
+
+        let event_details: EventDataDetails = match &event_string_code {
+            b"FTLP" => {
+                let fastest_lap: FastestLap = FastestLap::unserialize(
+                    &bytes[size_of::<PacketHeader>() + 4 * size_of::<u8>()..],
+                )?;
+                EventDataDetails { fastest_lap }
+            }
+            b"RTMT" => {
+                let retirement: Retirement = Retirement::unserialize(
+                    &bytes[size_of::<PacketHeader>() + 4 * size_of::<u8>()..],
+                )?;
+                EventDataDetails { retirement }
+            }
+            b"TMPT" => {
+                let team_mate_in_pits: TeamMateInPits = TeamMateInPits::unserialize(
+                    &bytes[size_of::<PacketHeader>() + 4 * size_of::<u8>()..],
+                )?;
+                EventDataDetails { team_mate_in_pits }
+            }
+            b"RCWN" => {
+                let race_winner: RaceWinner = RaceWinner::unserialize(
+                    &bytes[size_of::<PacketHeader>() + 4 * size_of::<u8>()..],
+                )?;
+                EventDataDetails { race_winner }
+            }
+            b"PENA" => {
+                let penalty: Penalty = Penalty::unserialize(
+                    &bytes[size_of::<PacketHeader>() + 4 * size_of::<u8>()..],
+                )?;
+                EventDataDetails { penalty }
+            }
+            b"SPTP" => {
+                let speed_trap: SpeedTrap = SpeedTrap::unserialize(
+                    &bytes[size_of::<PacketHeader>() + 4 * size_of::<u8>()..],
+                )?;
+                EventDataDetails { speed_trap }
+            }
+            b"STLG" => {
+                let start_lights: StartLights = StartLights::unserialize(
+                    &bytes[size_of::<PacketHeader>() + 4 * size_of::<u8>()..],
+                )?;
+                EventDataDetails { start_lights }
+            }
+            b"DTSV" => {
+                let drive_through_penalty_served: DriveThroughPenaltyServed =
+                    DriveThroughPenaltyServed::unserialize(
+                        &bytes[size_of::<PacketHeader>() + 4 * size_of::<u8>()..],
+                    )?;
+                EventDataDetails {
+                    drive_through_penalty_served,
+                }
+            }
+            b"SGSV" => {
+                let stop_go_penalty_served: StopGoPenaltyServed = StopGoPenaltyServed::unserialize(
+                    &bytes[size_of::<PacketHeader>() + 4 * size_of::<u8>()..],
+                )?;
+                EventDataDetails {
+                    stop_go_penalty_served,
+                }
+            }
+            b"FLBK" => {
+                let flashback: Flashback = Flashback::unserialize(
+                    &bytes[size_of::<PacketHeader>() + 4 * size_of::<u8>()..],
+                )?;
+                EventDataDetails { flashback }
+            }
+            b"BUTN" => {
+                let buttons: Buttons = Buttons::unserialize(
+                    &bytes[size_of::<PacketHeader>() + 4 * size_of::<u8>()..],
+                )?;
+                EventDataDetails { buttons }
+            }
+            b"OVTK" => {
+                let overtake: Overtake = Overtake::unserialize(
+                    &bytes[size_of::<PacketHeader>() + 4 * size_of::<u8>()..],
+                )?;
+                EventDataDetails { overtake }
+            }
+            b"SSTA" => EventDataDetails {
+                // Unused Event Details
+                fastest_lap: FastestLap::default(),
+            },
+            b"SEND" => EventDataDetails {
+                // Unused Event Details
+                fastest_lap: FastestLap::default(),
+            },
+            b"DRSE" => EventDataDetails {
+                // Unused Event Details
+                fastest_lap: FastestLap::default(),
+            },
+            b"DRSD" => EventDataDetails {
+                // Unused Event Details
+                fastest_lap: FastestLap::default(),
+            },
+            b"CHQF" => EventDataDetails {
+                // Unused Event Details
+                fastest_lap: FastestLap::default(),
+            },
+            b"LGOT" => EventDataDetails {
+                // Unused Event Details
+                fastest_lap: FastestLap::default(),
+            },
+            b"RDFL" => EventDataDetails {
+                // Unused Event Details
+                fastest_lap: FastestLap::default(),
+            },
+            _ => {
+                return Err(std::io::Error::new(
+                    std::io::ErrorKind::InvalidData,
+                    "Invalid event string code",
+                ))
+            }
+        };
+
+        Ok(PacketEventData {
+            header,
+            event_string_code,
+            event_details,
+        })
+    }
+
+    pub fn serialize(&self) -> Result<Vec<u8>, std::io::Error> {
+        let mut bytes = Vec::with_capacity(size_of::<PacketEventData>());
+        bytes.extend_from_slice(&self.header.serialize()?);
+        bytes.extend_from_slice(&self.event_string_code);
+
+        match &self.event_string_code {
+            b"FTLP" => unsafe {
+                bytes.extend_from_slice(&self.event_details.fastest_lap.serialize()?);
+            },
+            b"RTMT" => unsafe {
+                bytes.extend_from_slice(&self.event_details.retirement.serialize()?);
+            },
+            b"TMPT" => unsafe {
+                bytes.extend_from_slice(&self.event_details.team_mate_in_pits.serialize()?);
+            },
+            b"RCWN" => unsafe {
+                bytes.extend_from_slice(&self.event_details.race_winner.serialize()?);
+            },
+            b"PENA" => unsafe {
+                bytes.extend_from_slice(&self.event_details.penalty.serialize()?);
+            },
+            b"SPTP" => unsafe {
+                bytes.extend_from_slice(&self.event_details.speed_trap.serialize()?);
+            },
+            b"STLG" => unsafe {
+                bytes.extend_from_slice(&self.event_details.start_lights.serialize()?);
+            },
+            b"DTSV" => unsafe {
+                bytes.extend_from_slice(
+                    &self
+                        .event_details
+                        .drive_through_penalty_served
+                        .serialize()?,
+                );
+            },
+            b"SGSV" => unsafe {
+                bytes.extend_from_slice(&self.event_details.stop_go_penalty_served.serialize()?);
+            },
+            b"FLBK" => unsafe {
+                bytes.extend_from_slice(&self.event_details.flashback.serialize()?);
+            },
+            b"BUTN" => unsafe {
+                bytes.extend_from_slice(&self.event_details.buttons.serialize()?);
+            },
+            b"OVTK" => unsafe {
+                bytes.extend_from_slice(&self.event_details.overtake.serialize()?);
+            },
+            b"SSTA" => unsafe {
+                // Unused Event Details
+                bytes.extend_from_slice(&self.event_details.fastest_lap.serialize()?)
+            },
+            b"SEND" => unsafe {
+                // Unused Event Details
+                bytes.extend_from_slice(&self.event_details.fastest_lap.serialize()?)
+            },
+            b"DRSE" => unsafe {
+                // Unused Event Details
+                bytes.extend_from_slice(&self.event_details.fastest_lap.serialize()?)
+            },
+            b"DRSD" => unsafe {
+                // Unused Event Details
+                bytes.extend_from_slice(&self.event_details.fastest_lap.serialize()?)
+            },
+            b"CHQF" => unsafe {
+                // Unused Event Details
+                bytes.extend_from_slice(&self.event_details.fastest_lap.serialize()?)
+            },
+            b"LGOT" => unsafe {
+                // Unused Event Details
+                bytes.extend_from_slice(&self.event_details.fastest_lap.serialize()?)
+            },
+            b"RDFL" => unsafe {
+                // Unused Event Details
+                bytes.extend_from_slice(&self.event_details.fastest_lap.serialize()?)
+            },
+            _ => {
+                return Err(std::io::Error::new(
+                    std::io::ErrorKind::InvalidData,
+                    "Invalid event string code",
+                ))
+            }
+        };
+
+        Ok(bytes)
+    }
+}

@@ -164,10 +164,10 @@ impl F1TelemetryClient {
                             };
                         }
                         3 => {
-                            // match PacketEventData::unserialize(&self.buf[..received]) {
-                            //     Ok(packet) => (self.event_handler)(&packet),
-                            //     Err(e) => eprintln!("{e:?}"),
-                            // };
+                            match PacketEventData::unserialize(&self.buf[..received]) {
+                                Ok(packet) => (self.event_handler)(&packet),
+                                Err(e) => eprintln!("{e:?}"),
+                            };
                         }
                         4 => {
                             match PacketParticipantsData::unserialize(&self.buf[..received]) {

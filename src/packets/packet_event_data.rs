@@ -406,83 +406,66 @@ impl PacketEventData {
         };
 
         let event_details: EventDataDetails = match &event_string_code {
-            b"FTLP" => {
-                let fastest_lap: FastestLap = FastestLap::unserialize(
+            b"FTLP" => EventDataDetails {
+                fastest_lap: FastestLap::unserialize(
                     &bytes[size_of::<PacketHeader>() + 4 * size_of::<u8>()..],
-                )?;
-                EventDataDetails { fastest_lap }
-            }
-            b"RTMT" => {
-                let retirement: Retirement = Retirement::unserialize(
+                )?,
+            },
+            b"RTMT" => EventDataDetails {
+                retirement: Retirement::unserialize(
                     &bytes[size_of::<PacketHeader>() + 4 * size_of::<u8>()..],
-                )?;
-                EventDataDetails { retirement }
-            }
-            b"TMPT" => {
-                let team_mate_in_pits: TeamMateInPits = TeamMateInPits::unserialize(
+                )?,
+            },
+            b"TMPT" => EventDataDetails {
+                team_mate_in_pits: TeamMateInPits::unserialize(
                     &bytes[size_of::<PacketHeader>() + 4 * size_of::<u8>()..],
-                )?;
-                EventDataDetails { team_mate_in_pits }
-            }
-            b"RCWN" => {
-                let race_winner: RaceWinner = RaceWinner::unserialize(
+                )?,
+            },
+            b"RCWN" => EventDataDetails {
+                race_winner: RaceWinner::unserialize(
                     &bytes[size_of::<PacketHeader>() + 4 * size_of::<u8>()..],
-                )?;
-                EventDataDetails { race_winner }
-            }
-            b"PENA" => {
-                let penalty: Penalty = Penalty::unserialize(
+                )?,
+            },
+            b"PENA" => EventDataDetails {
+                penalty: Penalty::unserialize(
                     &bytes[size_of::<PacketHeader>() + 4 * size_of::<u8>()..],
-                )?;
-                EventDataDetails { penalty }
-            }
-            b"SPTP" => {
-                let speed_trap: SpeedTrap = SpeedTrap::unserialize(
+                )?,
+            },
+            b"SPTP" => EventDataDetails {
+                speed_trap: SpeedTrap::unserialize(
                     &bytes[size_of::<PacketHeader>() + 4 * size_of::<u8>()..],
-                )?;
-                EventDataDetails { speed_trap }
-            }
-            b"STLG" => {
-                let start_lights: StartLights = StartLights::unserialize(
+                )?,
+            },
+            b"STLG" => EventDataDetails {
+                start_lights: StartLights::unserialize(
                     &bytes[size_of::<PacketHeader>() + 4 * size_of::<u8>()..],
-                )?;
-                EventDataDetails { start_lights }
-            }
-            b"DTSV" => {
-                let drive_through_penalty_served: DriveThroughPenaltyServed =
-                    DriveThroughPenaltyServed::unserialize(
-                        &bytes[size_of::<PacketHeader>() + 4 * size_of::<u8>()..],
-                    )?;
-                EventDataDetails {
-                    drive_through_penalty_served,
-                }
-            }
-            b"SGSV" => {
-                let stop_go_penalty_served: StopGoPenaltyServed = StopGoPenaltyServed::unserialize(
+                )?,
+            },
+            b"DTSV" => EventDataDetails {
+                drive_through_penalty_served: DriveThroughPenaltyServed::unserialize(
                     &bytes[size_of::<PacketHeader>() + 4 * size_of::<u8>()..],
-                )?;
-                EventDataDetails {
-                    stop_go_penalty_served,
-                }
-            }
-            b"FLBK" => {
-                let flashback: Flashback = Flashback::unserialize(
+                )?,
+            },
+            b"SGSV" => EventDataDetails {
+                stop_go_penalty_served: StopGoPenaltyServed::unserialize(
                     &bytes[size_of::<PacketHeader>() + 4 * size_of::<u8>()..],
-                )?;
-                EventDataDetails { flashback }
-            }
-            b"BUTN" => {
-                let buttons: Buttons = Buttons::unserialize(
+                )?,
+            },
+            b"FLBK" => EventDataDetails {
+                flashback: Flashback::unserialize(
                     &bytes[size_of::<PacketHeader>() + 4 * size_of::<u8>()..],
-                )?;
-                EventDataDetails { buttons }
-            }
-            b"OVTK" => {
-                let overtake: Overtake = Overtake::unserialize(
+                )?,
+            },
+            b"BUTN" => EventDataDetails {
+                buttons: Buttons::unserialize(
                     &bytes[size_of::<PacketHeader>() + 4 * size_of::<u8>()..],
-                )?;
-                EventDataDetails { overtake }
-            }
+                )?,
+            },
+            b"OVTK" => EventDataDetails {
+                overtake: Overtake::unserialize(
+                    &bytes[size_of::<PacketHeader>() + 4 * size_of::<u8>()..],
+                )?,
+            },
             b"SSTA" => EventDataDetails {
                 // Unused Event Details
                 fastest_lap: FastestLap::default(),

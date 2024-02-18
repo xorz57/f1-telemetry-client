@@ -39,8 +39,67 @@ fn main() {
     client.on_car_telemetry(Box::new(|packet: &PacketCarTelemetryData| {
         println!("{packet:?}");
     }));
-    client.on_event(Box::new(|_: &PacketEventData| {
-        // println!("{packet:?}");
+    client.on_event(Box::new(|packet: &PacketEventData| unsafe {
+        match &packet.event_string_code {
+            b"FTLP" => {
+                println!("{:?}", packet.event_details.fastest_lap);
+            }
+            b"RTMT" => {
+                println!("{:?}", packet.event_details.retirement);
+            }
+            b"TMPT" => {
+                println!("{:?}", packet.event_details.team_mate_in_pits);
+            }
+            b"RCWN" => {
+                println!("{:?}", packet.event_details.race_winner);
+            }
+            b"PENA" => {
+                println!("{:?}", packet.event_details.penalty);
+            }
+            b"SPTP" => {
+                println!("{:?}", packet.event_details.speed_trap);
+            }
+            b"STLG" => {
+                println!("{:?}", packet.event_details.start_lights);
+            }
+            b"DTSV" => {
+                println!("{:?}", packet.event_details.drive_through_penalty_served);
+            }
+            b"SGSV" => {
+                println!("{:?}", packet.event_details.stop_go_penalty_served);
+            }
+            b"FLBK" => {
+                println!("{:?}", packet.event_details.flashback);
+            }
+            b"BUTN" => {
+                println!("{:?}", packet.event_details.buttons);
+            }
+            b"OVTK" => {
+                println!("{:?}", packet.event_details.overtake);
+            }
+            b"SSTA" => {
+                println!("Session Started");
+            }
+            b"SEND" => {
+                println!("Session Ended");
+            }
+            b"DRSE" => {
+                println!("DRS Enabled");
+            }
+            b"DRSD" => {
+                println!("DRS Disabled");
+            }
+            b"CHQF" => {
+                println!("Chequered Flag");
+            }
+            b"LGOT" => {
+                println!("Lights Out");
+            }
+            b"RDFL" => {
+                println!("Red Flag");
+            }
+            _ => {}
+        }
     }));
     client.on_final_classification(Box::new(|packet: &PacketFinalClassificationData| {
         println!("{packet:?}");

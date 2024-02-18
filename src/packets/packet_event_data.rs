@@ -468,33 +468,26 @@ impl PacketEventData {
                 )?,
             },
             b"SSTA" => EventDataDetails {
-                // Unused Event Details
-                fastest_lap: FastestLap::default(),
-            },
+                buttons: Buttons::default(),
+            }, // Unused Event Details
             b"SEND" => EventDataDetails {
-                // Unused Event Details
-                fastest_lap: FastestLap::default(),
-            },
+                buttons: Buttons::default(),
+            }, // Unused Event Details
             b"DRSE" => EventDataDetails {
-                // Unused Event Details
-                fastest_lap: FastestLap::default(),
-            },
+                buttons: Buttons::default(),
+            }, // Unused Event Details
             b"DRSD" => EventDataDetails {
-                // Unused Event Details
-                fastest_lap: FastestLap::default(),
-            },
+                buttons: Buttons::default(),
+            }, // Unused Event Details
             b"CHQF" => EventDataDetails {
-                // Unused Event Details
-                fastest_lap: FastestLap::default(),
-            },
+                buttons: Buttons::default(),
+            }, // Unused Event Details
             b"LGOT" => EventDataDetails {
-                // Unused Event Details
-                fastest_lap: FastestLap::default(),
-            },
+                buttons: Buttons::default(),
+            }, // Unused Event Details
             b"RDFL" => EventDataDetails {
-                // Unused Event Details
-                fastest_lap: FastestLap::default(),
-            },
+                buttons: Buttons::default(),
+            }, // Unused Event Details
             _ => {
                 return Err(std::io::Error::new(
                     std::io::ErrorKind::InvalidData,
@@ -538,13 +531,13 @@ impl PacketEventData {
                 b"FLBK" => bytes.extend_from_slice(&self.event_details.flashback.serialize()?),
                 b"BUTN" => bytes.extend_from_slice(&self.event_details.buttons.serialize()?),
                 b"OVTK" => bytes.extend_from_slice(&self.event_details.overtake.serialize()?),
-                b"SSTA" => bytes.extend_from_slice(&self.event_details.fastest_lap.serialize()?), // Unused Event Details
-                b"SEND" => bytes.extend_from_slice(&self.event_details.fastest_lap.serialize()?), // Unused Event Details
-                b"DRSE" => bytes.extend_from_slice(&self.event_details.fastest_lap.serialize()?), // Unused Event Details
-                b"DRSD" => bytes.extend_from_slice(&self.event_details.fastest_lap.serialize()?), // Unused Event Details
-                b"CHQF" => bytes.extend_from_slice(&self.event_details.fastest_lap.serialize()?), // Unused Event Details
-                b"LGOT" => bytes.extend_from_slice(&self.event_details.fastest_lap.serialize()?), // Unused Event Details
-                b"RDFL" => bytes.extend_from_slice(&self.event_details.fastest_lap.serialize()?), // Unused Event Details
+                b"SSTA" => bytes.extend_from_slice(&self.event_details.buttons.serialize()?), // Unused Event Details
+                b"SEND" => bytes.extend_from_slice(&self.event_details.buttons.serialize()?), // Unused Event Details
+                b"DRSE" => bytes.extend_from_slice(&self.event_details.buttons.serialize()?), // Unused Event Details
+                b"DRSD" => bytes.extend_from_slice(&self.event_details.buttons.serialize()?), // Unused Event Details
+                b"CHQF" => bytes.extend_from_slice(&self.event_details.buttons.serialize()?), // Unused Event Details
+                b"LGOT" => bytes.extend_from_slice(&self.event_details.buttons.serialize()?), // Unused Event Details
+                b"RDFL" => bytes.extend_from_slice(&self.event_details.buttons.serialize()?), // Unused Event Details
                 _ => {
                     return Err(std::io::Error::new(
                         std::io::ErrorKind::InvalidData,
@@ -577,14 +570,14 @@ impl fmt::Debug for PacketEventData {
                     b"FLBK" => &self.event_details.flashback,
                     b"BUTN" => &self.event_details.buttons,
                     b"OVTK" => &self.event_details.overtake,
-                    b"SSTA" => &self.event_details.fastest_lap,
-                    b"SEND" => &self.event_details.fastest_lap,
-                    b"DRSE" => &self.event_details.fastest_lap,
-                    b"DRSD" => &self.event_details.fastest_lap,
-                    b"CHQF" => &self.event_details.fastest_lap,
-                    b"LGOT" => &self.event_details.fastest_lap,
-                    b"RDFL" => &self.event_details.fastest_lap,
-                    _ => &self.event_details.fastest_lap,
+                    b"SSTA" => &self.event_details.buttons, // Unused Event Details
+                    b"SEND" => &self.event_details.buttons, // Unused Event Details
+                    b"DRSE" => &self.event_details.buttons, // Unused Event Details
+                    b"DRSD" => &self.event_details.buttons, // Unused Event Details
+                    b"CHQF" => &self.event_details.buttons, // Unused Event Details
+                    b"LGOT" => &self.event_details.buttons, // Unused Event Details
+                    b"RDFL" => &self.event_details.buttons, // Unused Event Details
+                    _ => &self.event_details.buttons,       // Unused Event Details
                 }
             })
             .finish()
@@ -593,39 +586,33 @@ impl fmt::Debug for PacketEventData {
 
 impl PartialEq for PacketEventData {
     fn eq(&self, other: &Self) -> bool {
+        let ed1: EventDataDetails = self.event_details;
+        let ed2: EventDataDetails = other.event_details;
+
         self.header == other.header
             && self.event_string_code == other.event_string_code
             && unsafe {
                 match &self.event_string_code {
-                    b"FTLP" => self.event_details.fastest_lap == other.event_details.fastest_lap,
-                    b"RTMT" => self.event_details.retirement == other.event_details.retirement,
-                    b"TMPT" => {
-                        self.event_details.team_mate_in_pits
-                            == other.event_details.team_mate_in_pits
-                    }
-                    b"RCWN" => self.event_details.race_winner == other.event_details.race_winner,
-                    b"PENA" => self.event_details.penalty == other.event_details.penalty,
-                    b"SPTP" => self.event_details.speed_trap == other.event_details.speed_trap,
-                    b"STLG" => self.event_details.start_lights == other.event_details.start_lights,
-                    b"DTSV" => {
-                        self.event_details.drive_through_penalty_served
-                            == other.event_details.drive_through_penalty_served
-                    }
-                    b"SGSV" => {
-                        self.event_details.stop_go_penalty_served
-                            == other.event_details.stop_go_penalty_served
-                    }
-                    b"FLBK" => self.event_details.flashback == other.event_details.flashback,
-                    b"BUTN" => self.event_details.buttons == other.event_details.buttons,
-                    b"OVTK" => self.event_details.overtake == other.event_details.overtake,
-                    b"SSTA" => true,
-                    b"SEND" => true,
-                    b"DRSE" => true,
-                    b"DRSD" => true,
-                    b"CHQF" => true,
-                    b"LGOT" => true,
-                    b"RDFL" => true,
-                    _ => true,
+                    b"FTLP" => ed1.fastest_lap == ed2.fastest_lap,
+                    b"RTMT" => ed1.retirement == ed2.retirement,
+                    b"TMPT" => ed1.team_mate_in_pits == ed2.team_mate_in_pits,
+                    b"RCWN" => ed1.race_winner == ed2.race_winner,
+                    b"PENA" => ed1.penalty == ed2.penalty,
+                    b"SPTP" => ed1.speed_trap == ed2.speed_trap,
+                    b"STLG" => ed1.start_lights == ed2.start_lights,
+                    b"DTSV" => ed1.drive_through_penalty_served == ed2.drive_through_penalty_served,
+                    b"SGSV" => ed1.stop_go_penalty_served == ed2.stop_go_penalty_served,
+                    b"FLBK" => ed1.flashback == ed2.flashback,
+                    b"BUTN" => ed1.buttons == ed2.buttons,
+                    b"OVTK" => ed1.overtake == ed2.overtake,
+                    b"SSTA" => true, // Unused Event Details
+                    b"SEND" => true, // Unused Event Details
+                    b"DRSE" => true, // Unused Event Details
+                    b"DRSD" => true, // Unused Event Details
+                    b"CHQF" => true, // Unused Event Details
+                    b"LGOT" => true, // Unused Event Details
+                    b"RDFL" => true, // Unused Event Details
+                    _ => true,       // Unused Event Details
                 }
             }
     }

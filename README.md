@@ -9,6 +9,7 @@ This Rust library provides a telemetry client for the [F1® 23](https://store.st
 ## Usage Example
 
 ```rust
+use f1_telemetry_client::packets::EventDataDetails;
 use f1_telemetry_client::packets::PacketCarDamageData;
 use f1_telemetry_client::packets::PacketCarSetupData;
 use f1_telemetry_client::packets::PacketCarStatusData;
@@ -40,64 +41,27 @@ fn main() {
         println!("{packet:?}");
     }));
     client.on_event(Box::new(|packet: &PacketEventData| unsafe {
+        let ed: EventDataDetails = packet.event_details;
         match &packet.event_string_code {
-            b"FTLP" => {
-                println!("{:?}", packet.event_details.fastest_lap);
-            }
-            b"RTMT" => {
-                println!("{:?}", packet.event_details.retirement);
-            }
-            b"TMPT" => {
-                println!("{:?}", packet.event_details.team_mate_in_pits);
-            }
-            b"RCWN" => {
-                println!("{:?}", packet.event_details.race_winner);
-            }
-            b"PENA" => {
-                println!("{:?}", packet.event_details.penalty);
-            }
-            b"SPTP" => {
-                println!("{:?}", packet.event_details.speed_trap);
-            }
-            b"STLG" => {
-                println!("{:?}", packet.event_details.start_lights);
-            }
-            b"DTSV" => {
-                println!("{:?}", packet.event_details.drive_through_penalty_served);
-            }
-            b"SGSV" => {
-                println!("{:?}", packet.event_details.stop_go_penalty_served);
-            }
-            b"FLBK" => {
-                println!("{:?}", packet.event_details.flashback);
-            }
-            b"BUTN" => {
-                println!("{:?}", packet.event_details.buttons);
-            }
-            b"OVTK" => {
-                println!("{:?}", packet.event_details.overtake);
-            }
-            b"SSTA" => {
-                println!("Session Started");
-            }
-            b"SEND" => {
-                println!("Session Ended");
-            }
-            b"DRSE" => {
-                println!("DRS Enabled");
-            }
-            b"DRSD" => {
-                println!("DRS Disabled");
-            }
-            b"CHQF" => {
-                println!("Chequered Flag");
-            }
-            b"LGOT" => {
-                println!("Lights Out");
-            }
-            b"RDFL" => {
-                println!("Red Flag");
-            }
+            b"FTLP" => println!("{:?}", ed.fastest_lap),
+            b"RTMT" => println!("{:?}", ed.retirement),
+            b"TMPT" => println!("{:?}", ed.team_mate_in_pits),
+            b"RCWN" => println!("{:?}", ed.race_winner),
+            b"PENA" => println!("{:?}", ed.penalty),
+            b"SPTP" => println!("{:?}", ed.speed_trap),
+            b"STLG" => println!("{:?}", ed.start_lights),
+            b"DTSV" => println!("{:?}", ed.drive_through_penalty_served),
+            b"SGSV" => println!("{:?}", ed.stop_go_penalty_served),
+            b"FLBK" => println!("{:?}", ed.flashback),
+            b"BUTN" => println!("{:?}", ed.buttons),
+            b"OVTK" => println!("{:?}", ed.overtake),
+            b"SSTA" => println!("Session Started"),
+            b"SEND" => println!("Session Ended"),
+            b"DRSE" => println!("DRS Enabled"),
+            b"DRSD" => println!("DRS Disabled"),
+            b"CHQF" => println!("Chequered Flag"),
+            b"LGOT" => println!("Lights Out"),
+            b"RDFL" => println!("Red Flag"),
             _ => {}
         }
     }));

@@ -31,7 +31,6 @@ fn main() {
     }));
     client.on_event(Box::new(|packet: &PacketEventData| unsafe {
         let ed: EventDataDetails = packet.event_details;
-
         match &packet.event_string_code {
             b"FTLP" => println!("{:?}", ed.fastest_lap),
             b"RTMT" => println!("{:?}", ed.retirement),

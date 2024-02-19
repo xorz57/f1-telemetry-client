@@ -399,7 +399,7 @@ impl PacketEventData {
     pub fn unserialize(bytes: &[u8]) -> Result<Self, std::io::Error> {
         let header: PacketHeader = PacketHeader::unserialize(&bytes[..size_of::<PacketHeader>()])?;
         let event_string_code: [u8; 4] = {
-            let mut event_string_code: [u8; 4] = [0; 4];
+            let mut event_string_code: [u8; 4] = [0u8; 4];
             event_string_code.copy_from_slice(
                 &bytes[size_of::<PacketHeader>()..size_of::<PacketHeader>() + 4 * size_of::<u8>()],
             );
@@ -509,35 +509,32 @@ impl PacketEventData {
         bytes.extend_from_slice(&self.event_string_code);
 
         unsafe {
+            let ed: EventDataDetails = self.event_details;
             match &self.event_string_code {
-                b"FTLP" => bytes.extend_from_slice(&self.event_details.fastest_lap.serialize()?),
-                b"RTMT" => bytes.extend_from_slice(&self.event_details.retirement.serialize()?),
-                b"TMPT" => {
-                    bytes.extend_from_slice(&self.event_details.team_mate_in_pits.serialize()?)
-                }
-                b"RCWN" => bytes.extend_from_slice(&self.event_details.race_winner.serialize()?),
-                b"PENA" => bytes.extend_from_slice(&self.event_details.penalty.serialize()?),
-                b"SPTP" => bytes.extend_from_slice(&self.event_details.speed_trap.serialize()?),
-                b"STLG" => bytes.extend_from_slice(&self.event_details.start_lights.serialize()?),
+                b"FTLP" => bytes.extend_from_slice(&ed.fastest_lap.serialize()?),
+                b"RTMT" => bytes.extend_from_slice(&ed.retirement.serialize()?),
+                b"TMPT" => bytes.extend_from_slice(&ed.team_mate_in_pits.serialize()?),
+                b"RCWN" => bytes.extend_from_slice(&ed.race_winner.serialize()?),
+                b"PENA" => bytes.extend_from_slice(&ed.penalty.serialize()?),
+                b"SPTP" => bytes.extend_from_slice(&ed.speed_trap.serialize()?),
+                b"STLG" => bytes.extend_from_slice(&ed.start_lights.serialize()?),
                 b"DTSV" => bytes.extend_from_slice(
                     &self
                         .event_details
                         .drive_through_penalty_served
                         .serialize()?,
                 ),
-                b"SGSV" => {
-                    bytes.extend_from_slice(&self.event_details.stop_go_penalty_served.serialize()?)
-                }
-                b"FLBK" => bytes.extend_from_slice(&self.event_details.flashback.serialize()?),
-                b"BUTN" => bytes.extend_from_slice(&self.event_details.buttons.serialize()?),
-                b"OVTK" => bytes.extend_from_slice(&self.event_details.overtake.serialize()?),
-                b"SSTA" => bytes.extend_from_slice(&self.event_details.buttons.serialize()?), // Unused Event Details
-                b"SEND" => bytes.extend_from_slice(&self.event_details.buttons.serialize()?), // Unused Event Details
-                b"DRSE" => bytes.extend_from_slice(&self.event_details.buttons.serialize()?), // Unused Event Details
-                b"DRSD" => bytes.extend_from_slice(&self.event_details.buttons.serialize()?), // Unused Event Details
-                b"CHQF" => bytes.extend_from_slice(&self.event_details.buttons.serialize()?), // Unused Event Details
-                b"LGOT" => bytes.extend_from_slice(&self.event_details.buttons.serialize()?), // Unused Event Details
-                b"RDFL" => bytes.extend_from_slice(&self.event_details.buttons.serialize()?), // Unused Event Details
+                b"SGSV" => bytes.extend_from_slice(&ed.stop_go_penalty_served.serialize()?),
+                b"FLBK" => bytes.extend_from_slice(&ed.flashback.serialize()?),
+                b"BUTN" => bytes.extend_from_slice(&ed.buttons.serialize()?),
+                b"OVTK" => bytes.extend_from_slice(&ed.overtake.serialize()?),
+                b"SSTA" => bytes.extend_from_slice(&ed.buttons.serialize()?), // Unused Event Details
+                b"SEND" => bytes.extend_from_slice(&ed.buttons.serialize()?), // Unused Event Details
+                b"DRSE" => bytes.extend_from_slice(&ed.buttons.serialize()?), // Unused Event Details
+                b"DRSD" => bytes.extend_from_slice(&ed.buttons.serialize()?), // Unused Event Details
+                b"CHQF" => bytes.extend_from_slice(&ed.buttons.serialize()?), // Unused Event Details
+                b"LGOT" => bytes.extend_from_slice(&ed.buttons.serialize()?), // Unused Event Details
+                b"RDFL" => bytes.extend_from_slice(&ed.buttons.serialize()?), // Unused Event Details
                 _ => {
                     return Err(std::io::Error::new(
                         std::io::ErrorKind::InvalidData,

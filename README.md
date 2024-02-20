@@ -1,4 +1,4 @@
-# F1 Telemetry Client for Rust
+# F1 Telemetry Client
 
 [![Rust](https://github.com/xorz57/f1-telemetry-client/actions/workflows/rust.yml/badge.svg)](https://github.com/xorz57/f1-telemetry-client/actions/workflows/rust.yml)
 

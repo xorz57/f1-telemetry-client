@@ -20,14 +20,14 @@ use std::net::UdpSocket;
 pub struct F1TelemetryClient {
     socket: UdpSocket,
     buf: [u8; 2048],
-    car_damage_handler: Box<dyn Fn(&PacketCarDamageData)>,
-    car_setup_handler: Box<dyn Fn(&PacketCarSetupData)>,
-    car_status_handler: Box<dyn Fn(&PacketCarStatusData)>,
-    car_telemetry_handler: Box<dyn Fn(&PacketCarTelemetryData)>,
-    event_handler: Box<dyn Fn(&PacketEventData)>,
-    final_classification_handler: Box<dyn Fn(&PacketFinalClassificationData)>,
+    car_damage_data_handler: Box<dyn Fn(&PacketCarDamageData)>,
+    car_setup_data_handler: Box<dyn Fn(&PacketCarSetupData)>,
+    car_status_data_handler: Box<dyn Fn(&PacketCarStatusData)>,
+    car_telemetry_data_handler: Box<dyn Fn(&PacketCarTelemetryData)>,
+    event_data_handler: Box<dyn Fn(&PacketEventData)>,
+    final_classification_data_handler: Box<dyn Fn(&PacketFinalClassificationData)>,
     lap_data_handler: Box<dyn Fn(&PacketLapData)>,
-    lobby_info_handler: Box<dyn Fn(&PacketLobbyInfoData)>,
+    lobby_info_data_handler: Box<dyn Fn(&PacketLobbyInfoData)>,
     motion_data_handler: Box<dyn Fn(&PacketMotionData)>,
     motion_ex_data_handler: Box<dyn Fn(&PacketMotionExData)>,
     participants_data_handler: Box<dyn Fn(&PacketParticipantsData)>,
@@ -40,14 +40,14 @@ impl F1TelemetryClient {
     pub fn new(bind_address: &str) -> Self {
         let socket: UdpSocket = UdpSocket::bind(bind_address).expect("Couldn't bind to address");
         let buf: [u8; 2048] = [0; 2048];
-        let car_damage_handler = Box::new(|_: &PacketCarDamageData| {});
-        let car_setup_handler = Box::new(|_: &PacketCarSetupData| {});
-        let car_status_handler = Box::new(|_: &PacketCarStatusData| {});
-        let car_telemetry_handler = Box::new(|_: &PacketCarTelemetryData| {});
-        let event_handler = Box::new(|_: &PacketEventData| {});
-        let final_classification_handler = Box::new(|_: &PacketFinalClassificationData| {});
+        let car_damage_data_handler = Box::new(|_: &PacketCarDamageData| {});
+        let car_setup_data_handler = Box::new(|_: &PacketCarSetupData| {});
+        let car_status_data_handler = Box::new(|_: &PacketCarStatusData| {});
+        let car_telemetry_data_handler = Box::new(|_: &PacketCarTelemetryData| {});
+        let event_data_handler = Box::new(|_: &PacketEventData| {});
+        let final_classification_data_handler = Box::new(|_: &PacketFinalClassificationData| {});
         let lap_data_handler = Box::new(|_: &PacketLapData| {});
-        let lobby_info_handler = Box::new(|_: &PacketLobbyInfoData| {});
+        let lobby_info_data_handler = Box::new(|_: &PacketLobbyInfoData| {});
         let motion_data_handler = Box::new(|_: &PacketMotionData| {});
         let motion_ex_data_handler = Box::new(|_: &PacketMotionExData| {});
         let participants_data_handler = Box::new(|_: &PacketParticipantsData| {});
@@ -58,14 +58,14 @@ impl F1TelemetryClient {
         F1TelemetryClient {
             socket,
             buf,
-            car_damage_handler,
-            car_setup_handler,
-            car_status_handler,
-            car_telemetry_handler,
-            event_handler,
-            final_classification_handler,
+            car_damage_data_handler,
+            car_setup_data_handler,
+            car_status_data_handler,
+            car_telemetry_data_handler,
+            event_data_handler,
+            final_classification_data_handler,
             lap_data_handler,
-            lobby_info_handler,
+            lobby_info_data_handler,
             motion_data_handler,
             motion_ex_data_handler,
             participants_data_handler,
@@ -75,62 +75,62 @@ impl F1TelemetryClient {
         }
     }
 
-    pub fn on_packet_car_damage_data(&mut self, handler: Box<dyn Fn(&PacketCarDamageData)>) {
-        self.car_damage_handler = handler;
+    pub fn set_packet_car_damage_data_handler(&mut self, handler: Box<dyn Fn(&PacketCarDamageData)>) {
+        self.car_damage_data_handler = handler;
     }
 
-    pub fn on_packet_car_setup_data(&mut self, handler: Box<dyn Fn(&PacketCarSetupData)>) {
-        self.car_setup_handler = handler;
+    pub fn set_packet_car_setup_data_handler(&mut self, handler: Box<dyn Fn(&PacketCarSetupData)>) {
+        self.car_setup_data_handler = handler;
     }
 
-    pub fn on_packet_car_status_data(&mut self, handler: Box<dyn Fn(&PacketCarStatusData)>) {
-        self.car_status_handler = handler;
+    pub fn set_packet_car_status_data_handler(&mut self, handler: Box<dyn Fn(&PacketCarStatusData)>) {
+        self.car_status_data_handler = handler;
     }
 
-    pub fn on_packet_car_telemetry(&mut self, handler: Box<dyn Fn(&PacketCarTelemetryData)>) {
-        self.car_telemetry_handler = handler;
+    pub fn set_packet_car_telemetry_data_handler(&mut self, handler: Box<dyn Fn(&PacketCarTelemetryData)>) {
+        self.car_telemetry_data_handler = handler;
     }
 
-    pub fn on_packet_event_data(&mut self, handler: Box<dyn Fn(&PacketEventData)>) {
-        self.event_handler = handler;
+    pub fn set_packet_event_data_handler(&mut self, handler: Box<dyn Fn(&PacketEventData)>) {
+        self.event_data_handler = handler;
     }
 
-    pub fn on_packet_final_classification_data(
+    pub fn set_packet_final_classification_data_handler(
         &mut self,
         handler: Box<dyn Fn(&PacketFinalClassificationData)>,
     ) {
-        self.final_classification_handler = handler;
+        self.final_classification_data_handler = handler;
     }
 
-    pub fn on_packet_lap_data(&mut self, handler: Box<dyn Fn(&PacketLapData)>) {
+    pub fn set_packet_lap_data_handler(&mut self, handler: Box<dyn Fn(&PacketLapData)>) {
         self.lap_data_handler = handler;
     }
 
-    pub fn on_packet_lobby_info(&mut self, handler: Box<dyn Fn(&PacketLobbyInfoData)>) {
-        self.lobby_info_handler = handler;
+    pub fn set_packet_lobby_info_data_handler(&mut self, handler: Box<dyn Fn(&PacketLobbyInfoData)>) {
+        self.lobby_info_data_handler = handler;
     }
 
-    pub fn on_packet_motion_data(&mut self, handler: Box<dyn Fn(&PacketMotionData)>) {
+    pub fn set_packet_motion_data_handler(&mut self, handler: Box<dyn Fn(&PacketMotionData)>) {
         self.motion_data_handler = handler;
     }
 
-    pub fn on_packet_motion_ex_data(&mut self, handler: Box<dyn Fn(&PacketMotionExData)>) {
+    pub fn set_packet_motion_ex_data_handler(&mut self, handler: Box<dyn Fn(&PacketMotionExData)>) {
         self.motion_ex_data_handler = handler;
     }
 
-    pub fn on_packet_participants_data(&mut self, handler: Box<dyn Fn(&PacketParticipantsData)>) {
+    pub fn set_packet_participants_data_handler(&mut self, handler: Box<dyn Fn(&PacketParticipantsData)>) {
         self.participants_data_handler = handler;
     }
 
-    pub fn on_packet_session_data(&mut self, handler: Box<dyn Fn(&PacketSessionData)>) {
+    pub fn set_packet_session_data_handler(&mut self, handler: Box<dyn Fn(&PacketSessionData)>) {
         self.session_data_handler = handler;
     }
 
-    pub fn on_packet_session_history_data(&mut self, handler: Box<dyn Fn(&PacketSessionHistoryData)>) {
+    pub fn set_packet_session_history_data_handler(&mut self, handler: Box<dyn Fn(&PacketSessionHistoryData)>) {
         self.session_history_data_handler = handler;
     }
 
-    pub fn on_packet_tyre_sets_data(&mut self, handler: Box<dyn Fn(&PacketTyreSetsData)>) {
+    pub fn set_packet_tyre_sets_data_handler(&mut self, handler: Box<dyn Fn(&PacketTyreSetsData)>) {
         self.tyre_sets_data_handler = handler;
     }
 
@@ -165,7 +165,7 @@ impl F1TelemetryClient {
                         }
                         3 => {
                             match PacketEventData::unserialize(&self.buf[..received]) {
-                                Ok(packet) => (self.event_handler)(&packet),
+                                Ok(packet) => (self.event_data_handler)(&packet),
                                 Err(e) => eprintln!("{e:?}"),
                             };
                         }
@@ -177,37 +177,37 @@ impl F1TelemetryClient {
                         }
                         5 => {
                             match PacketCarSetupData::unserialize(&self.buf[..received]) {
-                                Ok(packet) => (self.car_setup_handler)(&packet),
+                                Ok(packet) => (self.car_setup_data_handler)(&packet),
                                 Err(e) => eprintln!("{e:?}"),
                             };
                         }
                         6 => {
                             match PacketCarTelemetryData::unserialize(&self.buf[..received]) {
-                                Ok(packet) => (self.car_telemetry_handler)(&packet),
+                                Ok(packet) => (self.car_telemetry_data_handler)(&packet),
                                 Err(e) => eprintln!("{e:?}"),
                             };
                         }
                         7 => {
                             match PacketCarStatusData::unserialize(&self.buf[..received]) {
-                                Ok(packet) => (self.car_status_handler)(&packet),
+                                Ok(packet) => (self.car_status_data_handler)(&packet),
                                 Err(e) => eprintln!("{e:?}"),
                             };
                         }
                         8 => {
                             match PacketFinalClassificationData::unserialize(&self.buf[..received]) {
-                                Ok(packet) => (self.final_classification_handler)(&packet),
+                                Ok(packet) => (self.final_classification_data_handler)(&packet),
                                 Err(e) => eprintln!("{e:?}"),
                             };
                         }
                         9 => {
                             match PacketLobbyInfoData::unserialize(&self.buf[..received]) {
-                                Ok(packet) => (self.lobby_info_handler)(&packet),
+                                Ok(packet) => (self.lobby_info_data_handler)(&packet),
                                 Err(e) => eprintln!("{e:?}"),
                             };
                         }
                         10 => {
                             match PacketCarDamageData::unserialize(&self.buf[..received]) {
-                                Ok(packet) => (self.car_damage_handler)(&packet),
+                                Ok(packet) => (self.car_damage_data_handler)(&packet),
                                 Err(e) => eprintln!("{e:?}"),
                             };
                         }
